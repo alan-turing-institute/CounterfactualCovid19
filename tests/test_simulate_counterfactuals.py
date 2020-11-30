@@ -22,4 +22,4 @@ def test_simulate_counterfactuals():
 
 
 
-    ts_daily_cases =  simulate_counterfactuals('United Kingdom',7,df_cases,df_best_knot,df_summaries)
+    ts_daily_cases =  simulate_counterfactuals('United Kingdom',(7,7),df_cases,df_best_knot,df_summaries)
