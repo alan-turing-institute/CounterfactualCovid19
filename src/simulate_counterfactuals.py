@@ -41,7 +41,7 @@ def simulate_counterfactuals(country, restrictions_shifts, df_cases , best_knots
 
     knots_best_country['Knot_date_1'] = pd.to_datetime(knots_best_country['Knot_date_1'], format="%Y-%m-%d")
     knots_best_country['Knot_date_2'] = pd.to_datetime(knots_best_country['Knot_date_2'], format="%Y-%m-%d")
-
+    data_eur_country['Date'] = pd.to_datetime(data_eur_country['Date'])
     # Calculate maximum number of days earlier we can estimate FIRST RESTRICTION
     # (minimum value of knot_date_1 greater than or equal to date_pop_pct)
     max_days_counterfactual_first_restriction = min(knots_best_country.Knot_date_1 - date_pop_pct.repeat(knots_best_country.shape[0]).values).days
@@ -77,4 +77,32 @@ def simulate_counterfactuals(country, restrictions_shifts, df_cases , best_knots
 
     start = pd.datetime.now()
 
+    for i in range(n_knots_best):
+        knots_best_country_counterfactual_i = knots_best_country_counterfactual.iloc[i]
+
+        # Record number of knots
+        n_knots = knots_best_country_counterfactual_i['N_knots']
+
+        # Define number of simulation runs for specified knot dates
+        n_runs_i= knots_best_country_counterfactual_i['N_unequal']
+
+        # Set knot dates
+        knot_date_1_i = knots_best_country_counterfactual_i['Knot_date_1']
+        knot_date_2_i = knots_best_country_counterfactual_i['Knot_date_2']
+
+        # Define mean growth parameters
+        growth_factor_1_i = knots_best_country_counterfactual_i['Growth_factor_1']
+        growth_factor_2_i = knots_best_country_counterfactual_i['Growth_factor_2']
+        growth_factor_3_i = knots_best_country_counterfactual_i['Growth_factor_3']
+
+        # Define number of simulation runs for specified knot dates
+        n_runs_i = knots_best_country_counterfactual_i['N_unequal']
+
+        daily_cases_sim_i = pd.DataFrame(index=[i for i in range(n_runs_i)],
+            columns=pd.date_range(start=date_pop_pct.values[0] - pd.Timedelta(days=1), end=date_T.values[0],
+                                  freq='D').date.tolist())
+
+        daily_cases_sim_i.iloc[:, 0] = \
+        data_eur_country[data_eur_country['Date'] == (date_pop_pct.values[0] - pd.Timedelta(days=1))][
+            'Daily_cases_MA7'].values.repeat(n_runs_i)
     return x
