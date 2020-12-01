@@ -73,7 +73,7 @@ def simulate_counterfactuals(country, restrictions_shifts, df_cases , best_knots
     knots_best_country_counterfactual['Knot_date_2'] = knots_best_country_counterfactual['Knot_date_2'] - pd.Timedelta(days=n_days_counterfactual_lockdown)
 
 
-    daily_cases_sim =  pd.DataFrame(columns=pd.date_range(start=date_pop_pct.values[0]-pd.Timedelta(days=1), end=date_T.values[0],freq='D').date.tolist())
+    daily_cases_sim =  pd.DataFrame()#columns=pd.date_range(start=date_pop_pct.values[0]-pd.Timedelta(days=1), end=date_T.values[0],freq='D').date.tolist())
 
     start = pd.datetime.now()
 
@@ -100,9 +100,52 @@ def simulate_counterfactuals(country, restrictions_shifts, df_cases , best_knots
 
         daily_cases_sim_i = pd.DataFrame(index=[i for i in range(n_runs_i)],
             columns=pd.date_range(start=date_pop_pct.values[0] - pd.Timedelta(days=1), end=date_T.values[0],
-                                  freq='D').date.tolist())
+                                  freq='D').strftime("%m-%d-%Y").tolist())
 
         daily_cases_sim_i.iloc[:, 0] = \
         data_eur_country[data_eur_country['Date'] == (date_pop_pct.values[0] - pd.Timedelta(days=1))][
             'Daily_cases_MA7'].values.repeat(n_runs_i)
-    return x
+
+        for date in dates:
+            inc_tminus1 = daily_cases_sim_i[(date - pd.Timedelta(days=1)).strftime("%m-%d-%Y")]
+
+            # Define growth parameters
+            if (n_knots == 0) :  # NO knot points
+                growth = growth_factor_1_i
+
+            elif (n_knots == 1) :  # ONE knot point
+                if date <= knot_date_1_i :
+                    growth = growth_factor_1_i
+                else:
+                    growth = growth_factor_2_i
+            else:  # TWO knot points
+                if (date <= knot_date_1_i):
+                    growth = growth_factor_1_i
+                elif (date <= knot_date_2_i):
+                    growth = growth_factor_2_i
+                else:
+                    growth = growth_factor_3_i
+
+            # Calculate daily cases at time t and record
+            inc_t = growth * inc_tminus1
+            daily_cases_sim_i.loc[:,date.strftime("%m-%d-%Y")] = inc_t
+
+            # Bind knot-specific dataframes to full scenario dataframe
+
+        daily_cases_sim = pd.concat([daily_cases_sim, daily_cases_sim_i])
+
+    daily_cases_sim_mean = daily_cases_sim.mean(axis=0)
+
+    cum_init = data_eur_country[data_eur_country['Date'] == (date_pop_pct.values[0] - pd.Timedelta(days=1))][
+        'Cumulative_cases_end_MA7'].values
+
+    daily_cases_sim_cum = daily_cases_sim.copy()
+    daily_cases_sim_cum.loc[:, (date_pop_pct.values[0] - pd.Timedelta(days=1)).strftime("%m-%d-%Y")] = cum_init.repeat(\
+        daily_cases_sim_cum.shape[0])
+    daily_cases_sim_cum = daily_cases_sim_cum.reindex(sorted(daily_cases_sim_cum.columns), axis=1)
+    daily_cases_sim_cum_sum = daily_cases_sim_cum.cumsum(axis=1)
+
+    daily_cases_sim_cum_sum_mean = daily_cases_sim_cum_sum.mean(axis=0)
+
+
+    return daily_cases_sim_mean
