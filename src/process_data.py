@@ -46,6 +46,7 @@ def get_important_dates(country, df_summaries):
 
     Returns
     -------
+    Dictionary with datetime objects of the main restriction dates for a country
 
     """
     summary_eur_country = df_summaries[df_summaries["Country"] == country]
@@ -54,18 +55,52 @@ def get_important_dates(country, df_summaries):
 
     # Record important dates
     # date for which cumulative cases first exceeded this percent (Date_pop_pct)
-    dates_dict['initial_date'] = pd.to_datetime(summary_eur_country.Date_pop_pct, format="%Y-%m-%d")
+    dates_dict['initial_date'] = pd.to_datetime(summary_eur_country.Date_pop_pct.values[0], format="%Y-%m-%d")
 
 
 
     # lastdate to include data
     # Date_max, Date_restrictions_eased + 28, or Date_lockdown_eased + 28, whichever comes first
-    dates_dict['maximum_date'] = pd.to_datetime(summary_eur_country.Date_T, format="%Y-%m-%d")
-    dates_dict['date_first_restriction'] = summary_eur_country.Date_first_restriction
+    dates_dict['maximum_date'] = pd.to_datetime(summary_eur_country.Date_T.values[0], format="%Y-%m-%d")
+    dates_dict['date_first_restriction'] = pd.to_datetime(summary_eur_country.Date_first_restriction.values[0], format="%Y-%m-%d")
 
-    dates_dict['date_lockdown'] = summary_eur_country.Date_lockdown
+    dates_dict['date_lockdown'] = pd.to_datetime(summary_eur_country.Date_lockdown.values[0], format="%Y-%m-%d")
 
     return dates_dict
+
+def get_number_of_cases(country, df_cases, date):
+    """
+    Get initial number of cases for a given country and a given date
+
+    Parameters
+    ----------
+    country: str
+        Country for data to be fetched
+    df_cases: dataframe
+        Historical case data.
+    date: datetime object
+        Date to extract case numbers
+
+    Returns
+    -------
+    Initial case number for that date and initial cumulative case number
+
+    """
+
+    data_eur_country = df_cases[df_cases['Country'] == country]
+    data_eur_country['Date'] = pd.to_datetime(data_eur_country['Date'])
+
+    # get initial number of cases for the first day of the simulation
+    initial_case_number = data_eur_country[data_eur_country['Date'] == (date - pd.Timedelta(days=1))][
+        'Daily_cases_MA7'].values[0]
+
+    # get initial cumulative number of cases for the first day of the simulation
+    initial_cumulative_case_number = \
+    data_eur_country[data_eur_country['Date'] == (date - pd.Timedelta(days=1))][
+        'Cumulative_cases_end_MA7'].values[0]
+
+    return initial_case_number, initial_cumulative_case_number
+
 
 
 
