@@ -22,12 +22,17 @@ def test_simulate_counterfactuals():
     country = 'United Kingdom'
 
     ts_daily_cases, ts_cum_daily_cases = simulate_country_counterfactuals(country, (7, 7), df_cases, df_best_knot, \
-                                                                  df_summaries)
+                                                                          df_summaries)
 
-    data_eur_country_daily = df_cases[df_cases['Country'] == country].reindex('Date')['Daily_cases_MA7']
-    data_eur_country_cum = df_cases[df_cases['Country'] == country].reindex('Date')['Cumulative_cases_end_MA7']
+    assert (ts_daily_cases.shape[0] == 102)
+    assert (ts_cum_daily_cases.shape[0] == 102)
 
+    assert (ts_daily_cases[-1] == 290.08613025000807)
 
-    assert (ts_daily_cases.shape[0] != 0)
-    assert (ts_cum_daily_cases.shape[0] != 0)
+    assert (ts_daily_cases[10] == 243.96895010215306)
+    assert (ts_daily_cases[50] == 830.314137571764)
+    assert (ts_cum_daily_cases[40] == 24954.909695002152)
 
+    assert (ts_cum_daily_cases.index[10] == '03-11-2020')
+    assert (ts_cum_daily_cases.index[-1] == '06-10-2020')
+    assert (ts_cum_daily_cases.index[0] == '03-01-2020')
