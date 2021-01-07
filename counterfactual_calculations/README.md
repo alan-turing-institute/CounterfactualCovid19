@@ -20,8 +20,9 @@ git clone https://github.com/alan-turing-institute/CounterfactualCovid19.git
 
 Enter the repository and check out a relevant branch if necessary (the develop branch contains the most up to date stable version of the code).
 ```
-cd CounterfactualCovid19
+cd CounterfactualCovid19/
 git checkout develop
+cd counterfactual_calculations
 ```
 Install the package using `pip`.
 ```

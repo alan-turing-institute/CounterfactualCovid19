@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.process_data import get_important_dates, get_number_of_cases
+from counterfactual_calculations.src.process_data import get_important_dates, get_number_of_cases
 
 
 def simulate_country_counterfactuals(country, counterfactual_shift, df_cases, best_knots_points, df_summaries):

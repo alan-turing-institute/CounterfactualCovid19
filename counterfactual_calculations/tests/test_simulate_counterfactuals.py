@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 import os
 import pandas as pd
-from src.simulate_counterfactuals import simulate_country_counterfactuals
+from counterfactual_calculations.src.simulate_counterfactuals import simulate_country_counterfactuals
 
 
 def test_simulate_counterfactuals():
@@ -23,6 +23,7 @@ def test_simulate_counterfactuals():
 
     ts_daily_cases, ts_cum_daily_cases = simulate_country_counterfactuals(country, (7, 7), df_cases, df_best_knot, \
                                                                           df_summaries)
+    ts_daily_cases.to_csv("covid_cases_time_series.csv")
 
     assert (ts_daily_cases.shape[0] == 102)
     assert (ts_cum_daily_cases.shape[0] == 102)

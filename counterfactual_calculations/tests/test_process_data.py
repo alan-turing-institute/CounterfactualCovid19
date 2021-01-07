@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 import os
 import pandas as pd
-from src.process_data import get_natural_history_data,get_important_dates, get_number_of_cases
+from counterfactual_calculations.src.process_data import get_natural_history_data,get_important_dates, get_number_of_cases
 
 
 
