@@ -6,6 +6,14 @@ You will need to install the following dependencies in order to run this app:
 
 - [Python](#python)
 
+### SpatiaLite
+
+You will need to install `SpatiaLite` [following the instructions for your OS](http://man.hubwiz.com/docset/Django.docset/Contents/Resources/Documents/doc/ref/contrib/gis/install/spatialite.html). For example, for OSX using `Homebrew` you would run:
+
+```bash
+brew install gdal spatialite-tools
+```
+
 ### Python
 
 This package requires Python 3.7 or greater.
@@ -19,8 +27,15 @@ conda activate counterfactual
 
 #### Install using pyenv
 
+Install `pyenv`
 ```bash
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions --enable-optimizations --with-openssl=$(brew --prefix openssl)" \
+LDFLAGS="-L/usr/local/opt/sqlite/lib" \
+CPPFLAGS="-I/usr/local/opt/sqlite/include" \
 pyenv install 3.7.9
+```
+
+```bash
 pyenv virtualenv 3.7.9 counterfactual
 pyenv local counterfactual
 ```

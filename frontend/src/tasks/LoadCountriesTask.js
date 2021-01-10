@@ -1,13 +1,12 @@
 import papa from "papaparse";
 import legendItems from "../entities/LegendItems";
-import { features } from "../data/countries.json";
-//    this.setState(features);
 
 class LoadCountryTask {
-  covidUrl =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv";
-
-  setState = null;
+  constructor(geometries) {
+    this.covidUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv";
+    this.setState = null;
+    this.geometries = geometries;
+  }
 
   load = (setState) => {
     this.setState = setState;
@@ -20,11 +19,12 @@ class LoadCountryTask {
   };
 
   #processCovidData = (covidCountries) => {
-    for (let i = 0; i < features.length; i++) {
-      const country = features[i];
-      //console.log(country);
+    console.log("countryGeometries");
+    console.log(this.geometries);
+    for (let i = 0; i < this.geometries.length; i++) {
+      const country = this.geometries[i];
       const covidCountry = covidCountries.find(
-        (covidCountry) => country.properties.ISO_A3 === covidCountry.ISO3
+        (covidCountry) => country.properties.iso_code === covidCountry.ISO3
       );
 
       country.properties.confirmed = 0;
@@ -40,7 +40,7 @@ class LoadCountryTask {
       this.#setCountryColor(country);
     }
 
-    this.setState(features);
+    this.setState(this.geometries);
   };
 
   #setCountryColor = (country) => {

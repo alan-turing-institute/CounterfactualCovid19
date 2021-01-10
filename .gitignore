@@ -4,6 +4,7 @@
 # Python files
 .python-version
 *__pycache__*
+poetry.lock
 
 # Node dependencies
 frontend/node_modules
@@ -21,3 +22,6 @@ frontend/.pnp
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Test data
+db.sqlite3
