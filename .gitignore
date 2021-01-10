@@ -1,0 +1,6 @@
+# OSX files
+.DS_Store
+
+# Python files
+.python-version
+*__pycache__*

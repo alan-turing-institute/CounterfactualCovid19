@@ -1,4 +1,33 @@
+# CounterfactualCovid19 frontend
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Prerequisites
+You will need to install the following dependencies in order to run this app:
+
+- [Node](#node)
+- [NPM](#npm)
+
+### Node
+
+This package requires `Node.js`.
+
+#### Install for OSX
+
+```bash
+brew install node
+```
+
+#### Install for other OSes
+
+Follow the instructions from `https://nodejs.org/en/download/`
+
+### NPM
+
+`NPM` should already be installed as part of the `Node.js` installation. To install the required `NPM` packages run the following from the `frontend/` directory:
+
+```bash
+npm install -g
+```
 
 ## Available Scripts
 
