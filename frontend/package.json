@@ -1,8 +1,8 @@
 {
-  "name": "covid19-map",
+  "name": "counterfactualcovid-frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://CodingWith-Adam.github.io/covid19-map",
+  "homepage": "https://github.com/alan-turing-institute/CounterfactualCovid19",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -15,7 +15,7 @@
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.7.0",
     "react-leaflet-choropleth": "^2.0.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "^3.4.4"
   },
   "scripts": {
     "predeploy": "npm run build",

@@ -26,7 +26,7 @@ Follow the instructions from `https://nodejs.org/en/download/`
 `NPM` should already be installed as part of the `Node.js` installation. To install the required `NPM` packages run the following from the `frontend/` directory:
 
 ```bash
-npm install -g
+npm install
 ```
 
 ## Available Scripts
