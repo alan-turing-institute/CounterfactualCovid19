@@ -23,6 +23,7 @@ This package requires Python 3.7 or greater.
 ```bash
 conda create -n counterfactual python=3.7.9
 conda activate counterfactual
+conda install -c conda-forge libspatialite
 ```
 
 #### Install using pyenv
