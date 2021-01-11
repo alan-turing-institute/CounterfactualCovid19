@@ -50,6 +50,16 @@ pip install poetry
 poetry install
 ```
 
+## Initialising the backend
+
+On first run you will need to setup the database with the following commands:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py loaddata countries
+```
+
 ## Running the backend
 
 Run the Django backend from the `backend/` directory with:
