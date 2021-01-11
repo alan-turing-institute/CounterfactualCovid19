@@ -1,7 +1,7 @@
 import papa from "papaparse";
 import legendItems from "../entities/LegendItems";
 
-class LoadCountryTask {
+class LoadCovidDataTask {
   constructor(geometries) {
     this.covidUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv";
     this.setState = null;
@@ -19,8 +19,6 @@ class LoadCountryTask {
   };
 
   #processCovidData = (covidCountries) => {
-    console.log("countryGeometries");
-    console.log(this.geometries);
     for (let i = 0; i < this.geometries.length; i++) {
       const country = this.geometries[i];
       const covidCountry = covidCountries.find(
@@ -56,4 +54,4 @@ class LoadCountryTask {
   };
 }
 
-export default LoadCountryTask;
+export default LoadCovidDataTask;

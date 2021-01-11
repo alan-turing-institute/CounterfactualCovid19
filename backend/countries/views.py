@@ -7,4 +7,4 @@ from .models import Country
 class CountryView(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
     queryset = Country.objects.all()
-    distance_filter_field = 'geometry'
+    http_method_names = ['get', 'list']

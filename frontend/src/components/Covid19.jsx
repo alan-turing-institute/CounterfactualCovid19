@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
 import CovidMap from "./CovidMap";
 import LoadGeometriesTask from "../tasks/LoadGeometriesTask";
-import LoadCountriesTask from "../tasks/LoadCountriesTask";
+import LoadCovidDataTask from "../tasks/LoadCovidDataTask";
 import Legend from "./Legend";
 import legendItems from "../entities/LegendItems";
 
@@ -17,9 +17,9 @@ const Covid19 = () => {
       console.log("Loading geometries from Django backend...");
       const loadGeometriesTask = new LoadGeometriesTask();
       const geometries = await loadGeometriesTask.getCountries();
-      console.log("Preparing map");
-      const loadCountriesTask = new LoadCountriesTask(geometries);
-      loadCountriesTask.load((countries) => setCountries(countries));
+      console.log("Preparing map using COVID data...");
+      const loadCovidDataTask = new LoadCovidDataTask(geometries);
+      loadCovidDataTask.load((countries) => setCountries(countries));
     }
     loadGeometries();
   }, []);
