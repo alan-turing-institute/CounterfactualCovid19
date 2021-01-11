@@ -19,9 +19,9 @@ from rest_framework import routers
 from countries import views
 
 router = routers.DefaultRouter()
-router.register('countries', views.CountryView, 'countries')
+router.register("countries", views.CountryView, "countries")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path("admin/", admin.site.urls),
+    path("api/", include(router.urls)),
 ]
