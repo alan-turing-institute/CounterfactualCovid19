@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ("iso_code", models.CharField(max_length=3)),
                 (
                     "geometry",
-                    django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326,null=True, blank=True),
+                    django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),
                 ),
             ],
         ),
