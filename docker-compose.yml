@@ -2,17 +2,21 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgis/postgis:13-master
     environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=counterfactualcovid
+      - POSTGRES_USER=django
+      - POSTGRES_PASSWORD=django
+    volumes:
+      - ./backend/postgres:/docker-entrypoint-initdb.d
     networks:
       - backend
     ports:
-      - "9999:5432"
+      - "5432:5432"
   backend:
     build: ./backend
-    command: ["poetry", "run", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    links:
+      - db:db
     networks:
       - app
       - backend
@@ -22,7 +26,6 @@ services:
       - db
   frontend:
     build: ./frontend
-    command: ["npm", "start"]
     networks:
       - app
     ports:

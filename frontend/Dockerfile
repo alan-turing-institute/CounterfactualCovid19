@@ -8,15 +8,11 @@ WORKDIR /app/frontend
 COPY package.json /app/frontend
 RUN npm install
 
-# Add the rest of the code
-# Note that node_modules is excluded by .dockerignore
-RUN ls -alh /app/frontend
+# Add the rest of the code, noting that node_modules is excluded by .dockerignore
 COPY . /app/frontend
-RUN ls -alh /app/frontend
 
 # Make port 3000 available for the app
 EXPOSE 3000
-
 
 # Entrypoint
 CMD ["npm", "start"]
