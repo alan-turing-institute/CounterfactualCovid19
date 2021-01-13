@@ -16,7 +16,7 @@ Both the [frontend](frontend/README.md) and the [backend](backend/README.md) hav
 Run the Django backend from the `backend/` directory with:
 
 ```bash
-python manage.py runserver
+poetry run python3 manage.py runserver
 ```
 
 followed by the React frontend from the `frontend/` directory with:
