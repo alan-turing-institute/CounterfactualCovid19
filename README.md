@@ -15,7 +15,13 @@ Both the [frontend](frontend/README.md) and the [backend](backend/README.md) hav
 
 ### Running the app
 
-Run the Django backend from the `backend/` directory with:
+Ensure that the PostgreSQL database is running:
+
+```bash
+pg_ctl -D /usr/local/var/postgres start
+```
+
+Then run the Django backend from the `backend/` directory with:
 
 ```bash
 poetry run python3 manage.py runserver
