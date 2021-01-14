@@ -25,7 +25,7 @@ SECRET_KEY = "3cgwsqthjn#8na&6!=8i*=&ko5x4ti_=fg4%n+rxtq2+ha8a29"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["backend", "localhost"]
 
 
 # Application definition
@@ -79,13 +79,13 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": "counterfactualcovid",
         "USER": "django",
         "PASSWORD": "django",
+        "HOST": "db",
     }
 }
 

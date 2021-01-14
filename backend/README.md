@@ -16,8 +16,6 @@ brew install postgresql
 initdb /usr/local/var/postgres # note that you can use another location if preferred
 pg_ctl -D /usr/local/var/postgres start
 createdb counterfactualcovid
-psql counterfactualcovid -c "CREATE USER django WITH PASSWORD 'django';"
-psql counterfactualcovid -c "CREATE EXTENSION postgis;"
 ```
 
 You can test that `PostgreSQL` is correctly configured by running
