@@ -7,8 +7,6 @@ services:
       - POSTGRES_DB=counterfactualcovid
       - POSTGRES_USER=django
       - POSTGRES_PASSWORD=django
-    volumes:
-      - ./backend/postgres:/docker-entrypoint-initdb.d
     networks:
       - backend
     ports:
