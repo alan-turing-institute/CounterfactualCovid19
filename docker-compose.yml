@@ -11,8 +11,11 @@ services:
       - backend
     ports:
       - "5432:5432"
+    restart: always
   backend:
     build: ./backend
+    depends_on:
+      - db
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings.docker
     links:
@@ -22,14 +25,14 @@ services:
       - backend
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    restart: always
   frontend:
     build: ./frontend
     networks:
       - app
     ports:
       - "3000:3000"
+    restart: always
     stdin_open: true
 
 networks:
