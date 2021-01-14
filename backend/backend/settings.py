@@ -82,8 +82,10 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
 DATABASES = {
     "default": {
-        "ENGINE": "django.contrib.gis.db.backends.spatialite",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "counterfactualcovid",
+        "USER": "django",
+        "PASSWORD": "django",
     }
 }
 
