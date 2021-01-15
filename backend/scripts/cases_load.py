@@ -26,27 +26,11 @@ def run():
         try:
             code_county = pycountry.countries.get(name=country)
 
-            m = Cases(country=country, iso_code=code_county.alpha_3, date=date, cumulative_cases_beg=total_cases)
+            m = Cases(country=country, iso_code=code_county.alpha_3, date=date, cumulative_cases=total_cases)
 
             m.save()
         except AttributeError:
             continue
-
-
-
-
-    #
-    # fhand = open('Cases_deaths_data_europe.csv')
-    # reader = csv.reader(fhand)
-    # next(reader)  # Advance past the header
-    #
-    #
-    #
-    # for row in reader:
-    #     print(row)
-    #
-    #     m = Cases(country=row[0], date=row[1], cumulative_cases_beg=row[2])
-    #     m.save()
 
 
 def get_natural_history_data(country, df_cases):
