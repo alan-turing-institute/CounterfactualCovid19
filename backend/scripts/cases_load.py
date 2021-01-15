@@ -1,8 +1,5 @@
-import csv  # https://docs.python.org/3/library/csv.html
-
-# https://django-extensions.readthedocs.io/en/latest/runscript.html
-
-# python3 manage.py runscript many_load
+"""Load COVID cases data into the database"""
+import csv
 import pandas as pd
 import pycountry
 from cases.models import Cases
