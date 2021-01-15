@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('country', models.CharField(max_length=255)),
                 ('iso_code', models.CharField(max_length=3)),
                 ('date', models.DateField()),
-                ('cumulative_cases_beg', models.PositiveIntegerField()),
+                ('cumulative_cases', models.PositiveIntegerField()),
 
             ],
         ),
