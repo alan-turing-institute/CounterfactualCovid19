@@ -17,7 +17,7 @@ djangorestframework-gis = "^0.16"
 psycopg2 = "^2.8.6"
 django-extensions = "^3.1.0"
 pandas = "^1.1.5"
-pycountry = "20.7.3"
+pycountry = "^20.7.3"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
