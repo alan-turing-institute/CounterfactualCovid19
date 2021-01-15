@@ -9,4 +9,4 @@ class Cases(models.Model):
     cumulative_cases = models.PositiveIntegerField()
 
     def _str_(self):
-        return f""
+        return f"{self.country} ({self.iso_code}) [{self.date}] => {self.cumulative_cases}"
