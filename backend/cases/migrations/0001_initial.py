@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('iso_code', models.CharField(max_length=3)),
                 ('date', models.DateField()),
                 ('cumulative_cases', models.PositiveIntegerField()),
+                ('population', models.PositiveIntegerField()),
 
             ],
         ),
