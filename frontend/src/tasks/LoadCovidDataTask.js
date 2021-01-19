@@ -1,35 +1,37 @@
-import papa from "papaparse";
 import legendItems from "../entities/LegendItems";
+import axios from 'axios';
 
 class LoadCovidDataTask {
   constructor(geometries) {
-    this.covidUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv";
     this.setState = null;
     this.geometries = geometries;
   }
 
-  load = (setState) => {
+  load = async (setState) => {
     this.setState = setState;
 
-    papa.parse(this.covidUrl, {
-      download: true,
-      header: true,
-      complete: (result) => this.#processCovidData(result.data),
-    });
-  };
+    try {
+      const response = await axios.get('http://localhost:8000/api/cases', {});
+      this.#processCovidData(response.data);
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+
+    };
 
   #processCovidData = (covidCountries) => {
     for (let i = 0; i < this.geometries.length; i++) {
       const country = this.geometries[i];
       const covidCountry = covidCountries.find(
-        (covidCountry) => country.properties.iso_code === covidCountry.ISO3
+        (covidCountry) => country.properties.iso_code === covidCountry.iso_code
       );
 
       country.properties.confirmed = 0;
       country.properties.confirmedText = 0;
 
       if (covidCountry != null) {
-        let confirmed = Number(covidCountry.Confirmed);
+        let confirmed = Number(covidCountry.cumulative_cases);
         country.properties.confirmed = confirmed;
         country.properties.confirmedText = this.#formatNumberWithCommas(
           confirmed
