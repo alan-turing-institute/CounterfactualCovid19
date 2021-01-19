@@ -31,7 +31,8 @@ class LoadCovidDataTask {
       country.properties.confirmedText = 0;
 
       if (covidCountry != null) {
-        let confirmed = Number(covidCountry.cumulative_cases);
+        let confirmed = (Number(covidCountry.cumulative_cases)/Number(covidCountry.population))*1000000;
+
         country.properties.confirmed = confirmed;
         country.properties.confirmedText = this.#formatNumberWithCommas(
           confirmed
@@ -52,7 +53,8 @@ class LoadCovidDataTask {
   };
 
   #formatNumberWithCommas = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number.toFixed(2).toString();
+    //return number.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 }
 
