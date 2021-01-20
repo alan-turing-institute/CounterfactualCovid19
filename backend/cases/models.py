@@ -7,6 +7,7 @@ class Cases(models.Model):
     iso_code = models.CharField(max_length=3)
     date = models.DateField()
     cumulative_cases = models.PositiveIntegerField()
+    population = models.PositiveIntegerField()
 
     def _str_(self):
-        return f"{self.country} ({self.iso_code}) [{self.date}] => {self.cumulative_cases}"
+        return f"{self.country} ({self.iso_code}) [{self.date}] => {self.cumulative_cases} ({self.population})"

@@ -1,5 +1,5 @@
 import React from "react";
-import { Map, GeoJSON } from "react-leaflet";
+import { MapContainer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./CovidMap.css";
 
@@ -19,13 +19,13 @@ const CovidMap = ({ countries }) => {
   };
 
   return (
-    <Map style={{ height: "90vh" }} zoom={2} center={[20, 60]}>
+    <MapContainer style={{ height: "90vh" }} zoom={2} center={[20, 60]}>
       <GeoJSON
         style={mapStyle}
         data={countries}
         onEachFeature={onEachCountry}
       />
-    </Map>
+    </MapContainer>
   );
 };
 
