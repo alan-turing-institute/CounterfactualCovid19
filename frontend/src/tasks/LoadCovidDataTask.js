@@ -9,7 +9,6 @@ class LoadCovidDataTask {
 
   load = async (setState) => {
     this.setState = setState;
-
     try {
       const response = await axios.get('http://localhost:8000/api/cases', {});
       this.#processCovidData(response.data);
@@ -17,8 +16,7 @@ class LoadCovidDataTask {
       console.log(error);
       return [];
     }
-
-    };
+  };
 
   #processCovidData = (covidCountries) => {
     for (let i = 0; i < this.geometries.length; i++) {
@@ -31,12 +29,9 @@ class LoadCovidDataTask {
       country.properties.confirmedText = 0;
 
       if (covidCountry != null) {
-        let confirmed = (Number(covidCountry.cumulative_cases)/Number(covidCountry.population))*1000000;
-
+        let confirmed = (Number(covidCountry.cumulative_cases) / Number(covidCountry.population)) * 1000000;
         country.properties.confirmed = confirmed;
-        country.properties.confirmedText = this.#formatNumberWithCommas(
-          confirmed
-        );
+        country.properties.confirmedText = confirmed.toFixed(2).toString();
       }
       this.#setCountryColor(country);
     }
@@ -48,13 +43,7 @@ class LoadCovidDataTask {
     const legendItem = legendItems.find((item) =>
       item.isFor(country.properties.confirmed)
     );
-
     if (legendItem != null) country.properties.color = legendItem.color;
-  };
-
-  #formatNumberWithCommas = (number) => {
-    return number.toFixed(2).toString();
-    //return number.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 }
 
