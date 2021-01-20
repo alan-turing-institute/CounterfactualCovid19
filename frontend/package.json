@@ -3,17 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/user-event": "^12.6.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "leaflet": "^1.7.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-leaflet": "^2.8.0",
-    "react-leaflet-choropleth": "^2.0.1",
-    "react-scripts": "^3.4.4"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-leaflet": "^3.0.5",
+    "react-scripts": "^4.0.1"
   },
   "scripts": {
     "predeploy": "npm run build",
