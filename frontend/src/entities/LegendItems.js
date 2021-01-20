@@ -4,14 +4,12 @@ var legendItems = [
   new LegendItem(
     "10000 +",
     "#741f1f",
-    // "#8b0000",
     (cases) => cases >= 10000,
     "white"
   ),
 
   new LegendItem(
     "5000 - 9999",
-    // "#741f1f",
     "#9c2929",
     (cases) => cases >= 5000 && cases < 10000,
     "White"
