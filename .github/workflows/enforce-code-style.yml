@@ -24,7 +24,7 @@ jobs:
           git fetch
           git checkout ${{ github.head_ref }}
           git commit -am "Reformat Python using Black"
-          # git push
+          git push
   enforce-style-javascript:
     runs-on: ubuntu-latest
     steps:
@@ -34,23 +34,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '15'
-      - name: Install js-beautify
-        run: npm install -g js-beautify
-      - name: Run js-beautify
-        run: |
-          for jsfile in $(find . \( -name '*.js' -o -name '*.jsx' \) -not -path '*/node_modules/*'); do
-            js-beautify -r $jsfile;
-          done
-          if [ "$(git diff)" != "" ]; then
-            exit 1
-          fi
-      - name: If needed, commit js-beautify changes to the pull request
+      - name: Install prettier
+        run: npm install prettier
+      - name: Run prettier --check
+        run: npx prettier --check .
+      - name: If needed, commit prettier changes to the pull request
         if: failure()
         run: |
+          npx prettier --write .
           git config --global user.name 'AutoLinter'
           git config --global user.email 'autolinter@noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git fetch
           git checkout ${{ github.head_ref }}
-          git commit -am "Reformat Javascript using js-beautify"
-          # git push
+          git commit -am "Reformat Javascript using prettier"
+          git push

@@ -1,0 +1,6 @@
+# Node dependencies
+frontend/node_modules
+
+# Files covered by other linters
+*.py
+*.md
