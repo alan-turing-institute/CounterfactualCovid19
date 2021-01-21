@@ -38,11 +38,12 @@ jobs:
       - name: Run js-beautify .
         run: for jsfile in $(find frontend \( -name '*.js' -o -name '*.jsx' \) -not -path '*/node_modules/*'); do js-beautify -r $jsfile; done
       - name: If needed, commit js-beautify changes to the pull request
-        if: git diff
         run: |
-          git config --global user.name 'AutoLinter'
-          git config --global user.email 'autolinter@noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git checkout $GITHUB_HEAD_REF
-          git commit -am "Reformat Javascript using js-beautify"
-          git push
+          if [ $(git diff) != "" ]; then
+            git config --global user.name 'AutoLinter'
+            git config --global user.email 'autolinter@noreply.github.com'
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+            git checkout $GITHUB_HEAD_REF
+            git commit -am "Reformat Javascript using js-beautify"
+            git push
+          fi
