@@ -5,7 +5,9 @@ const Legend = ({ legendItems }) => {
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "stretch",
+        height: "100%",
       }}
     >
       {legendItems.map((item) => (
@@ -20,7 +22,6 @@ const Legend = ({ legendItems }) => {
             color: item.textColor != null ? item.textColor : "black",
             fontWeight: "bolder",
             fontSize: "1em",
-            height: "10vh",
           }}
         >
           <span>{item.title}</span>

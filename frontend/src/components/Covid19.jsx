@@ -5,6 +5,9 @@ import LoadGeometriesTask from "../tasks/LoadGeometriesTask";
 import LoadCovidDataTask from "../tasks/LoadCovidDataTask";
 import Legend from "./Legend";
 import legendItems from "../entities/LegendItems";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 
 const Covid19 = () => {
   const [countries, setCountries] = useState([]);
@@ -29,10 +32,19 @@ const Covid19 = () => {
       {countries.length === 0 ? (
         <Loading />
       ) : (
-        <div>
-          <CovidMap countries={countries} />
-          <Legend legendItems={legendItemsReverse} />
-        </div>
+        <Container fluid>
+          <Row style={{ height: "80vh" }}>
+            <Col xs={10} style={{ padding: "0px" }}>
+              <CovidMap countries={countries} />
+            </Col>
+            <Col style={{ padding: "0px" }}>
+              <Legend legendItems={legendItemsReverse} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>Bottom component</Col>
+          </Row>
+        </Container>
       )}
     </div>
   );
