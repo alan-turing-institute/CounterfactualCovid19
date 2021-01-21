@@ -12,7 +12,7 @@ jobs:
           python-version: 3.9
       - name: Install Black
         run: pip install black
-      - name: Run black --check .
+      - name: Run black --check
         run: black --check .
       - name: If needed, commit black changes to the pull request
         if: failure()
@@ -20,10 +20,11 @@ jobs:
           black .
           git config --global user.name 'AutoLinter'
           git config --global user.email 'autolinter@noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git checkout $GITHUB_HEAD_REF
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git fetch
+          git checkout ${{ github.head_ref }}
           git commit -am "Reformat Python using Black"
-          git push
+          # git push
   enforce-style-javascript:
     runs-on: ubuntu-latest
     steps:
@@ -34,16 +35,22 @@ jobs:
         with:
           node-version: '15'
       - name: Install js-beautify
-        run: npm install js-beautify
-      - name: Run js-beautify .
-        run: for jsfile in $(find frontend \( -name '*.js' -o -name '*.jsx' \) -not -path '*/node_modules/*'); do js-beautify -r $jsfile; done
-      - name: If needed, commit js-beautify changes to the pull request
+        run: npm install -g js-beautify
+      - name: Run js-beautify
         run: |
-          if [ $(git diff) != "" ]; then
-            git config --global user.name 'AutoLinter'
-            git config --global user.email 'autolinter@noreply.github.com'
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-            git checkout $GITHUB_HEAD_REF
-            git commit -am "Reformat Javascript using js-beautify"
-            git push
+          for jsfile in $(find . \( -name '*.js' -o -name '*.jsx' \) -not -path '*/node_modules/*'); do
+            js-beautify -r $jsfile;
+          done
+          if [ "$(git diff)" != "" ]; then
+            exit 1
           fi
+      - name: If needed, commit js-beautify changes to the pull request
+        if: failure()
+        run: |
+          git config --global user.name 'AutoLinter'
+          git config --global user.email 'autolinter@noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git fetch
+          git checkout ${{ github.head_ref }}
+          git commit -am "Reformat Javascript using js-beautify"
+          # git push
