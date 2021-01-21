@@ -1,5 +1,5 @@
 import legendItems from "../entities/LegendItems";
-import axios from 'axios';
+import axios from "axios";
 
 class LoadCovidDataTask {
   constructor(geometries) {
@@ -10,7 +10,7 @@ class LoadCovidDataTask {
   load = async (setState) => {
     this.setState = setState;
     try {
-      const response = await axios.get('http://localhost:8000/api/cases', {});
+      const response = await axios.get("http://localhost:8000/api/cases", {});
       this.#processCovidData(response.data);
     } catch (error) {
       console.log(error);
@@ -29,7 +29,10 @@ class LoadCovidDataTask {
       country.properties.confirmedText = 0;
 
       if (covidCountry != null) {
-        let confirmed = (Number(covidCountry.cumulative_cases) / Number(covidCountry.population)) * 1000000;
+        let confirmed =
+          (Number(covidCountry.cumulative_cases) /
+            Number(covidCountry.population)) *
+          1000000;
         country.properties.confirmed = confirmed;
         country.properties.confirmedText = confirmed.toFixed(2).toString();
       }
