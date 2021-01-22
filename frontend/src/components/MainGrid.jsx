@@ -2,13 +2,13 @@ import React from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import CovidMap from "./CovidMap";
 import Histogram from "./Histogram";
 import Legend from "./Legend";
 import Loading from "./Loading";
+import WorldMap from "./WorldMap";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
 
-export default class Covid19 extends React.Component {
+export default class MainGrid extends React.Component {
   constructor(props) {
     super(props);
 
@@ -45,7 +45,7 @@ export default class Covid19 extends React.Component {
           <Container fluid>
             <Row style={{ height: "80vh" }}>
               <Col xs={10} style={{ padding: "0px" }}>
-                <CovidMap
+                <WorldMap
                   countries={this.state.countries}
                   onCountrySelect={this.handleCountryChange}
                 />

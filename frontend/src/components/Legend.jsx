@@ -1,4 +1,3 @@
-import React from "react";
 import legendItems from "../entities/LegendItems";
 
 const Legend = () => {

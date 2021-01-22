@@ -1,9 +1,8 @@
-import React from "react";
 import { MapContainer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import "./CovidMap.css";
+import "./WorldMap.css";
 
-const CovidMap = ({ countries, onCountrySelect }) => {
+const WorldMap = ({ countries, onCountrySelect }) => {
   const mapStyle = {
     fillColor: "white",
     weight: 1,
@@ -32,4 +31,4 @@ const CovidMap = ({ countries, onCountrySelect }) => {
   );
 };
 
-export default CovidMap;
+export default WorldMap;
