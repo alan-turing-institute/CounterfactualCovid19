@@ -1,6 +1,8 @@
 import React from "react";
+import legendItems from "../entities/LegendItems";
 
-const Legend = ({ legendItems }) => {
+const Legend = () => {
+  const legendItemsReverse = [...legendItems].reverse();
   return (
     <div
       style={{
@@ -10,7 +12,7 @@ const Legend = ({ legendItems }) => {
         height: "100%",
       }}
     >
-      {legendItems.map((item) => (
+      {legendItemsReverse.map((item) => (
         <div
           key={item.title}
           style={{

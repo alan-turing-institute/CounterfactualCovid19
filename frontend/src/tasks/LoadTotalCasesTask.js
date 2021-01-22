@@ -1,14 +1,21 @@
-import legendItems from "../entities/LegendItems";
 import axios from "axios";
+import legendItems from "../entities/LegendItems";
 
-class LoadCovidDataTask {
+class LoadTotalCasesTask {
   decorateCountries = async (countries) => {
     try {
-      const casesResponse = await axios.get(
-        "http://localhost:8000/api/cases",
-        {}
-      );
-      return this.#processCovidData(countries, casesResponse.data);
+      const totalCases = await this.#getTotalCases();
+      return this.#processCovidData(countries, totalCases);
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  #getTotalCases = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/cases", {});
+      return res.data;
     } catch (error) {
       console.log(error);
       return [];
@@ -22,17 +29,14 @@ class LoadCovidDataTask {
         (covidCountry) => country.properties.iso_code === covidCountry.iso_code
       );
 
-      country.properties.confirmed = 0;
-      country.properties.confirmedText = 0;
-
-      if (covidCountry != null) {
-        let confirmed =
-          (Number(covidCountry.cumulative_cases) /
+      const casesPerMillion = covidCountry
+        ? (Number(covidCountry.cumulative_cases) /
             Number(covidCountry.population)) *
-          1e6;
-        country.properties.confirmed = confirmed;
-        country.properties.confirmedText = confirmed.toFixed(2).toString();
-      }
+          1e6
+        : 0;
+      country.properties.confirmed = casesPerMillion;
+      country.properties.confirmedText = casesPerMillion.toFixed(2).toString();
+
       this.#setCountryColor(country);
     }
     return countries;
@@ -48,4 +52,4 @@ class LoadCovidDataTask {
   };
 }
 
-export default LoadCovidDataTask;
+export default LoadTotalCasesTask;

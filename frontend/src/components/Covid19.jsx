@@ -1,14 +1,12 @@
 import React from "react";
-import Loading from "./Loading";
-import CovidMap from "./CovidMap";
-import LoadGeometriesTask from "../tasks/LoadGeometriesTask";
-import LoadCovidDataTask from "../tasks/LoadCovidDataTask";
-import Legend from "./Legend";
-import Histogram from "./Histogram";
-import legendItems from "../entities/LegendItems";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import CovidMap from "./CovidMap";
+import Histogram from "./Histogram";
+import Legend from "./Legend";
+import Loading from "./Loading";
+import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
 
 export default class Covid19 extends React.Component {
   constructor(props) {
@@ -17,29 +15,18 @@ export default class Covid19 extends React.Component {
     // Initialize state first
     this.state = { countries: [], selectedCountry: null };
 
-    // Bind the `handleCountryChange` reference to allow it to be used by other objects
+    // Bind the `handleCountryChange` function to allow it to be used by other objects
     this.handleCountryChange = this.handleCountryChange.bind(this);
   }
 
-  // Load geometry and cases data from Django backend
-  async loadGeometries() {
-    console.log("Loading geometries from Django backend...");
-    const loadGeometriesTask = new LoadGeometriesTask();
-    const countries = await loadGeometriesTask.getCountries();
-    console.log("Preparing map using COVID data...");
-    const loadCovidDataTask = new LoadCovidDataTask();
-    const decoratedCountries = await loadCovidDataTask.decorateCountries(
-      countries
-    );
-    this.setState({ countries: decoratedCountries });
-    console.log(`Loaded data for ${this.state.countries.length} countries`);
-  }
-
-  // This runs when the component is loaded
-  componentDidMount() {
-    this.loadGeometries().catch((error) => {
+  // This runs when the component is first loaded
+  async componentDidMount() {
+    try {
+      const initialMapItems = await loadInitialMapItems();
+      this.setState({ countries: initialMapItems });
+    } catch (error) {
       console.log(error);
-    });
+    }
   }
 
   // Update the state for a new country
@@ -48,9 +35,8 @@ export default class Covid19 extends React.Component {
     this.setState({ selectedCountry: iso_code });
   }
 
-  // This runs when the component is rendered
+  // This is evaluated whenever the component is rendered
   render() {
-    const legendItemsReverse = [...legendItems].reverse();
     return (
       <div>
         {this.state.countries.length === 0 ? (
@@ -65,7 +51,7 @@ export default class Covid19 extends React.Component {
                 />
               </Col>
               <Col style={{ padding: "0px" }}>
-                <Legend legendItems={legendItemsReverse} />
+                <Legend />
               </Col>
             </Row>
             <Row>
