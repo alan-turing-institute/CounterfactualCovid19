@@ -1,0 +1,9 @@
+# External node dependencies
+frontend/node_modules
+
+# Files covered by other linters
+*.py
+*.md
+
+# Files that must not be changed during CI
+.github/workflows

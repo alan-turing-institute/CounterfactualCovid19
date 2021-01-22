@@ -29,11 +29,11 @@ const Covid19 = () => {
       {countries.length === 0 ? (
         <Loading />
       ) : (
-          <div>
-            <CovidMap countries={countries} />
-            <Legend legendItems={legendItemsReverse} />
-          </div>
-        )}
+        <div>
+          <CovidMap countries={countries} />
+          <Legend legendItems={legendItemsReverse} />
+        </div>
+      )}
     </div>
   );
 };
