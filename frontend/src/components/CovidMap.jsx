@@ -3,7 +3,7 @@ import { MapContainer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./CovidMap.css";
 
-const CovidMap = ({ countries }) => {
+const CovidMap = ({ countries, onCountrySelect }) => {
   const mapStyle = {
     fillColor: "white",
     weight: 1,
@@ -16,6 +16,9 @@ const CovidMap = ({ countries }) => {
     const name = country.properties.name;
     const confirmedText = country.properties.confirmedText;
     layer.bindPopup(`${name} ${confirmedText}`);
+    layer.on("click", function (e) {
+      onCountrySelect(e.target.feature.properties.iso_code);
+    });
   };
 
   return (
