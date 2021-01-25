@@ -14,7 +14,7 @@ class LoadTotalCasesTask {
 
   #getTotalCases = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/cases", {});
+      const res = await axios.get("http://localhost:8000/api/cases/total", {});
       return res.data;
     } catch (error) {
       console.log(error);
