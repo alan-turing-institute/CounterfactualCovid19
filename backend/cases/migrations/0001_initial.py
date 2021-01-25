@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Cases",
+            name="TotalCases",
             fields=[
                 (
                     "id",
@@ -22,9 +22,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("country", models.CharField(max_length=255)),
                 ("iso_code", models.CharField(max_length=3)),
-                ("date", models.DateField()),
                 ("cumulative_cases", models.PositiveIntegerField()),
                 ("population", models.PositiveIntegerField()),
             ],

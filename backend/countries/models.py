@@ -9,5 +9,5 @@ class Country(models.Model):
     iso_code = models.CharField(max_length=3)
     geometry = MultiPolygonField()
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.name} ({self.iso_code}): {self.geometry}"

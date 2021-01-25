@@ -2,12 +2,20 @@
 from django.db import models
 
 
-class Cases(models.Model):
-    country = models.CharField(max_length=255)
+class TotalCases(models.Model):
     iso_code = models.CharField(max_length=3)
-    date = models.DateField()
     cumulative_cases = models.PositiveIntegerField()
     population = models.PositiveIntegerField()
 
-    def _str_(self):
-        return f"{self.country} ({self.iso_code}) [{self.date}] => {self.cumulative_cases} ({self.population})"
+    def __str__(self):
+        return f"({self.iso_code}) => {self.cumulative_cases} ({self.population})"
+
+
+class TimeSeriesCases(models.Model):
+    iso_code = models.CharField(max_length=3)
+    date = models.DateField()
+    daily_cases = models.FloatField()
+    daily_cum_cases = models.FloatField()
+
+    def __str__(self):
+        return f"({self.iso_code}) [{self.date}] => {self.daily_cases} ({self.daily_cum_cases})"
