@@ -1,7 +1,9 @@
 # CounterfactualCovid19 frontend
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Prerequisites
+
 You will need to install the following dependencies in order to run this app:
 
 - [Node](#node)

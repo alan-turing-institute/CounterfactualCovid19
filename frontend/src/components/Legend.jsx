@@ -1,14 +1,17 @@
-import React from "react";
+import legendItems from "../entities/LegendItems";
 
-const Legend = ({ legendItems }) => {
+const Legend = () => {
+  const legendItemsReverse = [...legendItems].reverse();
   return (
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "stretch",
+        height: "100%",
       }}
     >
-      {legendItems.map((item) => (
+      {legendItemsReverse.map((item) => (
         <div
           key={item.title}
           style={{
@@ -20,7 +23,6 @@ const Legend = ({ legendItems }) => {
             color: item.textColor != null ? item.textColor : "black",
             fontWeight: "bolder",
             fontSize: "1em",
-            height: "10vh",
           }}
         >
           <span>{item.title}</span>
