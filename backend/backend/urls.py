@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from countries.views import CountryView
-from cases.views import TotalCasesView, TimeSeriesCasesView
+from cases.views import TotalCasesView, TimeSeriesCasesView, TaskViewSet
 
 router = routers.DefaultRouter()
 router.register("countries", CountryView)
 router.register("cases/total", TotalCasesView)
 router.register("cases/timeseries", TimeSeriesCasesView)
+router.register("cases/task", TaskViewSet, basename='task')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
