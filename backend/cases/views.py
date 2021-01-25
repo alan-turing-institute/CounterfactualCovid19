@@ -8,6 +8,7 @@ class TotalCasesView(viewsets.ModelViewSet):
     queryset = TotalCases.objects.all()
     http_method_names = ["get", "list"]
 
+
 # Create your views here.
 class TimeSeriesCasesView(viewsets.ModelViewSet):
     serializer_class = TimeSeriesCasesSerializer
