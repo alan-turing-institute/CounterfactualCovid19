@@ -9,8 +9,6 @@ class TotalCasesSerializer(ModelSerializer):
 
 
 class TimeSeriesCasesSerializer(ModelSerializer):
-
     class Meta:
         model = TimeSeriesCases
         fields = ("iso_code", "daily_cases", "daily_cum_cases", "date")
-

@@ -19,7 +19,6 @@ def run():
 
     df_cases_end_date = df_cases_begin_date[df_cases_begin_date["Date"] < end_date]
 
-
     # Delete all existing TimeSeriesCases data and regenerate the table
     TimeSeriesCases.objects.all().delete()
     for entry in df_cases_end_date.itertuples():
@@ -33,7 +32,6 @@ def run():
                 daily_cases=entry.Daily_cases_MA7,
                 daily_cum_cases=entry.Cumulative_cases_end_MA7,
                 date=entry.Date,
-
             )
             m.save()
         except AttributeError:

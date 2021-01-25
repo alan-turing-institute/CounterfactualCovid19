@@ -11,7 +11,6 @@ class TotalCases(models.Model):
         return f"({self.iso_code}) => {self.cumulative_cases} ({self.population})"
 
 
-
 class TimeSeriesCases(models.Model):
     iso_code = models.CharField(max_length=3)
     date = models.DateField()
