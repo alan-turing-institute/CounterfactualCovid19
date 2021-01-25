@@ -2,7 +2,7 @@
 import csv
 import pandas as pd
 import pycountry
-from cases.models import Cases
+from cases.models import TotalCases
 
 
 def run():
@@ -21,8 +21,8 @@ def run():
     # Load population data in 2019 from the world bank
     df_pop = pd.read_csv(url_population)
 
-    # Delete all existing Cases data and regenerate the table
-    Cases.objects.all().delete()
+    # Delete all existing TotalCases data and regenerate the table
+    TotalCases.objects.all().delete()
     for entry in df_cases_end_date.itertuples():
         try:
             code_country = pycountry.countries.get(name=entry.Country)
@@ -33,10 +33,8 @@ def run():
                 "Population"
             ].values[0]
 
-            m = Cases(
-                country=code_country.name,
+            m = TotalCases(
                 iso_code=code_country.alpha_3,
-                date=end_date,
                 cumulative_cases=entry.Cumulative_cases_end,
                 population=population,
             )
