@@ -2,8 +2,9 @@ from .serializers import (
     TotalCasesSerializer,
     TimeSeriesCasesSerializer,
     DailyCounterfactualCasesSerializer,
+    DailyCasesSerializer,
 )
-from .models import TotalCases, TimeSeriesCases, DailyCounterfactualCases
+from .models import CasesRecord, TotalCases, TimeSeriesCases, DailyCounterfactualCases
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 
@@ -34,3 +35,11 @@ class DailyCounterfactualCasesView(viewsets.ViewSet):
         records = DailyCounterfactualCases.simulate_counterfactual_records()
         serializer = DailyCounterfactualCasesSerializer(instance=records, many=True)
         return Response(serializer.data)
+
+
+class DailyCasesView(viewsets.ModelViewSet):
+    """Daily numbers of cases"""
+
+    serializer_class = DailyCasesSerializer
+    queryset = CasesRecord.objects.all()
+    http_method_names = ["get", "head", "list", "options"]

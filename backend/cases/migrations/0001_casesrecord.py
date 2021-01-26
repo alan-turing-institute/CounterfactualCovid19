@@ -6,7 +6,11 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = []
+    initial = True
+
+    dependencies = [
+        ("countries", "0001_country"),
+    ]
 
     operations = [
         migrations.CreateModel(
@@ -24,7 +28,7 @@ class Migration(migrations.Migration):
                 ("date", models.DateField()),
                 ("cases", models.FloatField()),
                 (
-                    "iso_code",
+                    "country",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="countries.country",
@@ -32,7 +36,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "unique_together": {("iso_code", "date")},
+                "unique_together": {("country", "date")},
             },
         ),
     ]

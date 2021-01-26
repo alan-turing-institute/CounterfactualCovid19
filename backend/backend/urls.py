@@ -21,6 +21,7 @@ from cases.views import (
     TotalCasesView,
     TimeSeriesCasesView,
     DailyCounterfactualCasesView,
+    DailyCasesView,
 )
 
 router = routers.DefaultRouter()
@@ -32,6 +33,8 @@ router.register(
     DailyCounterfactualCasesView,
     basename="daily_counterfactuals",
 )
+router.register("cases/daily", DailyCasesView)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),

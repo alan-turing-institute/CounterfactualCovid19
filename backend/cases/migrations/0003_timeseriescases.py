@@ -5,7 +5,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = []
+    dependencies = [
+        ("cases", "0002_totalcases"),
+    ]
 
     operations = [
         migrations.CreateModel(

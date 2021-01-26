@@ -7,4 +7,4 @@ class CountrySerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Country
         geo_field = "geometry"
-        fields = ("name", "iso_code")
+        fields = ("name", "population")
