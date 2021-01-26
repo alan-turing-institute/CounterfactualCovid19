@@ -13,7 +13,11 @@ export default class MainGrid extends React.Component {
     super(props);
 
     // Initialize state first
-    this.state = { countries: [], selectedCountry: null, selectedCaseNumber: null };
+    this.state = {
+      countries: [],
+      selectedCountry: null,
+      selectedCaseNumber: null,
+    };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
     this.handleCountryChange = this.handleCountryChange.bind(this);
@@ -34,7 +38,6 @@ export default class MainGrid extends React.Component {
     console.log(`Selected country is ${iso_code}`);
     this.setState({ selectedCountry: iso_code });
     this.setState({ selectedCaseNumber: selectedCaseNumber });
-
   }
 
   // This is evaluated whenever the component is rendered
@@ -58,7 +61,10 @@ export default class MainGrid extends React.Component {
             </Row>
             <Row>
               <Col>
-                <Histogram selectedCountry={this.state.selectedCountry} selectedCaseNumber={this.state.selectedCaseNumber}/>
+                <Histogram
+                  selectedCountry={this.state.selectedCountry}
+                  selectedCaseNumber={this.state.selectedCaseNumber}
+                />
               </Col>
             </Row>
           </Container>

@@ -15,7 +15,6 @@
     "react-leaflet": "^3.0.5",
     "react-scripts": "^4.0.1",
     "recharts": "^2.0.3"
-
   },
   "scripts": {
     "predeploy": "npm run build",
