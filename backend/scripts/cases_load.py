@@ -14,6 +14,7 @@ def run():
 
     # Load all cases then filter by date
     df_cases = pd.read_csv(url_cases, parse_dates=["Date"])
+    df_cases = df_cases[df_cases["Country"] == "Albania"]
 
     # Delete all existing CasesRecord data and regenerate the table
     CasesRecord.objects.all().delete()
