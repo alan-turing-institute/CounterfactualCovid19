@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import TotalCases, TimeSeriesCases
+from ..models import TotalCases, TimeSeriesCases
 
 
 class TotalCasesSerializer(ModelSerializer):
