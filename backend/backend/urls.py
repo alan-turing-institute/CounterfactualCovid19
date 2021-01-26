@@ -20,7 +20,7 @@ from countries.views import CountryView
 from cases.views import (
     TotalCasesView,
     TimeSeriesCasesView,
-    DailyCounterfactualCasesViewSet,
+    DailyCounterfactualCasesView,
 )
 
 router = routers.DefaultRouter()
@@ -29,7 +29,7 @@ router.register("cases/total", TotalCasesView)
 router.register("cases/timeseries", TimeSeriesCasesView)
 router.register(
     "cases/daily_counterfactuals",
-    DailyCounterfactualCasesViewSet,
+    DailyCounterfactualCasesView,
     basename="daily_counterfactuals",
 )
 

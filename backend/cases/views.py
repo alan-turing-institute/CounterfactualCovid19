@@ -24,7 +24,7 @@ class TimeSeriesCasesView(viewsets.ModelViewSet):
     http_method_names = ["get", "head", "list", "options"]
 
 
-class DailyCounterfactualCasesViewSet(viewsets.ViewSet):
+class DailyCounterfactualCasesView(viewsets.ViewSet):
     """Counterfactual daily and cumulative cases on a date"""
 
     serializer_class = DailyCounterfactualCasesSerializer
