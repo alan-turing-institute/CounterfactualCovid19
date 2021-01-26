@@ -18,20 +18,16 @@ from django.urls import include, path
 from rest_framework import routers
 from countries.views import CountryView
 from cases.views import (
-    TotalCasesView,
-    TimeSeriesCasesView,
     DailyCounterfactualCasesView,
     DailyCasesView,
 )
 
 router = routers.DefaultRouter()
 router.register("countries", CountryView)
-router.register("cases/total", TotalCasesView)
-router.register("cases/timeseries", TimeSeriesCasesView)
 router.register(
-    "cases/daily_counterfactuals",
+    "cases/daily/counterfactual",
     DailyCounterfactualCasesView,
-    basename="daily_counterfactuals",
+    basename="daily_counterfactual",
 )
 router.register("cases/daily", DailyCasesView)
 

@@ -2,19 +2,21 @@
 import csv
 import pandas as pd
 import pycountry
+from time import monotonic
 from cases.models import CasesRecord
 from countries.models import Country
 from django.core.exceptions import ObjectDoesNotExist
 
 
 def run():
+    print("Starting to load cases data...")
+    start = monotonic()
 
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
     url_cases = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Data/Formatted/Cases_deaths_data_europe.csv"
 
     # Load all cases then filter by date
     df_cases = pd.read_csv(url_cases, parse_dates=["Date"])
-    df_cases = df_cases[df_cases["Country"] == "Albania"]
 
     # Delete all existing CasesRecord data and regenerate the table
     CasesRecord.objects.all().delete()
@@ -38,3 +40,5 @@ def run():
 
         except AttributeError:
             continue
+
+    print(f"Finished loading cases data after {monotonic() - start:.2f} seconds")

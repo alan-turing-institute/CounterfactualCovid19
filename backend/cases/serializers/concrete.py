@@ -1,18 +1,6 @@
 from rest_framework import serializers
-from ..models import CasesRecord, TotalCases, TimeSeriesCases
+from ..models import CasesRecord
 from countries.models import Country
-
-
-class TotalCasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TotalCases
-        fields = ("iso_code", "cumulative_cases", "population")
-
-
-class TimeSeriesCasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeSeriesCases
-        fields = ("iso_code", "daily_cases", "daily_cum_cases", "date")
 
 
 class DailyCasesSerializer(serializers.ModelSerializer):
@@ -36,4 +24,12 @@ class DailyCasesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CasesRecord
-        fields = ("iso_code", "date", "cases", "population", "cumulative_cases", "cases_per_million", "cumulative_cases_per_million")
+        fields = (
+            "iso_code",
+            "date",
+            "cases",
+            "population",
+            "cumulative_cases",
+            "cases_per_million",
+            "cumulative_cases_per_million",
+        )

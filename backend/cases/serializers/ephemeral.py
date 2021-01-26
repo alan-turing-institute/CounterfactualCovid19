@@ -1,18 +1,23 @@
-# from django.db import models
 from rest_framework import serializers
-from ..models import DailyCounterfactualCases
+from ..models import CounterfactualCasesRecord
+from countries.models import Country
 
 
 class DailyCounterfactualCasesSerializer(serializers.Serializer):
     iso_code = serializers.CharField(max_length=3)
     date = serializers.DateField()
+    population = serializers.IntegerField()
     cases = serializers.FloatField()
     cumulative_cases = serializers.FloatField()
+    cases_per_million = serializers.SerializerMethodField()
+    cumulative_cases_per_million = serializers.SerializerMethodField()
 
-    def create(self, validated_data):
-        return DailyCounterfactualCases(**validated_data)
+    def get_cases_per_million(self, entry):
+        if entry["population"] and entry["population"] != 0:
+            return 1e6 * entry["cases"] / entry["population"]
+        return 0
 
-    def update(self, instance, validated_data):
-        for field, value in validated_data.items():
-            setattr(instance, field, value)
-        return instance
+    def get_cumulative_cases_per_million(self, entry):
+        if entry["population"] and entry["population"] != 0:
+            return 1e6 * entry["cumulative_cases"] / entry["population"]
+        return 0
