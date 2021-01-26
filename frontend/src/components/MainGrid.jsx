@@ -13,7 +13,7 @@ export default class MainGrid extends React.Component {
     super(props);
 
     // Initialize state first
-    this.state = { countries: [], selectedCountry: null, selectedCaseNumber: null };
+    this.state = { countries: [], selectedCountry: null, selectedCaseNumber: null, sizeMapComponent:"90vh"};
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
     this.handleCountryChange = this.handleCountryChange.bind(this);
@@ -34,6 +34,7 @@ export default class MainGrid extends React.Component {
     console.log(`Selected country is ${iso_code}`);
     this.setState({ selectedCountry: iso_code });
     this.setState({ selectedCaseNumber: selectedCaseNumber });
+    this.setState({sizeMapComponent: "65vh"})
 
   }
 
@@ -45,7 +46,7 @@ export default class MainGrid extends React.Component {
           <Loading />
         ) : (
           <Container fluid>
-            <Row style={{ height: "80vh" }}>
+            <Row style={{ height: this.state.sizeMapComponent }}>
               <Col xs={10} style={{ padding: "0px" }}>
                 <WorldMap
                   countries={this.state.countries}
