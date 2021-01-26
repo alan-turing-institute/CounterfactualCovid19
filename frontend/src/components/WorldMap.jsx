@@ -21,7 +21,7 @@ const WorldMap = ({ countries, onCountrySelect }) => {
   };
 
   return (
-    <MapContainer style={{ height: "100%" }} zoom={2} center={[20, 60]}>
+    <MapContainer style={{ height: "100%" }} zoom={3.5} center={[50, 35]}>
       <GeoJSON
         style={mapStyle}
         data={countries}
