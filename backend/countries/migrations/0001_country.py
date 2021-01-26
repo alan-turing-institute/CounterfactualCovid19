@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                     models.CharField(max_length=3, primary_key=True, serialize=False),
                 ),
                 ("name", models.CharField(max_length=255)),
-                ("population", models.PositiveIntegerField()),
+                ("population", models.PositiveIntegerField(null=True)),
                 (
                     "geometry",
                     django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),

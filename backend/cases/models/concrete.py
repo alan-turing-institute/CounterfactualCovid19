@@ -1,5 +1,6 @@
 """Countries model"""
 from django.db import models
+from countries.models import Country
 
 
 class TotalCases(models.Model):
@@ -19,3 +20,16 @@ class TimeSeriesCases(models.Model):
 
     def __str__(self):
         return f"({self.iso_code}) [{self.date}] => {self.daily_cases} ({self.daily_cum_cases})"
+
+
+class CasesRecord(models.Model):
+    class Meta:
+        # As Django does not support compount keys we explicitly require uniqueness
+        unique_together = (("iso_code", "date"),)
+
+    iso_code = models.ForeignKey(Country, on_delete=models.CASCADE)
+    date = models.DateField()
+    cases = models.FloatField()
+
+    def __str__(self):
+        return f"{self.iso_code} had {self.cases} on {self.date}"
