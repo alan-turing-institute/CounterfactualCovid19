@@ -10,11 +10,9 @@ class DailyCounterfactualCasesSerializer(serializers.Serializer):
     cumulative_cases = serializers.FloatField()
 
     def create(self, validated_data):
-        print("calling create:", validated_data)
         return DailyCounterfactualCases(**validated_data)
 
     def update(self, instance, validated_data):
-        print("calling update:", instance, validated_data)
         for field, value in validated_data.items():
             setattr(instance, field, value)
         return instance

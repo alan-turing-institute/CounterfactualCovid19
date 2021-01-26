@@ -31,7 +31,6 @@ class DailyCounterfactualCasesViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """Response to a GET/LIST request"""
-        print("request", type(request), request)
         records = DailyCounterfactualCases.simulate_counterfactual_records()
         serializer = DailyCounterfactualCasesSerializer(instance=records, many=True)
         return Response(serializer.data)
