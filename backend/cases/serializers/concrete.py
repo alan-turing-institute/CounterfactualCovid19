@@ -5,9 +5,6 @@ from countries.models import Country
 
 class DailyCasesSerializer(serializers.ModelSerializer):
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
-    population = serializers.SlugRelatedField(
-        slug_field="population", source="country", read_only=True
-    )
     cumulative_cases = serializers.FloatField()
     cases_per_million = serializers.SerializerMethodField()
     cumulative_cases_per_million = serializers.SerializerMethodField()
@@ -28,7 +25,6 @@ class DailyCasesSerializer(serializers.ModelSerializer):
             "iso_code",
             "date",
             "cases",
-            "population",
             "cumulative_cases",
             "cases_per_million",
             "cumulative_cases_per_million",

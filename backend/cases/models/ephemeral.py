@@ -44,9 +44,9 @@ class CounterfactualCasesRecord:
     @staticmethod
     def add_cumulative(df_country_data):
         """Counterfactual simulation for a single country"""
-        df_country_data.sort_values(by=["date"], inplace=True)
-        df_country_data["cumulative_cases"] = df_country_data["cases"].cumsum()
-        return df_country_data
+        df_out = df_country_data.sort_values(by=["date"])
+        df_out["cumulative_cases"] = df_out["cases"].cumsum()
+        return df_out
 
     @staticmethod
     def simulate_single_country(df_country_data):
