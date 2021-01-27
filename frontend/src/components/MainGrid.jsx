@@ -68,7 +68,7 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
-            <Row style={{ height: 1-this.state.sizeMapComponent }}>
+            <Row style={{ height: 1 - this.state.sizeMapComponent }}>
               <Col>
                 <Histogram
                   selectedCountry={this.state.selectedCountry}

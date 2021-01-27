@@ -174,7 +174,7 @@ export default class Histogram extends React.Component {
         ) : (
           <Container fluid>
             <Row>
-              <Col style={{ width:"33vw"}}>
+              <Col style={{ width: "33vw" }}>
                 <Card
                   style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
                   bg={"light"}
@@ -187,7 +187,7 @@ export default class Histogram extends React.Component {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col style={{ width:"33vw"}}>
+              <Col style={{ width: "33vw" }}>
                 <ComposedChart
                   width={500}
                   height={350}
@@ -213,13 +213,14 @@ export default class Histogram extends React.Component {
                   />
                 </ComposedChart>
               </Col>
-              <Col style={{ width:"33vw"}}>
-              <Card
+              <Col style={{ width: "33vw" }}>
+                <Card
                   style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
-                  bg={"light"}>
-                    <Card.Text>
+                  bg={"light"}
+                >
+                  <Card.Text>
                     Any other data/information we might want to add in here.
-                    </Card.Text>
+                  </Card.Text>
                 </Card>
               </Col>
             </Row>
