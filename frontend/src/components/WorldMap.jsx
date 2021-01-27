@@ -16,7 +16,10 @@ const WorldMap = ({ countries, onCountrySelect }) => {
     const confirmedText = country.properties.confirmedText;
     layer.bindPopup(`${name} ${confirmedText}`);
     layer.on("click", function (e) {
-      onCountrySelect(e.target.feature.properties.name, e.target.feature.properties.confirmedText);
+      onCountrySelect(
+        e.target.feature.properties.name,
+        e.target.feature.properties.confirmedText
+      );
     });
   };
 

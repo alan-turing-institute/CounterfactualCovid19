@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import {
-  Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Area, Bar,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
 
@@ -52,7 +52,7 @@ export default class Histogram extends React.Component {
         </Card.Text>
       </Card.Body>
       </Card>
-        ) 
+        )
         : (
           <Container fluid>
           <Row>
@@ -90,7 +90,7 @@ export default class Histogram extends React.Component {
       Any other data/information we might want to add in here.
       </Col>
       </Row>
-      </Container>  
+      </Container>
   )}
   </div>
     );
