@@ -1,5 +1,6 @@
 from .concrete import CasesRecord
 import pandas as pd
+from datetime import date
 
 
 class CounterfactualCasesRecord:
@@ -10,7 +11,7 @@ class CounterfactualCasesRecord:
         self.cumulative_cases = cumulative_cases
 
     @staticmethod
-    def simulate_counterfactual_records(iso_codes=[]):
+    def simulate_counterfactual_records(iso_codes, start_date, end_date):
         """List of dicts containing counterfactual simulations for one or more countries"""
         # Load data from database
         df_data = pd.DataFrame.from_records(
@@ -26,6 +27,11 @@ class CounterfactualCasesRecord:
                 "country__population": "population",
             }
         )
+        # Filter by date if requested
+        if start_date:
+            df_data = df_data[df_data["date"] >= date.fromisoformat(start_date)]
+        if end_date:
+            df_data = df_data[df_data["date"] < date.fromisoformat(end_date)]
         # Use all countries if none are provided
         if not iso_codes:
             iso_codes = df_data.iso_code.unique()
