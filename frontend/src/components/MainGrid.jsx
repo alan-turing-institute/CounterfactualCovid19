@@ -38,8 +38,7 @@ export default class MainGrid extends React.Component {
     console.log(`Selected country is ${iso_code}`);
     this.setState({ selectedCountry: iso_code });
     this.setState({ selectedCaseNumber: selectedCaseNumber });
-    this.setState({sizeMapComponent: "65vh"})
-
+    this.setState({ sizeMapComponent: "65vh" });
   }
 
   // This is evaluated whenever the component is rendered
