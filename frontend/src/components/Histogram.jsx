@@ -1,8 +1,14 @@
 import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import {
-  Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Area, Bar,
-} from 'recharts';
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 const data1 = [
   {
@@ -73,20 +79,67 @@ const data2 = [
 export default class Histogram extends React.Component {
   render() {
     return (
-    <div>
-      {!this.props.selectedCountry ? (
-        <Card bg={"dark"}
-              style={{marginTop: 5, marginBottom: 5}}
-              text={'light'}>
-          <Card.Body>
-          <Card.Text>
-          Select a country
-        </Card.Text>
-      </Card.Body>
-      </Card>
-        )
-        : (
+      <div>
+        {!this.props.selectedCountry ? (
+          <Card
+            bg={"dark"}
+            style={{ marginTop: 5, marginBottom: 5 }}
+            text={"light"}
+          >
+            <Card.Body>
+              <Card.Text>Select a country</Card.Text>
+            </Card.Body>
+          </Card>
+        ) : (
           <Container fluid>
+            <Row>
+              <Col xs={100}>
+                <Card
+                  style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
+                  bg={"light"}
+                >
+                  <Card.Body>
+                    <Card.Title>{`${this.props.selectedCountry}`}</Card.Title>
+                    <Card.Text>
+                      {`Total Cases per Million: ${this.props.selectedCaseNumber}`}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col>
+                <ComposedChart
+                  width={700}
+                  height={350}
+                  data={data}
+                  margin={{
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 100,
+                  }}
+                >
+                  <CartesianGrid stroke="#f5f5f5" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="amt"
+                    fill="#8884d8"
+                    stroke="#8884d8"
+                  />
+                  <Bar data={data2} dataKey="amt" fill="#413ea0" />
+                  <Line type="monotone" dataKey="amt" stroke="#ff7300" />
+                </ComposedChart>
+              </Col>
+              <Col>
+                Any other data/information we might want to add in here.
+              </Col>
+            </Row>
+          </Container>
+        )}
+      </div>
           <Row>
           <Col xs={100}>
           <Card style={{ width: '18rem' , marginTop: 50, marginBottom: 50}}
