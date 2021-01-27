@@ -17,7 +17,7 @@ export default class MainGrid extends React.Component {
       countries: [],
       selectedCountry: null,
       selectedCaseNumber: null,
-      sizeMapComponent: "85vh",
+      sizeMapComponent: "90vh",
     };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
@@ -41,7 +41,7 @@ export default class MainGrid extends React.Component {
     if (iso_code === this.state.selectedCountry) {
       this.setState({ selectedCountry: null });
       this.setState({ selectedCaseNumber: null });
-      this.setState({ sizeMapComponent: "85vh" });
+      this.setState({ sizeMapComponent: "90vh" });
     } else {
       this.setState({ selectedCountry: iso_code });
       this.setState({ selectedCaseNumber: selectedCaseNumber });
@@ -68,7 +68,7 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
-            <Row>
+            <Row style={{ height: 1-this.state.sizeMapComponent }}>
               <Col>
                 <Histogram
                   selectedCountry={this.state.selectedCountry}

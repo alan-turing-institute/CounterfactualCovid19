@@ -174,7 +174,7 @@ export default class Histogram extends React.Component {
         ) : (
           <Container fluid>
             <Row>
-              <Col xs={100}>
+              <Col style={{ width:"33vw"}}>
                 <Card
                   style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
                   bg={"light"}
@@ -187,16 +187,16 @@ export default class Histogram extends React.Component {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col>
+              <Col style={{ width:"33vw"}}>
                 <ComposedChart
-                  width={700}
+                  width={500}
                   height={350}
                   data={data}
                   margin={{
                     top: 20,
                     right: 20,
                     bottom: 20,
-                    left: 100,
+                    left: 20,
                   }}
                 >
                   <CartesianGrid stroke="#f5f5f5" />
@@ -213,8 +213,14 @@ export default class Histogram extends React.Component {
                   />
                 </ComposedChart>
               </Col>
-              <Col>
-                Any other data/information we might want to add in here.
+              <Col style={{ width:"33vw"}}>
+              <Card
+                  style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
+                  bg={"light"}>
+                    <Card.Text>
+                    Any other data/information we might want to add in here.
+                    </Card.Text>
+                </Card>
               </Col>
             </Row>
           </Container>
