@@ -3,11 +3,16 @@ from ..models import CounterfactualCasesRecord
 from countries.models import Country
 
 
-class DailyCounterfactualCasesSerializer(serializers.Serializer):
+class CasesCounterfactualDailyAbsoluteSerializer(serializers.Serializer):
     iso_code = serializers.CharField(max_length=3)
     date = serializers.DateField()
     cases = serializers.FloatField()
     cumulative_cases = serializers.FloatField()
+
+
+class CasesCounterfactualDailyNormalisedSerializer(serializers.Serializer):
+    iso_code = serializers.CharField(max_length=3)
+    date = serializers.DateField()
     cases_per_million = serializers.SerializerMethodField()
     cumulative_cases_per_million = serializers.SerializerMethodField()
 
