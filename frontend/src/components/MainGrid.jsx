@@ -13,7 +13,12 @@ export default class MainGrid extends React.Component {
     super(props);
 
     // Initialize state first
-    this.state = { countries: [], selectedCountry: null };
+    this.state = {
+      countries: [],
+      selectedCountry: null,
+      currentTotalCases: null,
+      sizeMapComponent: "90vh",
+    };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
     this.handleCountryChange = this.handleCountryChange.bind(this);
@@ -30,9 +35,18 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code) {
+  handleCountryChange(iso_code, currentTotalCases) {
     console.log(`Selected country is ${iso_code}`);
-    this.setState({ selectedCountry: iso_code });
+
+    if (iso_code === this.state.selectedCountry) {
+      this.setState({ selectedCountry: null });
+      this.setState({ currentTotalCases: null });
+      this.setState({ sizeMapComponent: "90vh" });
+    } else {
+      this.setState({ selectedCountry: iso_code });
+      this.setState({ currentTotalCases: currentTotalCases });
+      this.setState({ sizeMapComponent: "65vh" });
+    }
   }
 
   // This is evaluated whenever the component is rendered
@@ -43,7 +57,7 @@ export default class MainGrid extends React.Component {
           <Loading />
         ) : (
           <Container fluid>
-            <Row style={{ height: "80vh" }}>
+            <Row style={{ height: this.state.sizeMapComponent }}>
               <Col xs={10} style={{ padding: "0px" }}>
                 <WorldMap
                   countries={this.state.countries}
@@ -54,9 +68,12 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
-            <Row>
+            <Row style={{ height: 1 - this.state.sizeMapComponent }}>
               <Col>
-                <Histogram selectedCountry={this.state.selectedCountry} />
+                <Histogram
+                  selectedCountry={this.state.selectedCountry}
+                  currentTotalCases={this.state.currentTotalCases}
+                />
               </Col>
             </Row>
           </Container>
