@@ -16,7 +16,7 @@ export default class MainGrid extends React.Component {
     this.state = {
       countries: [],
       selectedCountry: null,
-      selectedCaseNumber: null,
+      currentTotalCases: null,
       sizeMapComponent: "90vh",
     };
 
@@ -35,16 +35,16 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code, selectedCaseNumber) {
+  handleCountryChange(iso_code, currentTotalCases) {
     console.log(`Selected country is ${iso_code}`);
 
     if (iso_code === this.state.selectedCountry) {
       this.setState({ selectedCountry: null });
-      this.setState({ selectedCaseNumber: null });
+      this.setState({ currentTotalCases: null });
       this.setState({ sizeMapComponent: "90vh" });
     } else {
       this.setState({ selectedCountry: iso_code });
-      this.setState({ selectedCaseNumber: selectedCaseNumber });
+      this.setState({ currentTotalCases: currentTotalCases });
       this.setState({ sizeMapComponent: "65vh" });
     }
   }
@@ -72,7 +72,7 @@ export default class MainGrid extends React.Component {
               <Col>
                 <Histogram
                   selectedCountry={this.state.selectedCountry}
-                  selectedCaseNumber={this.state.selectedCaseNumber}
+                  currentTotalCases={this.state.currentTotalCases}
                 />
               </Col>
             </Row>
