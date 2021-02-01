@@ -69,8 +69,8 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
     serializer_class = CasesCounterfactualIntegratedSerializer
 
     def simulate(self, iso_codes, start_date, end_date):
-        return CounterfactualCasesRecord.simulate_counterfactual_summary_records(
-            iso_codes, start_date, end_date
+        return CounterfactualCasesRecord.simulate_counterfactual_records(
+            iso_codes, start_date, end_date, summary=True
         )
 
 

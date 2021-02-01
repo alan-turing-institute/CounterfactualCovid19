@@ -12,14 +12,10 @@ const WorldMap = ({ countries, onCountrySelect }) => {
 
   const onEachCountry = (country, layer) => {
     layer.options.fillColor = country.properties.color;
-    const name = country.properties.name;
-    const totalCasesPerMillionText =
-      country.properties.totalCasesPerMillionText;
-    layer.bindPopup(`${name} ${totalCasesPerMillionText}`);
     layer.on("click", function (e) {
       onCountrySelect(
         e.target.feature.id,
-        e.target.feature.properties.totalCasesPerMillionText
+        e.target.feature.properties.summedAvgCasesPerMillion
       );
     });
   };

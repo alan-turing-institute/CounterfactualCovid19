@@ -10,98 +10,48 @@ import {
   ComposedChart,
   Bar,
 } from "recharts";
-
-const cases_real = [
-  {
-    date: "2020-03-01",
-    cases_weekly_avg: 590,
-  },
-  {
-    date: "2020-03-02",
-    cases_weekly_avg: 868,
-  },
-  {
-    date: "2020-03-03",
-    cases_weekly_avg: 1397,
-  },
-  {
-    date: "2020-03-04",
-    cases_weekly_avg: 1480,
-  },
-  {
-    date: "2020-03-05",
-    cases_weekly_avg: 1520,
-  },
-  {
-    date: "2020-03-06",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-07",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-08",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-09",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-10",
-    cases_weekly_avg: 1400,
-  },
-];
-
-const cases_counterfactual = [
-  {
-    date: "2020-03-01",
-    cases_weekly_avg: 590,
-  },
-  {
-    date: "2020-03-02",
-    cases_weekly_avg: 868,
-  },
-  {
-    date: "2020-03-03",
-    cases_weekly_avg: 1397,
-  },
-  {
-    date: "2020-03-04",
-    cases_weekly_avg: 1480,
-  },
-  {
-    date: "2020-03-05",
-    cases_weekly_avg: 1520,
-  },
-  {
-    date: "2020-03-06",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-07",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-08",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-09",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-10",
-    cases_weekly_avg: 1400,
-  },
-];
+import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 
 export default class Histogram extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // Add component-level state
+    this.state = {
+      casesData: [],
+    };
+  }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (this.props.isoCode !== prevProps.isoCode) {
+      // Retrieve real and counterfactual data in parallel
+      const task = new LoadDailyCasesTask();
+      let [casesReal, casesCounterfactual] = await Promise.all([
+        task.getRealCovidCases(this.props.isoCode),
+        task.getCounterfactualCovidCases(this.props.isoCode),
+      ]);
+      // Combine the two datasets into a single data array
+      let casesData = [];
+      for (let i = 0; i < casesReal.length; i++) {
+        const counterfactual = casesCounterfactual.find(
+          (counterfactual) => counterfactual.date === casesReal[i].date
+        );
+        let record = {
+          date: casesReal[i].date,
+          weekly_avg_real: casesReal[i].weekly_avg_cases_per_million,
+          weekly_avg_counterfactual: counterfactual.weekly_avg_cases_per_million,
+        };
+        casesData.push(record);
+      }
+      // Set the component state to trigger a re-render
+      this.setState({ casesData: casesData });
+    }
+  }
+
   render() {
     return (
       <div>
-        {!this.props.currentIsoCode ? (
+        {!(this.props.isoCode && this.state.casesData.length > 0) ? (
           <Card
             bg={"dark"}
             style={{ marginTop: 5, marginBottom: 5 }}
@@ -120,18 +70,20 @@ export default class Histogram extends React.Component {
                   bg={"light"}
                 >
                   <Card.Body>
-                    <Card.Title>{`${this.props.currentIsoCode}`}</Card.Title>
+                    <Card.Title>{`${this.props.isoCode}`}</Card.Title>
                     <Card.Text>
-                      {`Total Cases per Million: ${this.props.currentTotalCasesText}`}
+                      {`Total Cases per Million: ${this.props.summedAvgCases
+                        .toFixed(2)
+                        .toString()}`}
                     </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
               <Col style={{ width: "33vw" }}>
                 <ComposedChart
+                  data={this.state.casesData}
                   width={500}
                   height={350}
-                  data={cases_real}
                   margin={{
                     top: 20,
                     right: 20,
@@ -144,11 +96,10 @@ export default class Histogram extends React.Component {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="cases_weekly_avg" fill="#413ea0" />
+                  <Bar dataKey="weekly_avg_real" fill="#413ea0" />
                   <Line
-                    data={cases_counterfactual}
                     type="monotone"
-                    dataKey="cases_weekly_avg"
+                    dataKey="weekly_avg_counterfactual"
                     stroke="#ff7300"
                   />
                 </ComposedChart>

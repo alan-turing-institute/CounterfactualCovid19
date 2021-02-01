@@ -12,11 +12,11 @@ export default class MainGrid extends React.Component {
   constructor(props) {
     super(props);
 
-    // Initialize state first
+    // Add component-level state
     this.state = {
       countries: [],
-      currentIsoCode: null,
-      currentTotalCasesText: null,
+      isoCode: null,
+      summedAvgCases: null,
       sizeMapComponent: "90vh",
     };
 
@@ -35,17 +35,20 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code, total_cases_text) {
-    console.log(`Selected country is ${iso_code}`);
-
+  handleCountryChange(iso_code, summed_avg_cases) {
+    console.log(`Setting country of interest to ${iso_code}`);
     if (iso_code === this.state.currentIsoCode) {
-      this.setState({ currentIsoCode: null });
-      this.setState({ currentTotalCasesText: null });
-      this.setState({ sizeMapComponent: "90vh" });
+      this.setState({
+        isoCode: null,
+        summedAvgCases: null,
+        sizeMapComponent: "90vh",
+      });
     } else {
-      this.setState({ currentIsoCode: iso_code });
-      this.setState({ currentTotalCasesText: total_cases_text });
-      this.setState({ sizeMapComponent: "65vh" });
+      this.setState({
+        isoCode: iso_code,
+        summedAvgCases: summed_avg_cases,
+        sizeMapComponent: "65vh",
+      });
     }
   }
 
@@ -71,8 +74,8 @@ export default class MainGrid extends React.Component {
             <Row style={{ flex_grow: 1, flex_shrink: 1, flex_basis: "auto" }}>
               <Col>
                 <Histogram
-                  currentIsoCode={this.state.currentIsoCode}
-                  currentTotalCasesText={this.state.currentTotalCasesText}
+                  isoCode={this.state.isoCode}
+                  summedAvgCases={this.state.summedAvgCases}
                 />
               </Col>
             </Row>

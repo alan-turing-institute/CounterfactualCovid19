@@ -2,17 +2,17 @@ import axios from "axios";
 import legendItems from "../entities/LegendItems";
 
 class LoadTotalCasesTask {
-  decorateCountries = async (countries) => {
+  decorateCountries = async (countryGeoms) => {
     try {
-      const totalCovidCases = await this.#getTotalCovidCases();
-      return this.#processCovidData(countries, totalCovidCases);
+      const integratedCasesData = await this.#getIntegratedCasesData();
+      return this.#processCovidData(countryGeoms, integratedCasesData);
     } catch (error) {
       console.log(error);
       return [];
     }
   };
 
-  #getTotalCovidCases = async () => {
+  #getIntegratedCasesData = async () => {
     try {
       const res = await axios.get(
         "http://localhost:8000/api/cases/real/integrated/?end_date=2020-06-23",
@@ -25,33 +25,29 @@ class LoadTotalCasesTask {
     }
   };
 
-  #processCovidData = (countries, totalCovidCases) => {
-    for (let i = 0; i < countries.length; i++) {
+  #processCovidData = (countryGeoms, integratedCasesData) => {
+    for (let i = 0; i < countryGeoms.length; i++) {
       // Find matching country
-      const country = countries[i];
-      const covidCountry = totalCovidCases.find(
-        (covidCountry) => country.id === covidCountry.iso_code
+      const countryGeom = countryGeoms[i];
+      const countryData = integratedCasesData.find(
+        (countryData) => countryGeom.id === countryData.iso_code
       );
       // Decorate with total cases per million
-      const casesPerMillion = covidCountry
-        ? Number(covidCountry.total_cases_per_million)
+      countryGeom.properties.summedAvgCasesPerMillion = countryData
+        ? Number(countryData.summed_avg_cases_per_million)
         : 0;
-      country.properties.totalCasesPerMillion = casesPerMillion;
-      country.properties.totalCasesPerMillionText = casesPerMillion
-        .toFixed(2)
-        .toString();
       // Set appropriate colour
-      this.#setCountryColour(country);
+      this.#setCountryColour(countryGeom);
     }
-    return countries;
+    return countryGeoms;
   };
 
-  #setCountryColour = (country) => {
+  #setCountryColour = (countryGeom) => {
     const legendItem = legendItems.find((item) =>
-      item.isFor(country.properties.totalCasesPerMillion)
+      item.isFor(countryGeom.properties.summedAvgCasesPerMillion)
     );
     if (legendItem != null) {
-      country.properties.color = legendItem.color;
+      countryGeom.properties.color = legendItem.color;
     }
   };
 }
