@@ -15,7 +15,6 @@ const cases_real = [
   {
     date: "2020-03-01",
     cases_7day_rolling_average: 590,
-
   },
   {
     date: "2020-03-02",
@@ -79,12 +78,10 @@ const cases_counterfactual = [
   {
     date: "2020-03-06",
     cases_7day_rolling_average: 1400,
-
   },
   {
     date: "2020-03-07",
     cases_7day_rolling_average: 1400,
-
   },
   {
     date: "2020-03-08",
@@ -162,7 +159,8 @@ export default class Histogram extends React.Component {
                   bg={"light"}
                 >
                   <Card.Text>
-                    Any other cases_real/information we might want to add in here.
+                    Any other cases_real/information we might want to add in
+                    here.
                   </Card.Text>
                 </Card>
               </Col>
