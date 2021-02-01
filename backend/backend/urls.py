@@ -20,6 +20,7 @@ from countries.views import CountryView
 from cases.views import (
     CasesCounterfactualDailyAbsoluteView,
     CasesCounterfactualDailyNormalisedView,
+    CasesCounterfactualIntegratedView,
     CasesRealDailyAbsoluteView,
     CasesRealDailyNormalisedView,
     CasesRealIntegratedView,
@@ -36,6 +37,11 @@ router.register(
     "cases/counterfactual/daily/normalised",
     CasesCounterfactualDailyNormalisedView,
     basename="counterfactual_daily_normalised",
+)
+router.register(
+    "cases/counterfactual/integrated",
+    CasesCounterfactualIntegratedView,
+    basename="counterfactual_integrated",
 )
 router.register(
     "cases/real/daily/absolute",

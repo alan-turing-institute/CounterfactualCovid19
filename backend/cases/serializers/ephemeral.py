@@ -25,3 +25,18 @@ class CasesCounterfactualDailyNormalisedSerializer(serializers.Serializer):
         if entry["population"] and entry["population"] != 0:
             return 1e6 * entry["cumulative_cases"] / entry["population"]
         return 0
+
+
+class CasesCounterfactualIntegratedSerializer(serializers.Serializer):
+    iso_code = serializers.CharField(max_length=3)
+    date = serializers.DateField()
+    total_cases = serializers.SerializerMethodField()
+    total_cases_per_million = serializers.SerializerMethodField()
+
+    def get_total_cases(self, entry):
+        return entry["cumulative_cases"]
+
+    def get_total_cases_per_million(self, entry):
+        if entry["population"] and entry["population"] != 0:
+            return 1e6 * entry["cumulative_cases"] / entry["population"]
+        return 0

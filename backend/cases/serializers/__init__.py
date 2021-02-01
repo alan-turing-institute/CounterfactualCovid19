@@ -6,4 +6,5 @@ from .concrete import (
 from .ephemeral import (
     CasesCounterfactualDailyAbsoluteSerializer,
     CasesCounterfactualDailyNormalisedSerializer,
+    CasesCounterfactualIntegratedSerializer,
 )

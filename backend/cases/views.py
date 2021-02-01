@@ -1,6 +1,7 @@
 from .serializers import (
     CasesCounterfactualDailyAbsoluteSerializer,
     CasesCounterfactualDailyNormalisedSerializer,
+    CasesCounterfactualIntegratedSerializer,
     CasesRealDailyAbsoluteSerializer,
     CasesRealDailyNormalisedSerializer,
     CasesRealIntegratedSerializer,
@@ -46,6 +47,28 @@ class CasesCounterfactualDailyNormalisedView(viewsets.ViewSet):
             iso_codes=iso_codes, start_date=start_date, end_date=end_date
         )
         serializer = CasesCounterfactualDailyNormalisedSerializer(
+            instance=records, many=True
+        )
+        return Response(serializer.data)
+
+
+class CasesCounterfactualIntegratedView(viewsets.ViewSet):
+    """Counterfactual integrated number of cases normalised by population"""
+
+    serializer_class = CasesCounterfactualIntegratedSerializer
+
+    def list(self, request):
+        """Response to a GET/LIST request"""
+        iso_code = self.request.query_params.get("iso_code", None)
+        iso_codes = [iso_code] if iso_code else []
+        start_date = self.request.query_params.get("start_date", None)
+        end_date = self.request.query_params.get("end_date", None)
+        records = CounterfactualCasesRecord.simulate_counterfactual_summary_records(
+            iso_codes=iso_codes, start_date=start_date, end_date=end_date
+        )
+        print("records", records)
+        print("serializer_class", self.serializer_class)
+        serializer = CasesCounterfactualIntegratedSerializer(
             instance=records, many=True
         )
         return Response(serializer.data)
@@ -123,7 +146,7 @@ class CasesRealIntegratedView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Apply filters to the default queryset"""
-        queryset = CasesRecord.objects.all()
+        queryset = CasesRecord.objects.all().order_by("country__iso_code")
         iso_code = self.request.query_params.get("iso_code", None)
         start_date = self.request.query_params.get("start_date", None)
         end_date = self.request.query_params.get("end_date", None)
@@ -137,7 +160,7 @@ class CasesRealIntegratedView(viewsets.ModelViewSet):
             date=Max("date"),
             total_cases=Sum("cases"),
             total_cases_per_million=ExpressionWrapper(
-                Sum("cases") / F("country__population"), output_field=FloatField()
+                1e6 * Sum("cases") / F("country__population"), output_field=FloatField()
             ),
         )
         return queryset
