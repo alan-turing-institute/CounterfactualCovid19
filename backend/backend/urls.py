@@ -18,19 +18,45 @@ from django.urls import include, path
 from rest_framework import routers
 from countries.views import CountryView
 from cases.views import (
-    TotalCasesView,
-    TimeSeriesCasesView,
-    DailyCounterfactualCasesView,
+    CasesCounterfactualDailyAbsoluteView,
+    CasesCounterfactualDailyNormalisedView,
+    CasesCounterfactualIntegratedView,
+    CasesRealDailyAbsoluteView,
+    CasesRealDailyNormalisedView,
+    CasesRealIntegratedView,
 )
 
 router = routers.DefaultRouter()
 router.register("countries", CountryView)
-router.register("cases/total", TotalCasesView)
-router.register("cases/timeseries", TimeSeriesCasesView)
 router.register(
-    "cases/daily_counterfactuals",
-    DailyCounterfactualCasesView,
-    basename="daily_counterfactuals",
+    "cases/counterfactual/daily/absolute",
+    CasesCounterfactualDailyAbsoluteView,
+    basename="counterfactual_daily_absolute",
+)
+router.register(
+    "cases/counterfactual/daily/normalised",
+    CasesCounterfactualDailyNormalisedView,
+    basename="counterfactual_daily_normalised",
+)
+router.register(
+    "cases/counterfactual/integrated",
+    CasesCounterfactualIntegratedView,
+    basename="counterfactual_integrated",
+)
+router.register(
+    "cases/real/daily/absolute",
+    CasesRealDailyAbsoluteView,
+    basename="real_daily_absolute",
+)
+router.register(
+    "cases/real/daily/normalised",
+    CasesRealDailyNormalisedView,
+    basename="real_daily_normalised",
+)
+router.register(
+    "cases/real/integrated",
+    CasesRealIntegratedView,
+    basename="real_integrated",
 )
 
 urlpatterns = [

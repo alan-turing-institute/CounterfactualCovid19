@@ -2,42 +2,64 @@
 import csv
 import pandas as pd
 import pycountry
-from cases.models import TotalCases
+from time import monotonic
+from cases.models import CasesRecord
+from countries.models import Country
+from django.core.exceptions import ObjectDoesNotExist
+
+
+def get_country_code(country_name):
+    country_code = pycountry.countries.get(name=country_name)
+    if not country_code:
+        country_code = pycountry.countries.search_fuzzy(country_name)[0]
+    return country_code.alpha_3
+
+
+def get_country_model(iso_code):
+    try:
+        return Country.objects.get(iso_code=iso_code)
+    except ObjectDoesNotExist:
+        print(f"Could not find a matching country for {iso_code}")
+    return None
 
 
 def run():
+    print("Starting to load cases data...")
+    start = monotonic()
 
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
     url_cases = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Data/Formatted/Cases_deaths_data_europe.csv"
-    url_population = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Data/Formatted/Worldbank_data_europe.csv"
-
-    # Dummy date for end of the first wave in Europe
-    end_date = "2020-06-23"
 
     # Load all cases then filter by date
     df_cases = pd.read_csv(url_cases, parse_dates=["Date"])
-    df_cases_end_date = df_cases[df_cases["Date"] == end_date]
 
-    # Load population data in 2019 from the world bank
-    df_pop = pd.read_csv(url_population)
+    # Delete all existing CasesRecord data and regenerate the table
+    CasesRecord.objects.all().delete()
 
-    # Delete all existing TotalCases data and regenerate the table
-    TotalCases.objects.all().delete()
-    for entry in df_cases_end_date.itertuples():
+    # Add an ISO code column lookup table
+    code_lookup = {
+        country: get_country_code(country) for country in df_cases["Country"].unique()
+    }
+    df_cases["iso_code"] = df_cases.apply(lambda row: code_lookup[row.Country], axis=1)
+
+    # Create a lookup table from ISO code to Country model
+    country_lookup = {
+        iso_code: get_country_model(iso_code)
+        for iso_code in df_cases["iso_code"].unique()
+    }
+
+    for entry in df_cases.itertuples():
         try:
-            code_country = pycountry.countries.get(name=entry.Country)
-            if not code_country:
-                code_country = pycountry.countries.search_fuzzy(entry.Country)[0]
+            country = country_lookup[entry.iso_code]
+            if country:
+                m = CasesRecord(
+                    country=country,
+                    date=entry.Date,
+                    cases=entry.Daily_cases_MA7,
+                )
+                m.save()
 
-            population = df_pop[df_pop["Iso3c"] == code_country.alpha_3][
-                "Population"
-            ].values[0]
-
-            m = TotalCases(
-                iso_code=code_country.alpha_3,
-                cumulative_cases=entry.Cumulative_cases_end,
-                population=population,
-            )
-            m.save()
         except AttributeError:
             continue
+
+    print(f"Finished loading cases data after {monotonic() - start:.2f} seconds")

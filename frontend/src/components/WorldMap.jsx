@@ -18,7 +18,7 @@ const WorldMap = ({ countries, onCountrySelect }) => {
     layer.bindPopup(`${name} ${totalCasesPerMillionText}`);
     layer.on("click", function (e) {
       onCountrySelect(
-        e.target.feature.properties.name,
+        e.target.feature.id,
         e.target.feature.properties.totalCasesPerMillionText
       );
     });

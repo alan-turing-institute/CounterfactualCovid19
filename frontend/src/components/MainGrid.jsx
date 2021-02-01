@@ -15,8 +15,8 @@ export default class MainGrid extends React.Component {
     // Initialize state first
     this.state = {
       countries: [],
-      selectedCountry: null,
-      currentTotalCases: null,
+      currentIsoCode: null,
+      currentTotalCasesText: null,
       sizeMapComponent: "90vh",
     };
 
@@ -35,16 +35,16 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code, currentTotalCases) {
+  handleCountryChange(iso_code, total_cases_text) {
     console.log(`Selected country is ${iso_code}`);
 
-    if (iso_code === this.state.selectedCountry) {
-      this.setState({ selectedCountry: null });
-      this.setState({ currentTotalCases: null });
+    if (iso_code === this.state.currentIsoCode) {
+      this.setState({ currentIsoCode: null });
+      this.setState({ currentTotalCasesText: null });
       this.setState({ sizeMapComponent: "90vh" });
     } else {
-      this.setState({ selectedCountry: iso_code });
-      this.setState({ currentTotalCases: currentTotalCases });
+      this.setState({ currentIsoCode: iso_code });
+      this.setState({ currentTotalCasesText: total_cases_text });
       this.setState({ sizeMapComponent: "65vh" });
     }
   }
@@ -68,11 +68,11 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
-            <Row style={{ height: 1 - this.state.sizeMapComponent }}>
+            <Row style={{ flex_grow: 1, flex_shrink: 1, flex_basis: "auto" }}>
               <Col>
                 <Histogram
-                  selectedCountry={this.state.selectedCountry}
-                  currentTotalCases={this.state.currentTotalCases}
+                  currentIsoCode={this.state.currentIsoCode}
+                  currentTotalCasesText={this.state.currentTotalCasesText}
                 />
               </Col>
             </Row>

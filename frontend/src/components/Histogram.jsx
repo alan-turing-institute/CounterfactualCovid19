@@ -14,86 +14,86 @@ import {
 const cases_real = [
   {
     date: "2020-03-01",
-    cases_7day_rolling_average: 590,
+    cases_weekly_avg: 590,
   },
   {
     date: "2020-03-02",
-    cases_7day_rolling_average: 868,
+    cases_weekly_avg: 868,
   },
   {
     date: "2020-03-03",
-    cases_7day_rolling_average: 1397,
+    cases_weekly_avg: 1397,
   },
   {
     date: "2020-03-04",
-    cases_7day_rolling_average: 1480,
+    cases_weekly_avg: 1480,
   },
   {
     date: "2020-03-05",
-    cases_7day_rolling_average: 1520,
+    cases_weekly_avg: 1520,
   },
   {
     date: "2020-03-06",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-07",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-08",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-09",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-10",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
 ];
 
 const cases_counterfactual = [
   {
     date: "2020-03-01",
-    cases_7day_rolling_average: 590,
+    cases_weekly_avg: 590,
   },
   {
     date: "2020-03-02",
-    cases_7day_rolling_average: 868,
+    cases_weekly_avg: 868,
   },
   {
     date: "2020-03-03",
-    cases_7day_rolling_average: 1397,
+    cases_weekly_avg: 1397,
   },
   {
     date: "2020-03-04",
-    cases_7day_rolling_average: 1480,
+    cases_weekly_avg: 1480,
   },
   {
     date: "2020-03-05",
-    cases_7day_rolling_average: 1520,
+    cases_weekly_avg: 1520,
   },
   {
     date: "2020-03-06",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-07",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-08",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-09",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
   {
     date: "2020-03-10",
-    cases_7day_rolling_average: 1400,
+    cases_weekly_avg: 1400,
   },
 ];
 
@@ -101,7 +101,7 @@ export default class Histogram extends React.Component {
   render() {
     return (
       <div>
-        {!this.props.selectedCountry ? (
+        {!this.props.currentIsoCode ? (
           <Card
             bg={"dark"}
             style={{ marginTop: 5, marginBottom: 5 }}
@@ -120,9 +120,9 @@ export default class Histogram extends React.Component {
                   bg={"light"}
                 >
                   <Card.Body>
-                    <Card.Title>{`${this.props.selectedCountry}`}</Card.Title>
+                    <Card.Title>{`${this.props.currentIsoCode}`}</Card.Title>
                     <Card.Text>
-                      {`Total Cases per Million: ${this.props.selectedCaseNumber}`}
+                      {`Total Cases per Million: ${this.props.currentTotalCasesText}`}
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -140,15 +140,15 @@ export default class Histogram extends React.Component {
                   }}
                 >
                   <CartesianGrid stroke="#f5f5f5" />
-                  <XAxis cases_realKey="date" />
+                  <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar cases_realKey="amt" fill="#413ea0" />
+                  <Bar dataKey="cases_weekly_avg" fill="#413ea0" />
                   <Line
                     data={cases_counterfactual}
                     type="monotone"
-                    cases_realKey="amt"
+                    dataKey="cases_weekly_avg"
                     stroke="#ff7300"
                   />
                 </ComposedChart>

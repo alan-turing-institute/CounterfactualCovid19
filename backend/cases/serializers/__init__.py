@@ -1,2 +1,10 @@
-from .concrete import TotalCasesSerializer, TimeSeriesCasesSerializer
-from .ephemeral import DailyCounterfactualCasesSerializer
+from .concrete import (
+    CasesRealDailyAbsoluteSerializer,
+    CasesRealDailyNormalisedSerializer,
+    CasesRealIntegratedSerializer,
+)
+from .ephemeral import (
+    CasesCounterfactualDailyAbsoluteSerializer,
+    CasesCounterfactualDailyNormalisedSerializer,
+    CasesCounterfactualIntegratedSerializer,
+)

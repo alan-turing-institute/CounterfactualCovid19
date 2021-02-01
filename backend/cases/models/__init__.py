@@ -1,2 +1,2 @@
-from .concrete import TotalCases, TimeSeriesCases
-from .ephemeral import DailyCounterfactualCases
+from .concrete import CasesRecord
+from .ephemeral import CounterfactualCasesRecord
