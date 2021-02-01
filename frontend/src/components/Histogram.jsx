@@ -11,149 +11,92 @@ import {
   Bar,
 } from "recharts";
 
-const data = [
+const cases_real = [
   {
-    name: "2020-03-01",
-    uv: 590,
-    pv: 800,
-    amt: 1400,
-    cnt: 490,
+    date: "2020-03-01",
+    cases_7day_rolling_average: 590,
+
   },
   {
-    name: "2020-03-02",
-    uv: 868,
-    pv: 967,
-    amt: 1506,
-    cnt: 590,
+    date: "2020-03-02",
+    cases_7day_rolling_average: 868,
   },
   {
-    name: "2020-03-03",
-    uv: 1397,
-    pv: 1098,
-    amt: 989,
-    cnt: 350,
+    date: "2020-03-03",
+    cases_7day_rolling_average: 1397,
   },
   {
-    name: "2020-03-04",
-    uv: 1480,
-    pv: 1200,
-    amt: 1228,
-    cnt: 480,
+    date: "2020-03-04",
+    cases_7day_rolling_average: 1480,
   },
   {
-    name: "2020-03-05",
-    uv: 1520,
-    pv: 1108,
-    amt: 1100,
-    cnt: 460,
+    date: "2020-03-05",
+    cases_7day_rolling_average: 1520,
   },
   {
-    name: "2020-03-06",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-06",
+    cases_7day_rolling_average: 1400,
   },
   {
-    name: "2020-03-07",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-07",
+    cases_7day_rolling_average: 1400,
   },
   {
-    name: "2020-03-08",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-08",
+    cases_7day_rolling_average: 1400,
   },
   {
-    name: "2020-03-09",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-09",
+    cases_7day_rolling_average: 1400,
   },
   {
-    name: "2020-03-10",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-10",
+    cases_7day_rolling_average: 1400,
   },
 ];
 
-const data1 = [
+const cases_counterfactual = [
   {
-    name: "2020-03-01",
-    uv: 590,
-    pv: 800,
-    amt: 1200,
-    cnt: 490,
+    date: "2020-03-01",
+    cases_7day_rolling_average: 590,
   },
   {
-    name: "2020-03-02",
-    uv: 868,
-    pv: 967,
-    amt: 1306,
-    cnt: 590,
+    date: "2020-03-02",
+    cases_7day_rolling_average: 868,
   },
   {
-    name: "2020-03-03",
-    uv: 1397,
-    pv: 1098,
-    amt: 989,
-    cnt: 350,
+    date: "2020-03-03",
+    cases_7day_rolling_average: 1397,
   },
   {
-    name: "2020-03-04",
-    uv: 1480,
-    pv: 1200,
-    amt: 1228,
-    cnt: 480,
+    date: "2020-03-04",
+    cases_7day_rolling_average: 1480,
   },
   {
-    name: "2020-03-05",
-    uv: 1520,
-    pv: 1108,
-    amt: 1100,
-    cnt: 460,
+    date: "2020-03-05",
+    cases_7day_rolling_average: 1520,
   },
   {
-    name: "2020-03-06",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-06",
+    cases_7day_rolling_average: 1400,
+
   },
   {
-    name: "2020-03-07",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-07",
+    cases_7day_rolling_average: 1400,
+
   },
   {
-    name: "2020-03-08",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-08",
+    cases_7day_rolling_average: 1400,
   },
   {
-    name: "2020-03-09",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-09",
+    cases_7day_rolling_average: 1400,
   },
   {
-    name: "2020-03-10",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    date: "2020-03-10",
+    cases_7day_rolling_average: 1400,
   },
 ];
 
@@ -191,7 +134,7 @@ export default class Histogram extends React.Component {
                 <ComposedChart
                   width={500}
                   height={350}
-                  data={data}
+                  data={cases_real}
                   margin={{
                     top: 20,
                     right: 20,
@@ -200,15 +143,15 @@ export default class Histogram extends React.Component {
                   }}
                 >
                   <CartesianGrid stroke="#f5f5f5" />
-                  <XAxis dataKey="name" />
+                  <XAxis cases_realKey="date" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="amt" fill="#413ea0" />
+                  <Bar cases_realKey="amt" fill="#413ea0" />
                   <Line
-                    data={data1}
+                    data={cases_counterfactual}
                     type="monotone"
-                    dataKey="amt"
+                    cases_realKey="amt"
                     stroke="#ff7300"
                   />
                 </ComposedChart>
@@ -219,7 +162,7 @@ export default class Histogram extends React.Component {
                   bg={"light"}
                 >
                   <Card.Text>
-                    Any other data/information we might want to add in here.
+                    Any other cases_real/information we might want to add in here.
                   </Card.Text>
                 </Card>
               </Col>
