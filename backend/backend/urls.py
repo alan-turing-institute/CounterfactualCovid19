@@ -22,6 +22,7 @@ from cases.views import (
     CasesCounterfactualDailyNormalisedView,
     CasesRealDailyAbsoluteView,
     CasesRealDailyNormalisedView,
+    CasesRealIntegratedView,
 )
 
 router = routers.DefaultRouter()
@@ -46,7 +47,11 @@ router.register(
     CasesRealDailyNormalisedView,
     basename="real_daily_normalised",
 )
-
+router.register(
+    "cases/real/integrated",
+    CasesRealIntegratedView,
+    basename="real_integrated",
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

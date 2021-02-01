@@ -3,11 +3,12 @@ from .serializers import (
     CasesCounterfactualDailyNormalisedSerializer,
     CasesRealDailyAbsoluteSerializer,
     CasesRealDailyNormalisedSerializer,
+    CasesRealIntegratedSerializer,
 )
 from .models import CasesRecord, CounterfactualCasesRecord
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
-from django.db.models import Sum, F, Window, When
+from django.db.models import ExpressionWrapper, F, FloatField, Max, Sum, Window
 
 
 class CasesCounterfactualDailyAbsoluteView(viewsets.ViewSet):
@@ -54,6 +55,7 @@ class CasesRealDailyAbsoluteView(viewsets.ModelViewSet):
     """Daily new and cumulative cases"""
 
     serializer_class = CasesRealDailyAbsoluteSerializer
+    http_method_names = ["get", "head", "list", "options"]
 
     # Annotate the queryset with cumulative cases information
     # We run a window function over all entries, summing `cases` over all previous entries
@@ -65,8 +67,6 @@ class CasesRealDailyAbsoluteView(viewsets.ModelViewSet):
             order_by=F("date").asc(),
         )
     ).order_by("date")
-
-    http_method_names = ["get", "head", "list", "options"]
 
     def get_queryset(self):
         """Apply filters to the default queryset"""
@@ -87,6 +87,7 @@ class CasesRealDailyNormalisedView(viewsets.ModelViewSet):
     """Daily new and cumulative cases normalised by population"""
 
     serializer_class = CasesRealDailyNormalisedSerializer
+    http_method_names = ["get", "head", "list", "options"]
 
     # Annotate the queryset with cumulative cases information
     # We run a window function over all entries, summing `cases` over all previous entries
@@ -98,8 +99,6 @@ class CasesRealDailyNormalisedView(viewsets.ModelViewSet):
             order_by=F("date").asc(),
         )
     ).order_by("date")
-
-    http_method_names = ["get", "head", "list", "options"]
 
     def get_queryset(self):
         """Apply filters to the default queryset"""
@@ -113,4 +112,32 @@ class CasesRealDailyNormalisedView(viewsets.ModelViewSet):
             queryset = queryset.filter(date__gte=start_date)
         if end_date:
             queryset = queryset.filter(date__lt=end_date)
+        return queryset
+
+
+class CasesRealIntegratedView(viewsets.ModelViewSet):
+    """Integrated number of cases normalised by population"""
+
+    serializer_class = CasesRealIntegratedSerializer
+    http_method_names = ["get", "head", "list", "options"]
+
+    def get_queryset(self):
+        """Apply filters to the default queryset"""
+        queryset = CasesRecord.objects.all()
+        iso_code = self.request.query_params.get("iso_code", None)
+        start_date = self.request.query_params.get("start_date", None)
+        end_date = self.request.query_params.get("end_date", None)
+        if iso_code:
+            queryset = queryset.filter(country__iso_code=iso_code)
+        if start_date:
+            queryset = queryset.filter(date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(date__lt=end_date)
+        queryset = queryset.values("country").annotate(
+            date=Max("date"),
+            total_cases=Sum("cases"),
+            total_cases_per_million=ExpressionWrapper(
+                Sum("cases") / F("country__population"), output_field=FloatField()
+            ),
+        )
         return queryset
