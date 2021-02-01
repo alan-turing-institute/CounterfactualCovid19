@@ -36,8 +36,10 @@ class LoadTotalCasesTask {
       const casesPerMillion = covidCountry
         ? Number(covidCountry.total_cases_per_million)
         : 0;
-      country.properties.confirmed = casesPerMillion;
-      country.properties.confirmedText = casesPerMillion.toFixed(2).toString();
+      country.properties.totalCasesPerMillion = casesPerMillion;
+      country.properties.totalCasesPerMillionText = casesPerMillion
+        .toFixed(2)
+        .toString();
       // Set appropriate colour
       this.#setCountryColour(country);
     }
@@ -46,7 +48,7 @@ class LoadTotalCasesTask {
 
   #setCountryColour = (country) => {
     const legendItem = legendItems.find((item) =>
-      item.isFor(country.properties.confirmed)
+      item.isFor(country.properties.totalCasesPerMillion)
     );
     if (legendItem != null) {
       country.properties.color = legendItem.color;
