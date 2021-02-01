@@ -55,7 +55,7 @@ def run():
                 m = CasesRecord(
                     country=country,
                     date=entry.Date,
-                    cases=entry.Daily_cases_MA7,
+                    weekly_avg_cases=entry.Daily_cases_MA7,
                 )
                 m.save()
 

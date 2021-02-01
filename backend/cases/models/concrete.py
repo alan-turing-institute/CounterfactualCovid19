@@ -12,7 +12,7 @@ class CasesRecord(models.Model):
         Country, related_name="cases_records", on_delete=models.CASCADE
     )
     date = models.DateField()
-    cases = models.FloatField()
+    weekly_avg_cases = models.FloatField()
 
     def __str__(self):
-        return f"{self.country.name} had {self.cases} on {self.date}"
+        return f"{self.country.name} had {self.weekly_avg_cases} on {self.date}"
