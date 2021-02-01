@@ -4,17 +4,20 @@ import legendItems from "../entities/LegendItems";
 class LoadTotalCasesTask {
   decorateCountries = async (countries) => {
     try {
-      const totalCases = await this.#getTotalCases();
-      return this.#processCovidData(countries, totalCases);
+      const totalCovidCases = await this.#getTotalCovidCases();
+      return this.#processCovidData(countries, totalCovidCases);
     } catch (error) {
       console.log(error);
       return [];
     }
   };
 
-  #getTotalCases = async () => {
+  #getTotalCovidCases = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/cases/total", {});
+      const res = await axios.get(
+        "http://localhost:8000/api/cases/real/integrated/?end_date=2020-06-23",
+        {}
+      );
       return res.data;
     } catch (error) {
       console.log(error);
@@ -22,27 +25,26 @@ class LoadTotalCasesTask {
     }
   };
 
-  #processCovidData = (countries, casesData) => {
+  #processCovidData = (countries, totalCovidCases) => {
     for (let i = 0; i < countries.length; i++) {
+      // Find matching country
       const country = countries[i];
-      const covidCountry = casesData.find(
-        (covidCountry) => country.properties.iso_code === covidCountry.iso_code
+      const covidCountry = totalCovidCases.find(
+        (covidCountry) => country.id === covidCountry.iso_code
       );
-
+      // Decorate with total cases per million
       const casesPerMillion = covidCountry
-        ? (Number(covidCountry.cumulative_cases) /
-            Number(covidCountry.population)) *
-          1e6
+        ? Number(covidCountry.total_cases_per_million)
         : 0;
       country.properties.confirmed = casesPerMillion;
       country.properties.confirmedText = casesPerMillion.toFixed(2).toString();
-
-      this.#setCountryColor(country);
+      // Set appropriate colour
+      this.#setCountryColour(country);
     }
     return countries;
   };
 
-  #setCountryColor = (country) => {
+  #setCountryColour = (country) => {
     const legendItem = legendItems.find((item) =>
       item.isFor(country.properties.confirmed)
     );
