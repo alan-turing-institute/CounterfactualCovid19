@@ -48,15 +48,25 @@ class CounterfactualCasesRecord:
 
     @staticmethod
     def simulate_counterfactual_records(iso_codes, start_date, end_date):
-        df_counterfactuals = CounterfactualCasesRecord.simulate_counterfactual_dataframes(iso_codes, start_date, end_date)
+        df_counterfactuals = (
+            CounterfactualCasesRecord.simulate_counterfactual_dataframes(
+                iso_codes, start_date, end_date
+            )
+        )
         # Convert to records, flatten/combine and return
         return sum([df.to_dict("records") for df in df_counterfactuals], [])
 
     @staticmethod
     def simulate_counterfactual_summary_records(iso_codes, start_date, end_date):
-        df_counterfactuals = CounterfactualCasesRecord.simulate_counterfactual_dataframes(iso_codes, start_date, end_date)
+        df_counterfactuals = (
+            CounterfactualCasesRecord.simulate_counterfactual_dataframes(
+                iso_codes, start_date, end_date
+            )
+        )
         # df_latest_dates = [df.iloc[[df["date"].idxmax()]] for df in df_counterfactuals]
-        df_latest_dates = [df[df["date"] == df["date"].max()] for df in df_counterfactuals]
+        df_latest_dates = [
+            df[df["date"] == df["date"].max()] for df in df_counterfactuals
+        ]
         # Convert to records, flatten/combine and return
         return sum([df.to_dict("records") for df in df_latest_dates], [])
 
