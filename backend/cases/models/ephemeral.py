@@ -42,7 +42,7 @@ class CounterfactualCasesRecord:
                     df_data[df_data["iso_code"] == iso_code]
                 )
             )
-            for iso_code in iso_codes
+            for iso_code in sorted(iso_codes)
         ]
         return df_counterfactuals
 

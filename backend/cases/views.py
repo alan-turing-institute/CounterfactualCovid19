@@ -1,3 +1,8 @@
+from abc import ABC, abstractmethod
+from django.db.models import ExpressionWrapper, F, FloatField, Max, Sum, Window
+from rest_framework import mixins, viewsets
+from rest_framework.response import Response
+from .models import CasesRecord, CounterfactualCasesRecord
 from .serializers import (
     CasesCounterfactualDailyAbsoluteSerializer,
     CasesCounterfactualDailyNormalisedSerializer,
@@ -6,14 +11,20 @@ from .serializers import (
     CasesRealDailyNormalisedSerializer,
     CasesRealIntegratedSerializer,
 )
-from .models import CasesRecord, CounterfactualCasesRecord
-from rest_framework import mixins, viewsets
-from rest_framework.response import Response
-from django.db.models import ExpressionWrapper, F, FloatField, Max, Sum, Window
 
 
-class CasesCounterfactualView(viewsets.ViewSet):
-    """Base counterfactual cases view"""
+class CasesCounterfactualViewMixin(ABC):
+    """Interface for counterfactual cases views"""
+
+    @property
+    @classmethod
+    @abstractmethod
+    def serializer_class(cls):
+        return NotImplementedError
+
+    @abstractmethod
+    def simulate(self, iso_codes, start_date, end_date):
+        return NotImplementedError
 
     def list(self, request):
         """Response to a GET/LIST request"""
@@ -26,7 +37,9 @@ class CasesCounterfactualView(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class CasesCounterfactualDailyAbsoluteView(CasesCounterfactualView):
+class CasesCounterfactualDailyAbsoluteView(
+    CasesCounterfactualViewMixin, viewsets.ViewSet
+):
     """Counterfactual daily new and cumulative cases"""
 
     serializer_class = CasesCounterfactualDailyAbsoluteSerializer
@@ -37,7 +50,9 @@ class CasesCounterfactualDailyAbsoluteView(CasesCounterfactualView):
         )
 
 
-class CasesCounterfactualDailyNormalisedView(CasesCounterfactualView):
+class CasesCounterfactualDailyNormalisedView(
+    CasesCounterfactualViewMixin, viewsets.ViewSet
+):
     """Counterfactual daily new and cumulative cases normalised by population"""
 
     serializer_class = CasesCounterfactualDailyNormalisedSerializer
@@ -48,7 +63,7 @@ class CasesCounterfactualDailyNormalisedView(CasesCounterfactualView):
         )
 
 
-class CasesCounterfactualIntegratedView(CasesCounterfactualView):
+class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.ViewSet):
     """Counterfactual integrated number of cases normalised by population"""
 
     serializer_class = CasesCounterfactualIntegratedSerializer
@@ -59,8 +74,14 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualView):
         )
 
 
-class CasesRealView(viewsets.ModelViewSet):
-    """Base real cases view"""
+class CasesRealViewMixin(ABC):
+    """Interface for real cases views"""
+
+    @property
+    @classmethod
+    @abstractmethod
+    def serializer_class(cls):
+        return NotImplementedError
 
     http_method_names = ["get", "head", "list", "options"]
 
@@ -91,19 +112,19 @@ class CasesRealView(viewsets.ModelViewSet):
         return queryset
 
 
-class CasesRealDailyAbsoluteView(CasesRealView):
+class CasesRealDailyAbsoluteView(CasesRealViewMixin, viewsets.ModelViewSet):
     """Daily new and cumulative cases"""
 
     serializer_class = CasesRealDailyAbsoluteSerializer
 
 
-class CasesRealDailyNormalisedView(CasesRealView):
+class CasesRealDailyNormalisedView(CasesRealViewMixin, viewsets.ModelViewSet):
     """Daily new and cumulative cases normalised by population"""
 
     serializer_class = CasesRealDailyNormalisedSerializer
 
 
-class CasesRealIntegratedView(CasesRealView):
+class CasesRealIntegratedView(CasesRealViewMixin, viewsets.ModelViewSet):
     """Integrated number of cases normalised by population"""
 
     serializer_class = CasesRealIntegratedSerializer
