@@ -11,11 +11,7 @@ export default class InfoPanel extends React.Component {
     return (
       <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
         {!this.props.isoCode ? (
-          <Card
-            bg={"dark"}
-            text={"light"}
-            style={{ width: "100%" }}
-          >
+          <Card bg={"dark"} text={"light"} style={{ width: "100%" }}>
             <Card.Body style={{ display: "flex", justifyContent: "center" }}>
               <Card.Text>Select a country</Card.Text>
             </Card.Body>
