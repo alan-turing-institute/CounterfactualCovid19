@@ -9,22 +9,14 @@ import Histogram from "./Histogram";
 export default class InfoPanel extends React.Component {
   render() {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center", // vertical stretch-to-fill
-          justifyContent: "center", // horizontal alignment
-          height: "100%",
-          width: "100%",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
         {!this.props.isoCode ? (
           <Card
             bg={"dark"}
-            style={{ height: "100%", width: "100%", margin:"5px" }}
             text={"light"}
+            style={{ width: "100%" }}
           >
-            <Card.Body>
+            <Card.Body style={{ display: "flex", justifyContent: "center" }}>
               <Card.Text>Select a country</Card.Text>
             </Card.Body>
           </Card>
@@ -34,7 +26,6 @@ export default class InfoPanel extends React.Component {
               <Col xs={4} md={3} lg={2}>
                 <Card
                   style={{
-                    width: "100%",
                     marginTop: "10%",
                     marginBottom: "10%",
                   }}
@@ -59,7 +50,6 @@ export default class InfoPanel extends React.Component {
               <Col xs={4} md={3} lg={2}>
                 <Card
                   style={{
-                    width: "100%",
                     marginTop: "10%",
                     marginBottom: "10%",
                   }}
