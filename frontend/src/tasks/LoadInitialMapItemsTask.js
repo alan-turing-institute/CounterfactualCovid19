@@ -9,7 +9,7 @@ const loadInitialMapItems = async () => {
   console.log("Preparing map using COVID data...");
   const loadTotalCasesTask = new LoadTotalCasesTask();
   const mapItems = await loadTotalCasesTask.decorateCountries(countries);
-  console.log(`Loaded data for ${mapItems.length} countries`);
+  console.log(`Loaded map data for ${mapItems.length} countries`);
   return mapItems;
 };
 

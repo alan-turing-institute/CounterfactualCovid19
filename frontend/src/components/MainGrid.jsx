@@ -2,7 +2,7 @@ import React from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Histogram from "./Histogram";
+import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
 import Loading from "./Loading";
 import WorldMap from "./WorldMap";
@@ -18,6 +18,7 @@ export default class MainGrid extends React.Component {
       isoCode: null,
       summedAvgCases: null,
       sizeMapComponent: "90vh",
+      sizeHistogramComponent: "10vh",
     };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
@@ -42,12 +43,14 @@ export default class MainGrid extends React.Component {
         isoCode: null,
         summedAvgCases: null,
         sizeMapComponent: "90vh",
+        sizeHistogramComponent: "10vh",
       });
     } else {
       this.setState({
         isoCode: iso_code,
         summedAvgCases: summed_avg_cases,
         sizeMapComponent: "65vh",
+        sizeHistogramComponent: "35vh",
       });
     }
   }
@@ -67,15 +70,16 @@ export default class MainGrid extends React.Component {
                   onCountrySelect={this.handleCountryChange}
                 />
               </Col>
-              <Col style={{ padding: "0px" }}>
+              <Col xs={2} style={{ padding: "0px" }}>
                 <Legend />
               </Col>
             </Row>
-            <Row style={{ flex_grow: 1, flex_shrink: 1, flex_basis: "auto" }}>
-              <Col>
-                <Histogram
+            <Row>
+              <Col xs={12} style={{ padding: "0px" }}>
+                <InfoPanel
                   isoCode={this.state.isoCode}
                   summedAvgCases={this.state.summedAvgCases}
+                  height={this.state.sizeHistogramComponent}
                 />
               </Col>
             </Row>
