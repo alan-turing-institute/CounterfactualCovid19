@@ -22,7 +22,7 @@ const Legend = () => {
             justifyContent: "center", // horiztontal
             color: item.textColor != null ? item.textColor : "black",
             fontWeight: "bolder",
-            fontSize: "1em",
+            fontSize: "x-small",
           }}
         >
           <span>{item.title}</span>
