@@ -1,5 +1,4 @@
 import React from "react";
-import Spinner from "react-bootstrap/Spinner";
 import {
   Bar,
   CartesianGrid,
@@ -11,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 
 export default class Histogram extends React.Component {
@@ -68,9 +68,7 @@ export default class Histogram extends React.Component {
         }}
       >
         {this.state.casesData.length === 0 ? (
-          <Spinner animation="grow" variant="info" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <Loading/>
         ) : (
           <ResponsiveContainer height="95%">
             <ComposedChart data={this.state.casesData}>
