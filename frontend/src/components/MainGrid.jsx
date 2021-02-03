@@ -58,7 +58,7 @@ export default class MainGrid extends React.Component {
         ) : (
           <Container fluid>
             <Row style={{ height: this.state.sizeMapComponent }}>
-              <Col md={11}  style={{ padding: "0px" }}>
+              <Col md={11} style={{ padding: "0px" }}>
                 <WorldMap
                   countries={this.state.countries}
                   onCountrySelect={this.handleCountryChange}
