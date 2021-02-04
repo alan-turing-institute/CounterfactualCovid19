@@ -51,7 +51,12 @@ class CasesRealIntegratedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CasesRecord
-        fields = ("iso_code", "date", "summed_avg_cases", "summed_avg_cases_per_million")
+        fields = (
+            "iso_code",
+            "date",
+            "summed_avg_cases",
+            "summed_avg_cases_per_million",
+        )
 
     def get_iso_code(self, datadict):
         return datadict["country"]
