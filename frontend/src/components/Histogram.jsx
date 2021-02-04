@@ -1,171 +1,90 @@
 import React from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
 import {
+  Bar,
+  CartesianGrid,
+  ComposedChart,
+  Legend,
   Line,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ComposedChart,
-  Bar,
 } from "recharts";
-
-const cases_real = [
-  {
-    date: "2020-03-01",
-    cases_weekly_avg: 590,
-  },
-  {
-    date: "2020-03-02",
-    cases_weekly_avg: 868,
-  },
-  {
-    date: "2020-03-03",
-    cases_weekly_avg: 1397,
-  },
-  {
-    date: "2020-03-04",
-    cases_weekly_avg: 1480,
-  },
-  {
-    date: "2020-03-05",
-    cases_weekly_avg: 1520,
-  },
-  {
-    date: "2020-03-06",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-07",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-08",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-09",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-10",
-    cases_weekly_avg: 1400,
-  },
-];
-
-const cases_counterfactual = [
-  {
-    date: "2020-03-01",
-    cases_weekly_avg: 590,
-  },
-  {
-    date: "2020-03-02",
-    cases_weekly_avg: 868,
-  },
-  {
-    date: "2020-03-03",
-    cases_weekly_avg: 1397,
-  },
-  {
-    date: "2020-03-04",
-    cases_weekly_avg: 1480,
-  },
-  {
-    date: "2020-03-05",
-    cases_weekly_avg: 1520,
-  },
-  {
-    date: "2020-03-06",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-07",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-08",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-09",
-    cases_weekly_avg: 1400,
-  },
-  {
-    date: "2020-03-10",
-    cases_weekly_avg: 1400,
-  },
-];
+import Loading from "./Loading";
+import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 
 export default class Histogram extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // Add component-level state
+    this.state = {
+      casesData: [],
+    };
+  }
+
+  async loadCasesData() {
+    // Retrieve real and counterfactual data in parallel
+    const task = new LoadDailyCasesTask();
+    let [casesReal, casesCounterfactual] = await Promise.all([
+      task.getRealCovidCases(this.props.isoCode),
+      task.getCounterfactualCovidCases(this.props.isoCode),
+    ]);
+    // Combine the two datasets into a single data array
+    let casesData = [];
+    for (let i = 0; i < casesReal.length; i++) {
+      const counterfactual = casesCounterfactual.find(
+        (counterfactual) => counterfactual.date === casesReal[i].date
+      );
+      let record = {
+        date: casesReal[i].date,
+        weekly_avg_real: casesReal[i].weekly_avg_cases_per_million,
+        weekly_avg_counterfactual: counterfactual.weekly_avg_cases_per_million,
+      };
+      casesData.push(record);
+    }
+    // Set the component state to trigger a re-render
+    this.setState({ casesData: casesData });
+  }
+
+  async componentDidMount() {
+    await this.loadCasesData();
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.isoCode !== prevProps.isoCode) {
+      await this.loadCasesData();
+    }
+  }
+
   render() {
     return (
-      <div>
-        {!this.props.currentIsoCode ? (
-          <Card
-            bg={"dark"}
-            style={{ marginTop: 5, marginBottom: 5 }}
-            text={"light"}
-          >
-            <Card.Body>
-              <Card.Text>Select a country</Card.Text>
-            </Card.Body>
-          </Card>
+      <div
+        style={{
+          height: this.props.height,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {this.state.casesData.length === 0 ? (
+          <Loading />
         ) : (
-          <Container fluid>
-            <Row>
-              <Col style={{ width: "33vw" }}>
-                <Card
-                  style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
-                  bg={"light"}
-                >
-                  <Card.Body>
-                    <Card.Title>{`${this.props.currentIsoCode}`}</Card.Title>
-                    <Card.Text>
-                      {`Total Cases per Million: ${this.props.currentTotalCasesText}`}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col style={{ width: "33vw" }}>
-                <ComposedChart
-                  width={500}
-                  height={350}
-                  data={cases_real}
-                  margin={{
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 20,
-                  }}
-                >
-                  <CartesianGrid stroke="#f5f5f5" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="cases_weekly_avg" fill="#413ea0" />
-                  <Line
-                    data={cases_counterfactual}
-                    type="monotone"
-                    dataKey="cases_weekly_avg"
-                    stroke="#ff7300"
-                  />
-                </ComposedChart>
-              </Col>
-              <Col style={{ width: "33vw" }}>
-                <Card
-                  style={{ width: "18rem", marginTop: 50, marginBottom: 50 }}
-                  bg={"light"}
-                >
-                  <Card.Text>
-                    Any other cases_real/information we might want to add in
-                    here.
-                  </Card.Text>
-                </Card>
-              </Col>
-            </Row>
-          </Container>
+          <ResponsiveContainer height="95%">
+            <ComposedChart data={this.state.casesData}>
+              <CartesianGrid stroke="#f5f5f5" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="weekly_avg_real" fill="#413ea0" />
+              <Line
+                type="monotone"
+                dataKey="weekly_avg_counterfactual"
+                stroke="#ff7300"
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
         )}
       </div>
     );

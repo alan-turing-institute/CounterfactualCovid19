@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("date", models.DateField()),
-                ("cases", models.FloatField()),
+                ("weekly_avg_cases", models.FloatField()),
                 (
                     "country",
                     models.ForeignKey(

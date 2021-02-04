@@ -69,8 +69,8 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
     serializer_class = CasesCounterfactualIntegratedSerializer
 
     def simulate(self, iso_codes, start_date, end_date):
-        return CounterfactualCasesRecord.simulate_counterfactual_summary_records(
-            iso_codes, start_date, end_date
+        return CounterfactualCasesRecord.simulate_counterfactual_records(
+            iso_codes, start_date, end_date, summary=True
         )
 
 
@@ -92,8 +92,8 @@ class CasesRealViewMixin(ABC):
         # We run a window function over all entries, summing `cases` over all previous entries
         # We finish by returning the query ordered by date
         queryset = CasesRecord.objects.annotate(
-            cumulative_cases=Window(
-                expression=Sum("cases"),
+            summed_avg_cases=Window(
+                expression=Sum("weekly_avg_cases"),
                 partition_by=[F("country")],
                 order_by=F("date").asc(),
             )
@@ -134,8 +134,8 @@ class CasesRealIntegratedView(CasesRealViewMixin, viewsets.ModelViewSet):
         # Aggregate by country, calculating total cases and per-capita total cases
         return queryset.values("country").annotate(
             date=Max("date"),
-            total_cases=Sum("cases"),
-            total_cases_per_million=ExpressionWrapper(
-                1e6 * Sum("cases") / F("country__population"), output_field=FloatField()
+            summed_avg_cases=Sum("weekly_avg_cases"),
+            summed_avg_cases_per_million=ExpressionWrapper(
+                1e6 * Sum("weekly_avg_cases") / F("country__population"), output_field=FloatField()
             ),
         )

@@ -28,6 +28,8 @@ services:
     restart: always
   frontend:
     build: ./frontend
+    depends_on:
+      - backend
     networks:
       - app
     ports:

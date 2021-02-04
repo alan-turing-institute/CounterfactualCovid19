@@ -1,14 +1,14 @@
-from .concrete import CasesRecord
-import pandas as pd
 from datetime import date
+import pandas as pd
+from .concrete import CasesRecord
 
 
 class CounterfactualCasesRecord:
-    def __init__(self, iso_code, date, cases, cumulative_cases):
+    def __init__(self, iso_code, date, weekly_avg_cases, summed_avg_cases):
         self.iso_code = iso_code
         self.date = date
-        self.cases = cases
-        self.cumulative_cases = cumulative_cases
+        self.weekly_avg_cases = weekly_avg_cases
+        self.summed_avg_cases = summed_avg_cases
 
     @staticmethod
     def simulate_counterfactual_dataframes(iso_codes, start_date, end_date):
@@ -19,7 +19,7 @@ class CounterfactualCasesRecord:
                 "country__iso_code",
                 "country__population",
                 "date",
-                "cases",
+                "weekly_avg_cases",
             )
         ).rename(
             columns={
@@ -37,7 +37,7 @@ class CounterfactualCasesRecord:
             iso_codes = df_data.iso_code.unique()
         # Simulate each requested country
         df_counterfactuals = [
-            CounterfactualCasesRecord.add_cumulative(
+            CounterfactualCasesRecord.add_cumulative_sum(
                 CounterfactualCasesRecord.simulate_single_country(
                     df_data[df_data["iso_code"] == iso_code]
                 )
@@ -47,42 +47,34 @@ class CounterfactualCasesRecord:
         return df_counterfactuals
 
     @staticmethod
-    def simulate_counterfactual_records(iso_codes, start_date, end_date):
+    def simulate_counterfactual_records(iso_codes, start_date, end_date, summary=False):
         df_counterfactuals = (
             CounterfactualCasesRecord.simulate_counterfactual_dataframes(
                 iso_codes, start_date, end_date
             )
         )
+        if summary:
+            df_counterfactuals = [
+                df[df["date"] == df["date"].max()] for df in df_counterfactuals
+            ]
         # Convert to records, flatten/combine and return
         return sum([df.to_dict("records") for df in df_counterfactuals], [])
 
     @staticmethod
-    def simulate_counterfactual_summary_records(iso_codes, start_date, end_date):
-        df_counterfactuals = (
-            CounterfactualCasesRecord.simulate_counterfactual_dataframes(
-                iso_codes, start_date, end_date
-            )
-        )
-        # df_latest_dates = [df.iloc[[df["date"].idxmax()]] for df in df_counterfactuals]
-        df_latest_dates = [
-            df[df["date"] == df["date"].max()] for df in df_counterfactuals
-        ]
-        # Convert to records, flatten/combine and return
-        return sum([df.to_dict("records") for df in df_latest_dates], [])
-
-    @staticmethod
-    def add_cumulative(df_country_data):
+    def add_cumulative_sum(df_country_data):
         """Counterfactual simulation for a single country"""
-        df_out = df_country_data.sort_values(by=["date"])
-        df_out["cumulative_cases"] = df_out["cases"].cumsum()
+        df_out = df_country_data.copy().sort_values(by=["date"])
+        df_out["summed_avg_cases"] = df_out["weekly_avg_cases"].cumsum()
         return df_out
 
     @staticmethod
     def simulate_single_country(df_country_data):
         """Counterfactual simulation for a single country"""
-        return df_country_data
+        df_out = df_country_data.copy()
+        df_out["weekly_avg_cases"] = df_out["weekly_avg_cases"].rolling(10, center=True, closed=None).mean().fillna(0)
+        return df_out
 
     def __str__(self):
         return (
-            f"({self.iso_code}) [{self.date}] => {self.cases} ({self.cumulative_cases})"
+            f"({self.iso_code}) [{self.date}] => {self.weekly_avg_cases} ({self.summed_avg_cases})"
         )

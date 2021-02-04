@@ -2,7 +2,7 @@ import React from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Histogram from "./Histogram";
+import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
 import Loading from "./Loading";
 import WorldMap from "./WorldMap";
@@ -12,12 +12,13 @@ export default class MainGrid extends React.Component {
   constructor(props) {
     super(props);
 
-    // Initialize state first
+    // Add component-level state
     this.state = {
       countries: [],
-      currentIsoCode: null,
-      currentTotalCasesText: null,
+      isoCode: null,
+      summedAvgCases: null,
       sizeMapComponent: "90vh",
+      sizeHistogramComponent: "10vh",
     };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
@@ -35,17 +36,22 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code, total_cases_text) {
-    console.log(`Selected country is ${iso_code}`);
-
-    if (iso_code === this.state.currentIsoCode) {
-      this.setState({ currentIsoCode: null });
-      this.setState({ currentTotalCasesText: null });
-      this.setState({ sizeMapComponent: "90vh" });
+  handleCountryChange(iso_code, summed_avg_cases) {
+    console.log(`Setting country of interest to ${iso_code}`);
+    if (iso_code === this.state.isoCode) {
+      this.setState({
+        isoCode: null,
+        summedAvgCases: null,
+        sizeMapComponent: "90vh",
+        sizeHistogramComponent: "10vh",
+      });
     } else {
-      this.setState({ currentIsoCode: iso_code });
-      this.setState({ currentTotalCasesText: total_cases_text });
-      this.setState({ sizeMapComponent: "65vh" });
+      this.setState({
+        isoCode: iso_code,
+        summedAvgCases: summed_avg_cases,
+        sizeMapComponent: "65vh",
+        sizeHistogramComponent: "35vh",
+      });
     }
   }
 
@@ -64,15 +70,16 @@ export default class MainGrid extends React.Component {
                   onCountrySelect={this.handleCountryChange}
                 />
               </Col>
-              <Col style={{ padding: "0px" }}>
+              <Col xs={2} style={{ padding: "0px" }}>
                 <Legend />
               </Col>
             </Row>
-            <Row style={{ flex_grow: 1, flex_shrink: 1, flex_basis: "auto" }}>
-              <Col>
-                <Histogram
-                  currentIsoCode={this.state.currentIsoCode}
-                  currentTotalCasesText={this.state.currentTotalCasesText}
+            <Row style={{ height: this.state.sizeHistogramComponent }}>
+              <Col xs={12} style={{ padding: "0px" }}>
+                <InfoPanel
+                  isoCode={this.state.isoCode}
+                  summedAvgCases={this.state.summedAvgCases}
+                  height={this.state.sizeHistogramComponent}
                 />
               </Col>
             </Row>

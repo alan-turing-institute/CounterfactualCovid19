@@ -16,10 +16,10 @@ const Legend = () => {
           key={item.title}
           style={{
             backgroundColor: item.color,
-            flex: 1,
             display: "flex",
+            flex: 1,
             alignItems: "center", // vertical
-            justifyContent: "center", // horiztontal
+            justifyContent: "center", // horizontal
             color: item.textColor != null ? item.textColor : "black",
             fontWeight: "bolder",
             fontSize: "1em",
