@@ -64,7 +64,7 @@ export default class MainGrid extends React.Component {
           <Loading />
         ) : (
           <Container fluid>
-           <Row style={{ height: "12vh" }}>
+            <Row style={{ height: "12vh" }}>
               <Col xs={12} style={{ padding: "0px" }}>
                 <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
                   <Card.Body
