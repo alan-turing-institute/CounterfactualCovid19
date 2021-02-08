@@ -10,9 +10,7 @@ export default class InfoPanel extends React.Component {
   render() {
     return (
       <div>
-        {!this.props.isoCode ? (
-            null
-         ) : (
+        {!this.props.isoCode ? null : (
           <Container fluid>
             <Row>
               <Col xs={4} md={3} lg={2}>

@@ -67,10 +67,20 @@ export default class MainGrid extends React.Component {
            <Row style={{ height: "12vh" }}>
               <Col xs={12} style={{ padding: "0px" }}>
                 <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
-                    <Card.Body style={{ display: "flex", justifyContent: "center" }}>
-                    <Card.Title>What if?: The counterfactual story of the first wave of Covid19 in Europe.</Card.Title>
-                    <Card.Text> This dashboard contains data and simulations of the growth of Covid19 cases in Europe between X and X.Select a country to start.</Card.Text>
-                    </Card.Body>
+                  <Card.Body
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Card.Title>
+                      What if?: The counterfactual story of the first wave of
+                      Covid19 in Europe.
+                    </Card.Title>
+                    <Card.Text>
+                      {" "}
+                      This dashboard contains data and simulations of the growth
+                      of Covid19 cases in Europe between X and X.Select a
+                      country to start.
+                    </Card.Text>
+                  </Card.Body>
                 </Card>
               </Col>
             </Row>
