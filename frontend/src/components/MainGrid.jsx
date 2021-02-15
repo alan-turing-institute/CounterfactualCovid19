@@ -65,7 +65,7 @@ export default class MainGrid extends React.Component {
           <Loading />
         ) : (
           <Container fluid>
-           <Row style={{ height: "12vh" }}>
+            <Row style={{ height: "12vh" }}>
               <Col xs={10} style={{ padding: "0px" }}>
                 <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
                   <Card.Body
@@ -84,8 +84,15 @@ export default class MainGrid extends React.Component {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "1%" }} >
-              <HeaderPanel/>
+              <Col
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "1%",
+                  marginBottom: "1%",
+                }}
+              >
+                <HeaderPanel />
               </Col>
             </Row>
             <Row style={{ height: this.state.sizeMapComponent }}>
