@@ -6,7 +6,7 @@ WORKDIR /app/frontend
 
 # Install Node dependencies
 COPY package.json /app/frontend
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Add the rest of the code, noting that node_modules is excluded by .dockerignore
 COPY . /app/frontend
