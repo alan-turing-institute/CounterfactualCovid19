@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
 import Loading from "./Loading";
+import HeaderPanel from "./HeaderPanel";
 import WorldMap from "./WorldMap";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
 import Card from "react-bootstrap/Card";
@@ -65,7 +66,7 @@ export default class MainGrid extends React.Component {
         ) : (
           <Container fluid>
            <Row style={{ height: "12vh" }}>
-              <Col xs={12} style={{ padding: "0px" }}>
+              <Col xs={10} style={{ padding: "0px" }}>
                 <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
                   <Card.Body
                     style={{ display: "flex", justifyContent: "center" }}
@@ -82,6 +83,9 @@ export default class MainGrid extends React.Component {
                     </Card.Text>
                   </Card.Body>
                 </Card>
+              </Col>
+              <Col style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "1%" }} >
+              <HeaderPanel/>
               </Col>
             </Row>
             <Row style={{ height: this.state.sizeMapComponent }}>
