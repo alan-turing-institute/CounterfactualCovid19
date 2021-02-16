@@ -65,8 +65,8 @@ export default class MainGrid extends React.Component {
           <Loading />
         ) : (
           <Container fluid>
-           <Row style={{ height: "12vh" }}>
-              <HeaderPanel/>
+            <Row style={{ height: "12vh" }}>
+              <HeaderPanel />
             </Row>
             <Row style={{ height: this.state.sizeMapComponent }}>
               <Col md={11} style={{ padding: "0px" }}>
