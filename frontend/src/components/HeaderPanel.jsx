@@ -1,8 +1,11 @@
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 import React, { useState } from "react";
-//import Button from "react-bootstrap/Button";
-//import Popover from 'react-bootstrap/Popover';
 import { Button, Popover, PopoverHeader, PopoverBody } from "reactstrap";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
+
 
 const HeaderPanel = (props) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -10,7 +13,9 @@ const HeaderPanel = (props) => {
   const toggle = () => setPopoverOpen(!popoverOpen);
   return (
     <div>
-       <Col xs={10} style={{ padding: "0px" }}>
+       <Container fluid>
+       <Row>
+       <Col xs={10} md={10} lg={10} style={{ padding: "0px" }}>
           <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
              <Card.Body
                  style={{ display: "flex", justifyContent: "center" }}>
@@ -27,8 +32,8 @@ const HeaderPanel = (props) => {
                   </Card.Body>
                 </Card>
               </Col>
-       <Col style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "1%" }} >
-      <Button id="Popover1" type="button" size="lg" block>
+       <Col style={{ display: "flex", justifyContent: "center", padding: "0px" }} >
+      <Button id="Popover1" type="button" size="md" block>
         About this project
       </Button>
       <Popover
@@ -43,6 +48,10 @@ const HeaderPanel = (props) => {
           Pellentesque ornare sem lacinia quam venenatis vestibulum.
         </PopoverBody>
       </Popover>
+      </Col>
+    </Row>
+    </Container>
+
     </div>
   );
 };

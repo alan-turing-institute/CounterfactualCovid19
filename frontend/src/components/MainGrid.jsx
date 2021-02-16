@@ -19,8 +19,8 @@ export default class MainGrid extends React.Component {
       countries: [],
       isoCode: null,
       summedAvgCases: null,
-      sizeMapComponent: "90vh",
-      sizeHistogramComponent: "10vh",
+      sizeMapComponent: "88vh",
+      sizeHistogramComponent: "0vh",
     };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
