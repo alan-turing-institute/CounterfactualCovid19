@@ -56,7 +56,7 @@ def get_important_dates(country, df_summaries):
     # Record important dates
     # date for which cumulative cases first exceeded this percent (Date_pop_pct)
     dates_dict["initial_date"] = pd.to_datetime(
-        summary_eur_country.Date_pop_pct.values[0], format="%Y-%m-%d"
+        summary_eur_country.Date_start.values[0], format="%Y-%m-%d"
     )
 
     # lastdate to include data

@@ -27,7 +27,7 @@ def test_get_natural_history_data():
 
 def test_get_important_dates():
 
-    url_summaries = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/Country%20summaries.csv"
+    url_summaries = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/summary_eur.csv"
     df_summaries = pd.read_csv(url_summaries)
 
     country = "United Kingdom"

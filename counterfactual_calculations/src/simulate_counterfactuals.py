@@ -200,7 +200,7 @@ def simulate_counterfactuals(
         growth_factor_3_i = knots_best_country_counterfactual_i["Growth_factor_3"]
 
         # Define number of simulation runs for specified knot dates
-        n_runs_i = knots_best_country_counterfactual_i["N_unequal"]
+        n_runs_i = knots_best_country_counterfactual_i["Min_n_unequal"]
 
         daily_cases_sim_i = pd.DataFrame(
             index=[i for i in range(n_runs_i)],
