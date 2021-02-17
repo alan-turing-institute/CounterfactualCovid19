@@ -9,14 +9,8 @@ import Histogram from "./Histogram";
 export default class InfoPanel extends React.Component {
   render() {
     return (
-      <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-        {!this.props.isoCode ? (
-          <Card bg={"dark"} text={"light"} style={{ width: "100%" }}>
-            <Card.Body style={{ display: "flex", justifyContent: "center" }}>
-              <Card.Text>Select a country</Card.Text>
-            </Card.Body>
-          </Card>
-        ) : (
+      <div>
+        {!this.props.isoCode ? null : (
           <Container fluid>
             <Row>
               <Col xs={4} md={3} lg={2}>

@@ -71,10 +71,13 @@ class CounterfactualCasesRecord:
     def simulate_single_country(df_country_data):
         """Counterfactual simulation for a single country"""
         df_out = df_country_data.copy()
-        df_out["weekly_avg_cases"] = df_out["weekly_avg_cases"].rolling(10, center=True, closed=None).mean().fillna(0)
+        df_out["weekly_avg_cases"] = (
+            df_out["weekly_avg_cases"]
+            .rolling(10, center=True, closed=None)
+            .mean()
+            .fillna(0)
+        )
         return df_out
 
     def __str__(self):
-        return (
-            f"({self.iso_code}) [{self.date}] => {self.weekly_avg_cases} ({self.summed_avg_cases})"
-        )
+        return f"({self.iso_code}) [{self.date}] => {self.weekly_avg_cases} ({self.summed_avg_cases})"

@@ -5,8 +5,10 @@ import Row from "react-bootstrap/Row";
 import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
 import Loading from "./Loading";
+import HeaderPanel from "./HeaderPanel";
 import WorldMap from "./WorldMap";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
+import Card from "react-bootstrap/Card";
 
 export default class MainGrid extends React.Component {
   constructor(props) {
@@ -17,8 +19,8 @@ export default class MainGrid extends React.Component {
       countries: [],
       isoCode: null,
       summedAvgCases: null,
-      sizeMapComponent: "90vh",
-      sizeHistogramComponent: "10vh",
+      sizeMapComponent: "88vh",
+      sizeHistogramComponent: "0vh",
     };
 
     // Bind the `handleCountryChange` function to allow it to be used by other objects
@@ -42,15 +44,15 @@ export default class MainGrid extends React.Component {
       this.setState({
         isoCode: null,
         summedAvgCases: null,
-        sizeMapComponent: "90vh",
-        sizeHistogramComponent: "10vh",
+        sizeMapComponent: "88vh",
+        sizeHistogramComponent: "0vh",
       });
     } else {
       this.setState({
         isoCode: iso_code,
         summedAvgCases: summed_avg_cases,
-        sizeMapComponent: "65vh",
-        sizeHistogramComponent: "35vh",
+        sizeMapComponent: "50vh",
+        sizeHistogramComponent: "38vh",
       });
     }
   }
@@ -63,14 +65,17 @@ export default class MainGrid extends React.Component {
           <Loading />
         ) : (
           <Container fluid>
+            <Row style={{ height: "12vh" }}>
+              <HeaderPanel />
+            </Row>
             <Row style={{ height: this.state.sizeMapComponent }}>
-              <Col xs={10} style={{ padding: "0px" }}>
+              <Col md={11} style={{ padding: "0px" }}>
                 <WorldMap
                   countries={this.state.countries}
                   onCountrySelect={this.handleCountryChange}
                 />
               </Col>
-              <Col xs={2} style={{ padding: "0px" }}>
+              <Col xs={1} style={{ padding: "0px" }}>
                 <Legend />
               </Col>
             </Row>

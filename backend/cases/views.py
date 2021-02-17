@@ -136,6 +136,7 @@ class CasesRealIntegratedView(CasesRealViewMixin, viewsets.ModelViewSet):
             date=Max("date"),
             summed_avg_cases=Sum("weekly_avg_cases"),
             summed_avg_cases_per_million=ExpressionWrapper(
-                1e6 * Sum("weekly_avg_cases") / F("country__population"), output_field=FloatField()
+                1e6 * Sum("weekly_avg_cases") / F("country__population"),
+                output_field=FloatField(),
             ),
         )
