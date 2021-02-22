@@ -7,7 +7,12 @@ from counterfactual_calculations.src.process_data import (
 
 
 def simulate_country_counterfactuals(
-    country, counterfactual_shift, df_cases, best_knots_points, df_summaries, df_possible_counterfactuals
+    country,
+    counterfactual_shift,
+    df_cases,
+    best_knots_points,
+    df_summaries,
+    df_possible_counterfactuals,
 ):
     """
     Function that simulates the evolution of Covi19 cases for a country, given a shift in the time
@@ -56,19 +61,17 @@ def simulate_country_counterfactuals(
         knots_best_country["Knot_date_2"], format="%Y-%m-%d"
     )
 
-
     # Get all possible combinations of counterfactual days
-    possible_days_counterfactual = df_possible_counterfactuals[df_possible_counterfactuals['Country']==country]
+    possible_days_counterfactual = df_possible_counterfactuals[
+        df_possible_counterfactuals["Country"] == country
+    ]
 
     match = possible_days_counterfactual[
         (
             possible_days_counterfactual["N_days_first_restriction"]
             == counterfactual_shift[0]
         )
-        & (
-            possible_days_counterfactual["N_days_lockdown"]
-            == counterfactual_shift[1]
-        )
+        & (possible_days_counterfactual["N_days_lockdown"] == counterfactual_shift[1])
     ]
 
     if match.shape[0] == 0:
