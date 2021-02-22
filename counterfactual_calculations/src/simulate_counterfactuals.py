@@ -7,7 +7,12 @@ from counterfactual_calculations.src.process_data import (
 
 
 def simulate_country_counterfactuals(
-    country, counterfactual_shift, df_cases, best_knots_points, df_summaries
+    country,
+    counterfactual_shift,
+    df_cases,
+    best_knots_points,
+    df_summaries,
+    df_possible_counterfactuals,
 ):
     """
     Function that simulates the evolution of Covi19 cases for a country, given a shift in the time
@@ -25,6 +30,8 @@ def simulate_country_counterfactuals(
         Different growth periods for each country
     df_summaries: dataframe
         Dates and restrictions applied for each country
+    possible_days_counterfactual: dataframe
+        Possible days that the countrefactual simulation can be done
 
     Returns
     -------
@@ -54,55 +61,17 @@ def simulate_country_counterfactuals(
         knots_best_country["Knot_date_2"], format="%Y-%m-%d"
     )
 
-    # Calculate maximum number of days earlier we can estimate FIRST RESTRICTION
-    # (minimum value of knot_date_1 greater than or equal to date)
-    max_days_counterfactual_first_restriction = min(
-        knots_best_country.Knot_date_1
-        - pd.Series(initial_date).repeat(knots_best_country.shape[0]).values
-    ).days
-    max_days_counterfactual_lockdown = min(
-        knots_best_country.Knot_date_2
-        - pd.Series(initial_date + pd.DateOffset(1))
-        .repeat(knots_best_country.shape[0])
-        .values
-    ).days
-
-    # Determine all possible combinations of counterfactual days
-    # (filter so that minimum value of knot_date_2 is always greater than knot_date_1)
-    possibles = pd.DataFrame(
-        np.array(
-            [
-                (x, y)
-                for x in range(max_days_counterfactual_first_restriction + 1)
-                for y in range(max_days_counterfactual_lockdown + 1)
-            ]
-        ),
-        columns=[
-            "Poss_days_counterfactual_first_restriction",
-            "Poss_days_counterfactual_lockdown",
-        ],
-    )
-    possible_days_counterfactual = possibles[
-        (
-            possibles["Poss_days_counterfactual_lockdown"]
-            - possibles["Poss_days_counterfactual_first_restriction"]
-        )
-        <= (
-            max_days_counterfactual_lockdown
-            - max_days_counterfactual_first_restriction
-            - 1
-        )
+    # Get all possible combinations of counterfactual days
+    possible_days_counterfactual = df_possible_counterfactuals[
+        df_possible_counterfactuals["Country"] == country
     ]
 
     match = possible_days_counterfactual[
         (
-            possible_days_counterfactual["Poss_days_counterfactual_first_restriction"]
+            possible_days_counterfactual["N_days_first_restriction"]
             == counterfactual_shift[0]
         )
-        & (
-            possible_days_counterfactual["Poss_days_counterfactual_lockdown"]
-            == counterfactual_shift[1]
-        )
+        & (possible_days_counterfactual["N_days_lockdown"] == counterfactual_shift[1])
     ]
 
     if match.shape[0] == 0:
@@ -200,7 +169,7 @@ def simulate_counterfactuals(
         growth_factor_3_i = knots_best_country_counterfactual_i["Growth_factor_3"]
 
         # Define number of simulation runs for specified knot dates
-        n_runs_i = knots_best_country_counterfactual_i["N_unequal"]
+        n_runs_i = knots_best_country_counterfactual_i["Min_n_unequal"]
 
         daily_cases_sim_i = pd.DataFrame(
             index=[i for i in range(n_runs_i)],
