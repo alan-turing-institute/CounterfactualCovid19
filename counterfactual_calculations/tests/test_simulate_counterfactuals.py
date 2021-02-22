@@ -21,10 +21,13 @@ def test_simulate_counterfactuals():
     url_summaries = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/summary_eur.csv"
     df_summaries = pd.read_csv(url_summaries)
 
+    url_possible_counterfactuals = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/possible_days_counterfactual.csv"
+    df_possible_counterfactuals = pd.read_csv(url_possible_counterfactuals)
+
     country = "United Kingdom"
 
     ts_daily_cases, ts_cum_daily_cases = simulate_country_counterfactuals(
-        country, (7, 7), df_cases, df_best_knot, df_summaries
+        country, (7, 7), df_cases, df_best_knot, df_summaries, df_possible_counterfactuals
     )
     ts_daily_cases.to_csv("covid_cases_time_series.csv")
 
