@@ -31,10 +31,13 @@ def run():
     url_dates = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/summary_eur.csv"
 
     # Load Dates dataframe and parse them allowing for NAT
-    df_dates = pd.read_csv(url_dates, parse_dates=["Date_start","Date_T","Date_first_restriction","Date_lockdown"])
+    df_dates = pd.read_csv(
+        url_dates,
+        parse_dates=["Date_start", "Date_T", "Date_first_restriction", "Date_lockdown"],
+    )
 
     # replace all NaT with None needed for django
-    df_dates.Date_lockdown = df_dates.Date_lockdown.astype(str).replace({'NaT': None})
+    df_dates.Date_lockdown = df_dates.Date_lockdown.astype(str).replace({"NaT": None})
 
     # Delete all existing Dates data and regenerate the table
     Dates.objects.all().delete()
