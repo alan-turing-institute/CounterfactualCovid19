@@ -10,6 +10,7 @@ class DatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dates
         fields = (
+            "iso_code",
             "initial_date",
             "maximum_date",
             "first_restrictions_date",
