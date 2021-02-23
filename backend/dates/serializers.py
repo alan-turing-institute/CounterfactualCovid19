@@ -15,4 +15,3 @@ class DatesSerializer(serializers.ModelSerializer):
             "first_restrictions_date",
             "lockdown_date",
         )
-
