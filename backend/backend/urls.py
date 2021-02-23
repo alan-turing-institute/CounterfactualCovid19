@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from countries.views import CountryView
+from dates.views import DatesView
+
 from cases.views import (
     CasesCounterfactualDailyAbsoluteView,
     CasesCounterfactualDailyNormalisedView,
@@ -28,6 +30,8 @@ from cases.views import (
 
 router = routers.DefaultRouter()
 router.register("countries", CountryView)
+router.register("dates", DatesView)
+
 router.register(
     "cases/counterfactual/daily/absolute",
     CasesCounterfactualDailyAbsoluteView,
