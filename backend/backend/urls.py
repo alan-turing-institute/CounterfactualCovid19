@@ -18,6 +18,7 @@ from django.urls import include, path
 from rest_framework import routers
 from countries.views import CountryView
 from dates.views import DatesView
+from knotpoints.views import KnotPointsView
 
 from cases.views import (
     CasesCounterfactualDailyAbsoluteView,
@@ -31,6 +32,8 @@ from cases.views import (
 router = routers.DefaultRouter()
 router.register("countries", CountryView)
 router.register("dates", DatesView)
+router.register("knotpoints", KnotPointsView)
+
 
 router.register(
     "cases/counterfactual/daily/absolute",

@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "countries",
     "cases",
     "dates",
+    "knotpoints",
+
 ]
 
 MIDDLEWARE = [
