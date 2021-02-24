@@ -31,22 +31,35 @@ def run():
     url_best_knot = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/knots_best.csv"
 
     # Load Dates dataframe and parse them allowing for NAT
-    df_best_knot = pd.read_csv(url_best_knot, parse_dates=["Knot_date_1", "Knot_date_2"])
+    df_best_knot = pd.read_csv(
+        url_best_knot, parse_dates=["Knot_date_1", "Knot_date_2"]
+    )
 
     # replace all NaT with None needed for django
-    df_best_knot.Knot_date_2 = df_best_knot.Knot_date_2.astype(str).replace({"NaT": None, "Nan": None, "null": None,"nan": None})
-    df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.astype(str).replace({"NaT": None, "Nan": None, "null": None,"nan": None})
-    df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.astype(str).replace({"NaT": None, "NaN": None, "null": None,"nan": None})
-    df_best_knot.Growth_factor_3 = df_best_knot.Growth_factor_3.astype(str).replace({"NaT": None, "NaN": None, "null": None,"nan": None})
+    df_best_knot.Knot_date_2 = df_best_knot.Knot_date_2.astype(str).replace(
+        {"NaT": None, "Nan": None, "null": None, "nan": None}
+    )
+    df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.astype(str).replace(
+        {"NaT": None, "Nan": None, "null": None, "nan": None}
+    )
+    df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.astype(str).replace(
+        {"NaT": None, "NaN": None, "null": None, "nan": None}
+    )
+    df_best_knot.Growth_factor_3 = df_best_knot.Growth_factor_3.astype(str).replace(
+        {"NaT": None, "NaN": None, "null": None, "nan": None}
+    )
 
     # Delete all existing Dates data and regenerate the table
     KnotPoints.objects.all().delete()
 
     # Add an ISO code column lookup table
     code_lookup = {
-        country: get_country_code(country) for country in df_best_knot["Country"].unique()
+        country: get_country_code(country)
+        for country in df_best_knot["Country"].unique()
     }
-    df_best_knot["iso_code"] = df_best_knot.apply(lambda row: code_lookup[row.Country], axis=1)
+    df_best_knot["iso_code"] = df_best_knot.apply(
+        lambda row: code_lookup[row.Country], axis=1
+    )
 
     # Create a lookup table from ISO code to Country model
     country_lookup = {
@@ -67,7 +80,6 @@ def run():
                     growth_factor_2=entry.Growth_factor_2,
                     growth_factor_3=entry.Growth_factor_3,
                     min_n_unequal=entry.Min_n_unequal,
-
                 )
                 m.save()
 
