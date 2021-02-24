@@ -11,12 +11,12 @@ class KnotPoints(models.Model):
     )
 
     knot_date_1 = models.DateField()
-    knot_date_2 = models.DateField()
+    knot_date_2 = models.DateField(null=True)
     n_knots = models.IntegerField()
     growth_factor_1 = models.FloatField()
-    growth_factor_2 = models.FloatField()
-    growth_factor_3 = models.FloatField()
-    min_n_unequal = models.IntegerField()
+    growth_factor_2 = models.FloatField(null=True)
+    growth_factor_3 = models.FloatField(null=True)
+    min_n_unequal = models.IntegerField(null=True)
 
     def __str__(self):
         return f"{self.country}: ({self.knot_date_1}), {self.knot_date_2}"
