@@ -19,6 +19,7 @@ from rest_framework import routers
 from countries.views import CountryView
 from dates.views import DatesView
 from knotpoints.views import KnotPointsView
+from possibledates.views import PossibleDatesView
 
 from cases.views import (
     CasesCounterfactualDailyAbsoluteView,
@@ -33,6 +34,7 @@ router = routers.DefaultRouter()
 router.register("countries", CountryView)
 router.register("dates", DatesView)
 router.register("knotpoints", KnotPointsView)
+router.register("possibledates", PossibleDatesView)
 
 
 router.register(
