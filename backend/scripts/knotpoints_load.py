@@ -79,7 +79,7 @@ def run():
                     growth_factor_1=entry.Growth_factor_1,
                     growth_factor_2=entry.Growth_factor_2,
                     growth_factor_3=entry.Growth_factor_3,
-                    min_n_unequal=entry.Min_n_unequal,
+                    weight=entry.Min_n_unequal,
                 )
                 m.save()
 

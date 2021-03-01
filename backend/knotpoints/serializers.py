@@ -17,5 +17,5 @@ class KnotPointsSerializer(serializers.ModelSerializer):
             "growth_factor_1",
             "growth_factor_2",
             "growth_factor_3",
-            "min_n_unequal",
+            "weight",
         )
