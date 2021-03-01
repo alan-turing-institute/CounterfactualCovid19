@@ -7,7 +7,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("countries", "0001_country"),
-        ("knotpoints", "0001_knotpoints"),
     ]
 
     operations = [
@@ -29,7 +28,7 @@ class Migration(migrations.Migration):
                 ("growth_factor_1", models.FloatField()),
                 ("growth_factor_2", models.FloatField(null=True)),
                 ("growth_factor_3", models.FloatField(null=True)),
-                ("min_n_unequal", models.IntegerField(null=True)),
+                ("weight", models.IntegerField(null=True)),
                 (
                     "country",
                     models.ForeignKey(
@@ -40,7 +39,5 @@ class Migration(migrations.Migration):
                 ),
             ],
         ),
-        migrations.DeleteModel(
-            name="Country",
-        ),
+
     ]

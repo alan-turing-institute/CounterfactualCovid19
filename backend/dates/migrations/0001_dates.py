@@ -7,7 +7,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("countries", "0001_country"),
-        ("dates", "0001_dates"),
     ]
 
     operations = [
@@ -36,8 +35,5 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-        ),
-        migrations.DeleteModel(
-            name="Country",
         ),
     ]
