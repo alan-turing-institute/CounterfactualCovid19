@@ -15,4 +15,3 @@ class PossibleDatesSerializer(serializers.ModelSerializer):
             "dates_counterfactual_first_restrictions",
             "dates_counterfactual_lockdown",
         )
-

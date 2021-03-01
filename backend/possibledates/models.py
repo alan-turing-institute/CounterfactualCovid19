@@ -6,7 +6,9 @@ from countries.models import Country
 
 class PossibleDates(models.Model):
 
-    country = models.ForeignKey(Country, related_name="PossibleDates", on_delete=models.CASCADE)
+    country = models.ForeignKey(
+        Country, related_name="PossibleDates", on_delete=models.CASCADE
+    )
 
     n_days_first_restrictions = models.PositiveIntegerField()
     n_days_lockdown = models.PositiveIntegerField()

@@ -23,10 +23,11 @@ class Migration(migrations.Migration):
                         primary_key=True,
                         serialize=False,
                         verbose_name="ID",
-                    )),
+                    ),
+                ),
                 ("n_days_first_restrictions", models.PositiveIntegerField()),
                 ("n_days_lockdown", models.PositiveIntegerField()),
-                ("dates_counterfactual_first_restrictions",models.DateField()),
+                ("dates_counterfactual_first_restrictions", models.DateField()),
                 ("dates_counterfactual_lockdown", models.DateField()),
                 (
                     "country",
@@ -35,9 +36,7 @@ class Migration(migrations.Migration):
                         related_name="possibledates",
                         to="countries.country",
                     ),
-
-
-        ),
-        ],
+                ),
+            ],
         )
     ]

@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "cases",
     "dates",
     "knotpoints",
-    "possibledates"
+    "possibledates",
 ]
 
 MIDDLEWARE = [
