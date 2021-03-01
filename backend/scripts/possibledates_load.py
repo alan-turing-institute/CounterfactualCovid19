@@ -32,23 +32,24 @@ def run():
 
     # Load Dates dataframe and parse them allowing for NAT
     df_best_knot = pd.read_csv(
-        url_possible_counterfactuals, parse_dates=["Date_first_restriction", "Date_lockdown"]
+        url_possible_counterfactuals,
+        parse_dates=["Date_first_restriction", "Date_lockdown"],
     )
 
     # replace all NaT with None needed for django
-    df_best_knot.Date_first_restriction = df_best_knot.Date_first_restriction.astype(str).replace(
-        {"NaT": None, "Nan": None, "null": None, "nan": None}
-    )
-    df_best_knot.Date_lockdown = df_best_knot.Date_lockdown.astype(
-        str).replace(
+    df_best_knot.Date_first_restriction = df_best_knot.Date_first_restriction.astype(
+        str
+    ).replace({"NaT": None, "Nan": None, "null": None, "nan": None})
+    df_best_knot.Date_lockdown = df_best_knot.Date_lockdown.astype(str).replace(
         {"NaT": None, "Nan": None, "null": None, "nan": None}
     )
     # replace all NaT with None needed for django
-    df_best_knot.N_days_first_restriction = df_best_knot.N_days_first_restriction.astype(str).replace(
-        {"NaT": None, "Nan": None, "null": None, "nan": None}
+    df_best_knot.N_days_first_restriction = (
+        df_best_knot.N_days_first_restriction.astype(str).replace(
+            {"NaT": None, "Nan": None, "null": None, "nan": None}
+        )
     )
-    df_best_knot.N_days_lockdown = df_best_knot.N_days_lockdown.astype(
-        str).replace(
+    df_best_knot.N_days_lockdown = df_best_knot.N_days_lockdown.astype(str).replace(
         {"NaT": None, "Nan": None, "null": None, "nan": None}
     )
 
@@ -80,7 +81,6 @@ def run():
                     n_days_lockdown=entry.N_days_lockdown,
                     dates_counterfactual_first_restrictions=entry.Date_first_restriction,
                     dates_counterfactual_lockdown=entry.Date_lockdown,
-
                 )
                 m.save()
 
