@@ -6,27 +6,41 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('countries', '0001_country'),
-        ('knotpoints', '0001_knotpoints'),
+        ("countries", "0001_country"),
+        ("knotpoints", "0001_knotpoints"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='KnotPoints',
+            name="KnotPoints",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('knot_date_1', models.DateField()),
-                ('knot_date_2', models.DateField(null=True)),
-                ('n_knots', models.IntegerField()),
-                ('growth_factor_1', models.FloatField()),
-                ('growth_factor_2', models.FloatField(null=True)),
-                ('growth_factor_3', models.FloatField(null=True)),
-                ('min_n_unequal', models.IntegerField(null=True)),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='KnotPoints',
-                                              to='countries.country')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("knot_date_1", models.DateField()),
+                ("knot_date_2", models.DateField(null=True)),
+                ("n_knots", models.IntegerField()),
+                ("growth_factor_1", models.FloatField()),
+                ("growth_factor_2", models.FloatField(null=True)),
+                ("growth_factor_3", models.FloatField(null=True)),
+                ("min_n_unequal", models.IntegerField(null=True)),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="KnotPoints",
+                        to="countries.country",
+                    ),
+                ),
             ],
         ),
         migrations.DeleteModel(
-            name='Country',
+            name="Country",
         ),
     ]
