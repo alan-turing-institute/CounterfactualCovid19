@@ -1,7 +1,9 @@
 from datetime import date
 import pandas as pd
 from .concrete import CasesRecord
-
+from django.db import models
+from knotpoints.models import KnotPoints
+from dates.models import Dates
 
 class CounterfactualCasesRecord:
     def __init__(self, iso_code, date, weekly_avg_cases, summed_avg_cases):
@@ -9,6 +11,9 @@ class CounterfactualCasesRecord:
         self.date = date
         self.weekly_avg_cases = weekly_avg_cases
         self.summed_avg_cases = summed_avg_cases
+
+    KnotPoints = models.ForeignKey(KnotPoints, related_name="counterfactual_knotPoints_records", on_delete=models.CASCADE)
+    Dates = models.ForeignKey(Dates, related_name="conterfactual_dates_records", on_delete=models.CASCADE)
 
     @staticmethod
     def simulate_counterfactual_dataframes(iso_codes, start_date, end_date):
@@ -27,6 +32,21 @@ class CounterfactualCasesRecord:
                 "country__population": "population",
             }
         )
+        df_data_knotpoints = pd.DataFrame.from_records(
+            KnotPoints.objects.all().values(
+                "country","knot_date_1","knot_date_2",
+                 "n_knots","growth_factor_1","growth_factor_2",
+                  "growth_factor_3","weight")).rename(columns={
+                "country": "iso_code"})
+
+        df_dates = pd.DataFrame.from_records(
+            Dates.objects.all().values(
+                "country", "initial_date", "maximum_date")).rename(columns={
+                "country": "iso_code"})
+
+        print (df_data_knotpoints.head())
+        print (df_dates.head())
+
         # Filter by date if requested
         if start_date:
             df_data = df_data[df_data["date"] >= date.fromisoformat(start_date)]
