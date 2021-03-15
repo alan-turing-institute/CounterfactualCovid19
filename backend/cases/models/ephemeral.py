@@ -182,9 +182,10 @@ class CounterfactualCasesRecord:
             {'date': pd.to_datetime(counterfactual_cases.index, format='%Y-%m-%d'),
              'weekly_avg_cases': counterfactual_cases.values})
 
-
+        df_out = df_country_data.copy()
         # remove columns of weekly_avg_cases because it will be replaced with counterfactual cases
-        df_out = df_country_data.copy().drop(columns=['weekly_avg_cases'], inplace=True)
+        df_out.drop(columns=['weekly_avg_cases'], inplace=True)
+
         # merge dataframes adding new counterfactual cases
         df_out_final = pd.merge(df_out, counterfactual_cases_df, on='date', how="outer")
         df_out_final.fillna(0, inplace=True)
