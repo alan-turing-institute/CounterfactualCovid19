@@ -41,7 +41,6 @@ def test_simulate_counterfactuals():
 
     assert ts_daily_cases[-1] == 256.22020291814306
 
-
     assert ts_cum_daily_cases.index[10] == "03-12-2020"
     assert ts_cum_daily_cases.index[-1] == "06-10-2020"
     assert ts_cum_daily_cases.index[0] == "03-02-2020"

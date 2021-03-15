@@ -173,9 +173,7 @@ def simulate_counterfactuals(
 
         daily_cases_sim_i = pd.DataFrame(
             index=[i for i in range(n_runs_i)],
-            columns=pd.date_range(
-                start=initial_date, end=maximum_date, freq="D"
-            )
+            columns=pd.date_range(start=initial_date, end=maximum_date, freq="D")
             .strftime("%m-%d-%Y")
             .tolist(),
         )

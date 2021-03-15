@@ -13,9 +13,14 @@ class CounterfactualCasesRecord:
         self.weekly_avg_cases = weekly_avg_cases
         self.summed_avg_cases = summed_avg_cases
 
-    KnotPoints = models.ForeignKey(KnotPoints, related_name="counterfactual_knotPoints_records",
-                                   on_delete=models.CASCADE)
-    Dates = models.ForeignKey(Dates, related_name="conterfactual_dates_records", on_delete=models.CASCADE)
+    KnotPoints = models.ForeignKey(
+        KnotPoints,
+        related_name="counterfactual_knotPoints_records",
+        on_delete=models.CASCADE,
+    )
+    Dates = models.ForeignKey(
+        Dates, related_name="conterfactual_dates_records", on_delete=models.CASCADE
+    )
 
     @staticmethod
     def simulate_counterfactual_dataframes(iso_codes, start_date, end_date):
@@ -23,10 +28,7 @@ class CounterfactualCasesRecord:
         # Load data from database
         df_data = pd.DataFrame.from_records(
             CasesRecord.objects.all().values(
-                "country__iso_code",
-                "country__population",
-                "date",
-                "weekly_avg_cases"
+                "country__iso_code", "country__population", "date", "weekly_avg_cases"
             )
         ).rename(
             columns={
@@ -34,23 +36,36 @@ class CounterfactualCasesRecord:
                 "country__population": "population",
             }
         )
-        df_data['date'] = pd.to_datetime(df_data.date, format='%Y-%m-%d')
+        df_data["date"] = pd.to_datetime(df_data.date, format="%Y-%m-%d")
 
         df_data_knotpoints = pd.DataFrame.from_records(
             KnotPoints.objects.all().values(
-                "country", "knot_date_1", "knot_date_2",
-                "n_knots", "growth_factor_1", "growth_factor_2",
-                "growth_factor_3", "weight")).rename(columns={
-            "country": "iso_code"})
-        df_data_knotpoints['knot_date_1'] = pd.to_datetime(df_data_knotpoints.knot_date_1, format='%Y-%m-%d')
-        df_data_knotpoints['knot_date_2'] = pd.to_datetime(df_data_knotpoints.knot_date_2, format='%Y-%m-%d')
+                "country",
+                "knot_date_1",
+                "knot_date_2",
+                "n_knots",
+                "growth_factor_1",
+                "growth_factor_2",
+                "growth_factor_3",
+                "weight",
+            )
+        ).rename(columns={"country": "iso_code"})
+        df_data_knotpoints["knot_date_1"] = pd.to_datetime(
+            df_data_knotpoints.knot_date_1, format="%Y-%m-%d"
+        )
+        df_data_knotpoints["knot_date_2"] = pd.to_datetime(
+            df_data_knotpoints.knot_date_2, format="%Y-%m-%d"
+        )
 
         df_dates = pd.DataFrame.from_records(
-            Dates.objects.all().values(
-                "country", "initial_date", "maximum_date")).rename(columns={
-            "country": "iso_code"})
-        df_dates['initial_date'] = pd.to_datetime(df_dates.initial_date, format='%Y-%m-%d')
-        df_dates['maximum_date'] = pd.to_datetime(df_dates.maximum_date, format='%Y-%m-%d')
+            Dates.objects.all().values("country", "initial_date", "maximum_date")
+        ).rename(columns={"country": "iso_code"})
+        df_dates["initial_date"] = pd.to_datetime(
+            df_dates.initial_date, format="%Y-%m-%d"
+        )
+        df_dates["maximum_date"] = pd.to_datetime(
+            df_dates.maximum_date, format="%Y-%m-%d"
+        )
 
         # Filter by date if requested
         if start_date:
@@ -59,7 +74,6 @@ class CounterfactualCasesRecord:
             df_data = df_data[df_data["date"] < end_date]
         # Use all countries if none are provided
 
-
         if not iso_codes:
             iso_codes = df_data.iso_code.unique()
 
@@ -67,15 +81,14 @@ class CounterfactualCasesRecord:
         # Simulate each requested country
         df_counterfactuals = [
             CounterfactualCasesRecord.add_cumulative_sum(
-                CounterfactualCasesRecord.simulate_single_country(counterfactual_shift,
-                                                                  df_data[df_data["iso_code"] == iso_code],
-                                                                  df_dates[df_dates["iso_code"] == iso_code],
-                                                                  df_data_knotpoints[
-                                                                      df_data_knotpoints["iso_code"] == iso_code]
-                                                                  )
+                CounterfactualCasesRecord.simulate_single_country(
+                    counterfactual_shift,
+                    df_data[df_data["iso_code"] == iso_code],
+                    df_dates[df_dates["iso_code"] == iso_code],
+                    df_data_knotpoints[df_data_knotpoints["iso_code"] == iso_code],
+                )
             )
             for iso_code in sorted(iso_codes)
-
         ]
 
         return df_counterfactuals
@@ -87,7 +100,6 @@ class CounterfactualCasesRecord:
                 iso_codes, start_date, end_date
             )
         )
-
 
         if summary:
             df_counterfactuals = [
@@ -105,22 +117,25 @@ class CounterfactualCasesRecord:
         return df_out
 
     @staticmethod
-    def simulate_single_country(counterfactual_shift, df_country_data, df_dates_data, df_knots):
+    def simulate_single_country(
+        counterfactual_shift, df_country_data, df_dates_data, df_knots
+    ):
 
         """Counterfactual simulation for a single country"""
 
         # dates for the simulation
-        initial_date = df_dates_data['initial_date'].values[0]
-        maximum_date = df_dates_data['maximum_date'].values[0]
+        initial_date = df_dates_data["initial_date"].values[0]
+        maximum_date = df_dates_data["maximum_date"].values[0]
 
-        print ('maximum date')
-        print (maximum_date)
+        print("maximum date")
+        print(maximum_date)
 
         # starting number of cases
-        initial_case_number = \
-            df_country_data[df_country_data["date"] == initial_date]["weekly_avg_cases"].values[0]
+        initial_case_number = df_country_data[df_country_data["date"] == initial_date][
+            "weekly_avg_cases"
+        ].values[0]
 
-        print('INITIAL')
+        print("INITIAL")
         print(initial_date)
         print(initial_case_number)
 
@@ -129,12 +144,16 @@ class CounterfactualCasesRecord:
         n_days_counterfactual_lockdown = counterfactual_shift[1]
 
         df_knots["counterfactual_knot_date_1"] = df_knots["knot_date_1"] - pd.Timedelta(
-            days=n_days_counterfactual_first_restriction)
+            days=n_days_counterfactual_first_restriction
+        )
         df_knots["counterfactual_knot_date_2"] = df_knots["knot_date_2"] - pd.Timedelta(
-          days=n_days_counterfactual_lockdown)
+            days=n_days_counterfactual_lockdown
+        )
 
         # Set dates to simulate
-        dates_range = pd.date_range(start=initial_date, end=maximum_date, freq="D").tolist()
+        dates_range = pd.date_range(
+            start=initial_date, end=maximum_date, freq="D"
+        ).tolist()
 
         daily_cases_sim = pd.DataFrame()
 
@@ -149,7 +168,9 @@ class CounterfactualCasesRecord:
             )
 
             # the first day is the actual number of cases as  initial seed for the simulation
-            daily_cases_sim_i.iloc[:, 0] = [initial_case_number for _ in range(knots.weight)]
+            daily_cases_sim_i.iloc[:, 0] = [
+                initial_case_number for _ in range(knots.weight)
+            ]
 
             for d in dates_range[1:]:
                 inc_tminus1 = daily_cases_sim_i[(d - pd.Timedelta(days=1))]
@@ -179,19 +200,22 @@ class CounterfactualCasesRecord:
         counterfactual_cases = daily_cases_sim.mean(axis=0)
 
         counterfactual_cases_df = pd.DataFrame(
-            {'date': pd.to_datetime(counterfactual_cases.index, format='%Y-%m-%d'),
-             'weekly_avg_cases': counterfactual_cases.values})
+            {
+                "date": pd.to_datetime(counterfactual_cases.index, format="%Y-%m-%d"),
+                "weekly_avg_cases": counterfactual_cases.values,
+            }
+        )
 
         df_out = df_country_data.copy()
         # remove columns of weekly_avg_cases because it will be replaced with counterfactual cases
-        df_out.drop(columns=['weekly_avg_cases'], inplace=True)
+        df_out.drop(columns=["weekly_avg_cases"], inplace=True)
 
         # merge dataframes adding new counterfactual cases
-        df_out_final = pd.merge(df_out, counterfactual_cases_df, on='date', how="outer")
+        df_out_final = pd.merge(df_out, counterfactual_cases_df, on="date", how="outer")
         df_out_final.fillna(0, inplace=True)
 
         # make sure type is the expected one.
-        df_out_final['date'] = df_out_final['date'].dt.date
+        df_out_final["date"] = df_out_final["date"].dt.date
 
         return df_out_final
 
