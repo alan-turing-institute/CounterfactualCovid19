@@ -36,11 +36,18 @@ def run():
     )
 
     # replace all NaT with None needed for django
+    df_best_knot.Knot_date_1 = df_best_knot.Knot_date_1.astype(str).replace(
+        {"NaT": None, "Nan": None, "null": None, "nan": None}
+    )
+    # replace all NaT with None needed for django
     df_best_knot.Knot_date_2 = df_best_knot.Knot_date_2.astype(str).replace(
         {"NaT": None, "Nan": None, "null": None, "nan": None}
     )
     df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.astype(str).replace(
         {"NaT": None, "Nan": None, "null": None, "nan": None}
+    )
+    df_best_knot.Growth_factor_1 = df_best_knot.Growth_factor_1.astype(str).replace(
+        {"NaT": None, "NaN": None, "null": None, "nan": None}
     )
     df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.astype(str).replace(
         {"NaT": None, "NaN": None, "null": None, "nan": None}
