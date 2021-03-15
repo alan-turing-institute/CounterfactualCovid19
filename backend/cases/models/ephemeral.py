@@ -109,12 +109,14 @@ class CounterfactualCasesRecord:
 
         """Counterfactual simulation for a single country"""
 
+        # dates for the simulation
         initial_date = df_dates_data['initial_date'].values[0]
         maximum_date = df_dates_data['maximum_date'].values[0]
 
         print ('maximum date')
         print (maximum_date)
 
+        # starting number of cases
         initial_case_number = \
             df_country_data[df_country_data["date"] == initial_date]["weekly_avg_cases"].values[0]
 
@@ -122,12 +124,13 @@ class CounterfactualCasesRecord:
         print(initial_date)
         print(initial_case_number)
 
+        # counterfactual shift for restrictions and lockdown
         n_days_counterfactual_first_restriction = counterfactual_shift[0]
         n_days_counterfactual_lockdown = counterfactual_shift[1]
 
-        df_knots["counterfactual_knot_date_1"] = df_knots["knot_date_1"]  - pd.Timedelta(
+        df_knots["counterfactual_knot_date_1"] = df_knots["knot_date_1"] - pd.Timedelta(
             days=n_days_counterfactual_first_restriction)
-        df_knots["counterfactual_knot_date_2"] = df_knots["knot_date_2"]  - pd.Timedelta(
+        df_knots["counterfactual_knot_date_2"] = df_knots["knot_date_2"] - pd.Timedelta(
           days=n_days_counterfactual_lockdown)
 
         # Set dates to simulate
@@ -135,73 +138,59 @@ class CounterfactualCasesRecord:
 
         daily_cases_sim = pd.DataFrame()
 
-        for i in range(df_knots.shape[0]):
-            knots_best_country_counterfactual_i = df_knots.iloc[i]
+        for knots in df_knots.itertuples():
 
-            # Record number of knots
-            n_knots = knots_best_country_counterfactual_i["n_knots"]
-
-            # Set knot dates
-            knot_date_1_i = knots_best_country_counterfactual_i["counterfactual_knot_date_1"]
-            knot_date_2_i = knots_best_country_counterfactual_i["counterfactual_knot_date_2"]
-
-            # Define mean growth parameters
-            growth_factor_1_i = knots_best_country_counterfactual_i["growth_factor_1"]
-            growth_factor_2_i = knots_best_country_counterfactual_i["growth_factor_2"]
-            growth_factor_3_i = knots_best_country_counterfactual_i["growth_factor_3"]
-
-            # Define number of simulation runs for specified knot dates
-            n_runs_i = knots_best_country_counterfactual_i["weight"]
-
+            # create an empty dataframe with dates of the simulation as columns and rows as the weight of this knot point
             daily_cases_sim_i = pd.DataFrame(
-                index=[i for i in range(n_runs_i)],
+                index=[i for i in range(knots.weight)],
                 columns=pd.date_range(
                     start=initial_date, end=maximum_date, freq="D"
                 ).tolist(),
             )
 
-            daily_cases_sim_i.iloc[:, 0] = [initial_case_number for _ in range(n_runs_i)]
+            # the first day is the actual number of cases as  initial seed for the simulation
+            daily_cases_sim_i.iloc[:, 0] = [initial_case_number for _ in range(knots.weight)]
 
             for d in dates_range[1:]:
-                inc_tminus1 = daily_cases_sim_i[
-                    (d - pd.Timedelta(days=1))
-                ]
+                inc_tminus1 = daily_cases_sim_i[(d - pd.Timedelta(days=1))]
 
-                if n_knots == 1:  # ONE knot point
-                    if d <= knot_date_1_i:
-                        growth = growth_factor_1_i
+                # Depending on number of knots
+                if knots.n_knots == 1:
+                    if d <= knots.counterfactual_knot_date_1:
+                        growth = knots.growth_factor_1
                     else:
-                        growth = growth_factor_2_i
+                        growth = knots.growth_factor_2
                 else:  # TWO knot points
-                    if d <= knot_date_1_i:
-                        growth = growth_factor_1_i
-                    elif d <= knot_date_2_i:
-                        growth = growth_factor_2_i
+                    if d <= knots.counterfactual_knot_date_1:
+                        growth = knots.growth_factor_1
+                    elif d <= knots.counterfactual_knot_date_2:
+                        growth = knots.growth_factor_2
                     else:
-                        growth = growth_factor_3_i
+                        growth = knots.growth_factor_3
 
-                # Calculate daily cases at time t and record
+                # Calculate daily cases at time t given the number of cases in t -1 and the growth factor.
                 inc_t = growth * inc_tminus1
                 daily_cases_sim_i.loc[:, d] = inc_t
 
-                # Bind knot-specific dataframes to full scenario dataframe
-
+            # Bind knot-specific dataframes to full scenario dataframe
             daily_cases_sim = pd.concat([daily_cases_sim, daily_cases_sim_i])
 
+        # the counterfactual cases are the mean value of all scenarios
         counterfactual_cases = daily_cases_sim.mean(axis=0)
 
         counterfactual_cases_df = pd.DataFrame(
             {'date': pd.to_datetime(counterfactual_cases.index, format='%Y-%m-%d'),
              'weekly_avg_cases': counterfactual_cases.values})
 
-        df_out = df_country_data.copy()
 
-        df_out.drop(columns=['weekly_avg_cases'], inplace=True)
-
+        # remove columns of weekly_avg_cases because it will be replaced with counterfactual cases
+        df_out = df_country_data.copy().drop(columns=['weekly_avg_cases'], inplace=True)
+        # merge dataframes adding new counterfactual cases
         df_out_final = pd.merge(df_out, counterfactual_cases_df, on='date', how="outer")
-
-        df_out_final['date'] = df_out_final['date'].dt.date
         df_out_final.fillna(0, inplace=True)
+
+        # make sure type is the expected one.
+        df_out_final['date'] = df_out_final['date'].dt.date
 
         return df_out_final
 
