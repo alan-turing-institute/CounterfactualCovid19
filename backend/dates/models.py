@@ -6,7 +6,9 @@ from countries.models import Country
 
 class ModelDateRange(models.Model):
 
-    country = models.ForeignKey(Country, related_name="modeldaterange", on_delete=models.CASCADE)
+    country = models.ForeignKey(
+        Country, related_name="modeldaterange", on_delete=models.CASCADE
+    )
 
     initial_date = models.DateField()
     maximum_date = models.DateField()
