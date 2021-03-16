@@ -38,8 +38,8 @@ export default class Histogram extends React.Component {
       );
       let record = {
         date: casesReal[i].date,
-        weekly_avg_real: casesReal[i].weekly_avg_cases_per_million,
-        weekly_avg_counterfactual: counterfactual.weekly_avg_cases_per_million,
+        weekly_avg_real: casesReal[i].summed_avg_cases_per_million,
+        weekly_avg_counterfactual: counterfactual.summed_avg_cases_per_million,
       };
       casesData.push(record);
     }
