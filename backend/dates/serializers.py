@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from countries.models import Country
-from .models import Dates
+from .models import ModelDateRange
 from django.db.models import Sum, F, Window, When, Max
 
 
-class DatesSerializer(serializers.ModelSerializer):
+class ModelDateRangeSerializer(serializers.ModelSerializer):
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
     class Meta:
-        model = Dates
+        model = ModelDateRange
         fields = (
             "iso_code",
             "initial_date",

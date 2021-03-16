@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Dates",
+            name="modeldaterange",
             fields=[
                 (
                     "id",
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                     "country",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="Dates",
+                        related_name="modeldaterange",
                         to="countries.country",
                     ),
                 ),

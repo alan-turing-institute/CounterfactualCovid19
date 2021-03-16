@@ -3,7 +3,7 @@ import csv
 import pandas as pd
 import pycountry
 from time import monotonic
-from dates.models import Dates
+from dates.models import ModelDateRange
 from countries.models import Country
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -30,7 +30,7 @@ def run():
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
     url_dates = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/summary_eur.csv"
 
-    # Load Dates dataframe and parse them allowing for NAT
+    # Load ModelDateRange dataframe and parse them allowing for NAT
     df_dates = pd.read_csv(
         url_dates,
         parse_dates=["Date_start", "Date_T", "Date_first_restriction", "Date_lockdown"],
@@ -39,8 +39,8 @@ def run():
     # replace all NaT with None needed for django
     df_dates.Date_lockdown = df_dates.Date_lockdown.astype(str).replace({"NaT": None})
 
-    # Delete all existing Dates data and regenerate the table
-    Dates.objects.all().delete()
+    # Delete all existing ModelDateRange data and regenerate the table
+    ModelDateRange.objects.all().delete()
 
     # Add an ISO code column lookup table
     code_lookup = {
@@ -58,7 +58,7 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                m = Dates(
+                m = ModelDateRange(
                     country=country,
                     initial_date=entry.Date_start,
                     maximum_date=entry.Date_T,

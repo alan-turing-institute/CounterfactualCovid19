@@ -1,12 +1,12 @@
-"""Dates model"""
+"""ModelDateRange model"""
 
 from django.db import models
 from countries.models import Country
 
 
-class Dates(models.Model):
+class ModelDateRange(models.Model):
 
-    country = models.ForeignKey(Country, related_name="Dates", on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, related_name="modeldaterange", on_delete=models.CASCADE)
 
     initial_date = models.DateField()
     maximum_date = models.DateField()
