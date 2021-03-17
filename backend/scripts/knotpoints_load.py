@@ -38,11 +38,18 @@ def run():
     # replace all NaT with None needed for django
     df_best_knot.Knot_date_1 = df_best_knot.Knot_date_1.replace({float("nan"): None})
     df_best_knot.Knot_date_2 = df_best_knot.Knot_date_2.replace({float("nan"): None})
-    df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.replace({float("nan"): None})
-    df_best_knot.Growth_factor_1 = df_best_knot.Growth_factor_1.replace({float("nan"): None})
-    df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.replace({float("nan"): None})
-    df_best_knot.Growth_factor_3 = df_best_knot.Growth_factor_3.replace({float("nan"): None})
-
+    df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.replace(
+        {float("nan"): None}
+    )
+    df_best_knot.Growth_factor_1 = df_best_knot.Growth_factor_1.replace(
+        {float("nan"): None}
+    )
+    df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.replace(
+        {float("nan"): None}
+    )
+    df_best_knot.Growth_factor_3 = df_best_knot.Growth_factor_3.replace(
+        {float("nan"): None}
+    )
 
     # Delete all existing Dates data and regenerate the table
     KnotPoints.objects.all().delete()
