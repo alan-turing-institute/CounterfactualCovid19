@@ -37,7 +37,7 @@ def run():
     )
 
     # replace all NaT with None needed for django
-    df_dates.Date_lockdown = df_dates.Date_lockdown.astype(str).replace({"NaT": None})
+    df_dates.Date_lockdown = df_dates.Date_lockdown.replace({float("nan"): None})
 
     # Delete all existing ModelDateRange data and regenerate the table
     ModelDateRange.objects.all().delete()

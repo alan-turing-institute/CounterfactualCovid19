@@ -14,8 +14,8 @@ class KnotPointsSerializer(serializers.ModelSerializer):
             "knot_date_1",
             "knot_date_2",
             "n_knots",
-            "growth_factor_1",
-            "growth_factor_2",
-            "growth_factor_3",
+            "growth_factor_0_1",
+            "growth_factor_1_2",
+            "growth_factor_2_3",
             "weight",
         )
