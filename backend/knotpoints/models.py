@@ -10,12 +10,12 @@ class KnotPoints(models.Model):
         Country, related_name="KnotPoints", on_delete=models.CASCADE
     )
 
-    knot_date_1 = models.DateField()
+    knot_date_1 = models.DateField(null=True)
     knot_date_2 = models.DateField(null=True)
     n_knots = models.IntegerField()
-    growth_factor_1 = models.FloatField()
-    growth_factor_2 = models.FloatField(null=True)
-    growth_factor_3 = models.FloatField(null=True)
+    growth_factor_0_1 = models.FloatField(null=True)
+    growth_factor_1_2 = models.FloatField(null=True)
+    growth_factor_2_3 = models.FloatField(null=True)
     weight = models.IntegerField(null=True)
 
     def __str__(self):

@@ -36,18 +36,13 @@ def run():
     )
 
     # replace all NaT with None needed for django
-    df_best_knot.Knot_date_2 = df_best_knot.Knot_date_2.astype(str).replace(
-        {"NaT": None, "Nan": None, "null": None, "nan": None}
-    )
-    df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.astype(str).replace(
-        {"NaT": None, "Nan": None, "null": None, "nan": None}
-    )
-    df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.astype(str).replace(
-        {"NaT": None, "NaN": None, "null": None, "nan": None}
-    )
-    df_best_knot.Growth_factor_3 = df_best_knot.Growth_factor_3.astype(str).replace(
-        {"NaT": None, "NaN": None, "null": None, "nan": None}
-    )
+    df_best_knot.Knot_date_1 = df_best_knot.Knot_date_1.replace({float("nan"): None})
+    df_best_knot.Knot_date_2 = df_best_knot.Knot_date_2.replace({float("nan"): None})
+    df_best_knot.Min_n_unequal = df_best_knot.Min_n_unequal.replace({float("nan"): None})
+    df_best_knot.Growth_factor_1 = df_best_knot.Growth_factor_1.replace({float("nan"): None})
+    df_best_knot.Growth_factor_2 = df_best_knot.Growth_factor_2.replace({float("nan"): None})
+    df_best_knot.Growth_factor_3 = df_best_knot.Growth_factor_3.replace({float("nan"): None})
+
 
     # Delete all existing Dates data and regenerate the table
     KnotPoints.objects.all().delete()
@@ -76,9 +71,9 @@ def run():
                     knot_date_1=entry.Knot_date_1,
                     knot_date_2=entry.Knot_date_2,
                     n_knots=entry.N_knots,
-                    growth_factor_1=entry.Growth_factor_1,
-                    growth_factor_2=entry.Growth_factor_2,
-                    growth_factor_3=entry.Growth_factor_3,
+                    growth_factor_0_1=entry.Growth_factor_1,
+                    growth_factor_1_2=entry.Growth_factor_2,
+                    growth_factor_2_3=entry.Growth_factor_3,
                     weight=entry.Min_n_unequal,
                 )
                 m.save()

@@ -37,21 +37,10 @@ def run():
     )
 
     # replace all NaT with None needed for django
-    df_best_knot.Date_first_restriction = df_best_knot.Date_first_restriction.astype(
-        str
-    ).replace({"NaT": None, "Nan": None, "null": None, "nan": None})
-    df_best_knot.Date_lockdown = df_best_knot.Date_lockdown.astype(str).replace(
-        {"NaT": None, "Nan": None, "null": None, "nan": None}
-    )
-    # replace all NaT with None needed for django
-    df_best_knot.N_days_first_restriction = (
-        df_best_knot.N_days_first_restriction.astype(str).replace(
-            {"NaT": None, "Nan": None, "null": None, "nan": None}
-        )
-    )
-    df_best_knot.N_days_lockdown = df_best_knot.N_days_lockdown.astype(str).replace(
-        {"NaT": None, "Nan": None, "null": None, "nan": None}
-    )
+    df_best_knot.Date_first_restriction = df_best_knot.Date_first_restriction.replace({float("nan"): None})
+    df_best_knot.Date_lockdown = df_best_knot.Date_lockdown.replace({float("nan"): None})
+    df_best_knot.N_days_first_restriction = df_best_knot.N_days_first_restriction.replace({float("nan"): None})
+    df_best_knot.N_days_lockdown = df_best_knot.N_days_lockdown.replace({float("nan"): None})
 
     # Delete all existing Dates data and regenerate the table
     PossibleDates.objects.all().delete()
