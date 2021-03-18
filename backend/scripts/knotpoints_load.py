@@ -1,30 +1,13 @@
-"""Load COVID cases data into the database"""
-import csv
+"""Load COVID knot points dates data into the database"""
 import pandas as pd
-import pycountry
 from time import monotonic
 from knotpoints.models import KnotPoints
-from countries.models import Country
-from django.core.exceptions import ObjectDoesNotExist
+from utils import get_country_model, get_country_code, create_code_lookup, create_country_lookup
 
-
-def get_country_code(country_name):
-    country_code = pycountry.countries.get(name=country_name)
-    if not country_code:
-        country_code = pycountry.countries.search_fuzzy(country_name)[0]
-    return country_code.alpha_3
-
-
-def get_country_model(iso_code):
-    try:
-        return Country.objects.get(iso_code=iso_code)
-    except ObjectDoesNotExist:
-        print(f"Could not find a matching country for {iso_code}")
-    return None
 
 
 def run():
-    print("Starting to load important dates data...")
+    print("Starting to load knot points data...")
     start = monotonic()
 
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
@@ -51,23 +34,18 @@ def run():
         {float("nan"): None}
     )
 
-    # Delete all existing Dates data and regenerate the table
+    # Delete all existing KnotPoints data and regenerate the table
     KnotPoints.objects.all().delete()
 
     # Add an ISO code column lookup table
-    code_lookup = {
-        country: get_country_code(country)
-        for country in df_best_knot["Country"].unique()
-    }
+    code_lookup = create_code_lookup(df_best_knot["Country"].unique())
+
     df_best_knot["iso_code"] = df_best_knot.apply(
         lambda row: code_lookup[row.Country], axis=1
     )
 
     # Create a lookup table from ISO code to Country model
-    country_lookup = {
-        iso_code: get_country_model(iso_code)
-        for iso_code in df_best_knot["iso_code"].unique()
-    }
+    country_lookup = create_country_lookup(df_best_knot["iso_code"].unique())
 
     for entry in df_best_knot.itertuples():
         try:
@@ -88,4 +66,4 @@ def run():
         except AttributeError:
             continue
 
-    print(f"Finished loading cases data after {monotonic() - start:.2f} seconds")
+    print(f"Finished loading knot points data after {monotonic() - start:.2f} seconds")
