@@ -2,7 +2,12 @@
 import pandas as pd
 from time import monotonic
 from possibledates.models import PossibleDates
-from utils import get_country_model, get_country_code, create_code_lookup, create_country_lookup
+from utils import (
+    get_country_model,
+    get_country_code,
+    create_code_lookup,
+    create_country_lookup,
+)
 
 
 def run():
@@ -19,10 +24,18 @@ def run():
     )
 
     # replace all NaT with None needed for django
-    df_possible_dates.Date_first_restriction = df_possible_dates.Date_first_restriction.replace({float("nan"): None})
-    df_possible_dates.Date_lockdown = df_possible_dates.Date_lockdown.replace({float("nan"): None})
-    df_possible_dates.N_days_first_restriction = df_possible_dates.N_days_first_restriction.replace({float("nan"): None})
-    df_possible_dates.N_days_lockdown = df_possible_dates.N_days_lockdown.replace({float("nan"): None})
+    df_possible_dates.Date_first_restriction = (
+        df_possible_dates.Date_first_restriction.replace({float("nan"): None})
+    )
+    df_possible_dates.Date_lockdown = df_possible_dates.Date_lockdown.replace(
+        {float("nan"): None}
+    )
+    df_possible_dates.N_days_first_restriction = (
+        df_possible_dates.N_days_first_restriction.replace({float("nan"): None})
+    )
+    df_possible_dates.N_days_lockdown = df_possible_dates.N_days_lockdown.replace(
+        {float("nan"): None}
+    )
 
     # Delete all existing Dates data and regenerate the table
     PossibleDates.objects.all().delete()
@@ -36,7 +49,6 @@ def run():
 
     # Create a lookup table from ISO code to Country model
     country_lookup = create_country_lookup(df_possible_dates["iso_code"].unique())
-
 
     for entry in df_possible_dates.itertuples():
         try:
@@ -54,4 +66,6 @@ def run():
         except AttributeError:
             continue
 
-    print(f"Finished loading possible counterfactual dates data after {monotonic() - start:.2f} seconds")
+    print(
+        f"Finished loading possible counterfactual dates data after {monotonic() - start:.2f} seconds"
+    )

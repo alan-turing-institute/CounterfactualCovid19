@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 def get_country_code(country_name):
     """
-        Find ISO code for a given country
+    Find ISO code for a given country
     """
     country_code = pycountry.countries.get(name=country_name)
     if not country_code:
@@ -30,11 +30,9 @@ def create_code_lookup(unique_countries):
 
     """
     # Add an ISO code column lookup table
-    code_lookup = {
-        country: get_country_code(country)
-        for country in unique_countries
-    }
+    code_lookup = {country: get_country_code(country) for country in unique_countries}
     return code_lookup
+
 
 def create_country_lookup(unique_iso_codes):
     """
@@ -42,8 +40,7 @@ def create_country_lookup(unique_iso_codes):
 
     """
     country_lookup = {
-        iso_code: get_country_model(iso_code)
-        for iso_code in unique_iso_codes
+        iso_code: get_country_model(iso_code) for iso_code in unique_iso_codes
     }
 
     return country_lookup
