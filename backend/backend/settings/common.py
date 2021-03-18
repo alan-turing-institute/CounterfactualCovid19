@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     "corsheaders",
     "countries",
     "cases",
+    "dates",
+    "knotpoints",
+    "possibledates",
 ]
 
 MIDDLEWARE = [
