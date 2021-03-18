@@ -3,7 +3,7 @@ import pandas as pd
 from .concrete import CasesRecord
 from django.db import models
 from knotpoints.models import KnotPoints
-from dates.models import Dates
+from dates.models import ModelDateRange
 
 
 class CounterfactualCasesRecord:
@@ -18,8 +18,8 @@ class CounterfactualCasesRecord:
         related_name="counterfactual_knotPoints_records",
         on_delete=models.CASCADE,
     )
-    Dates = models.ForeignKey(
-        Dates, related_name="conterfactual_dates_records", on_delete=models.CASCADE
+    ModelDateRange = models.ForeignKey(
+        ModelDateRange, related_name="conterfactual_dates_records", on_delete=models.CASCADE
     )
 
     @staticmethod
@@ -44,9 +44,9 @@ class CounterfactualCasesRecord:
                 "knot_date_1",
                 "knot_date_2",
                 "n_knots",
-                "growth_factor_1",
-                "growth_factor_2",
-                "growth_factor_3",
+                "growth_factor_0_1",
+                "growth_factor_1_2",
+                "growth_factor_2_3",
                 "weight",
             )
         ).rename(columns={"country": "iso_code"})
@@ -58,7 +58,7 @@ class CounterfactualCasesRecord:
         )
 
         df_dates = pd.DataFrame.from_records(
-            Dates.objects.all().values("country", "initial_date", "maximum_date")
+            ModelDateRange.objects.all().values("country", "initial_date", "maximum_date")
         ).rename(columns={"country": "iso_code"})
         df_dates["initial_date"] = pd.to_datetime(
             df_dates.initial_date, format="%Y-%m-%d"
@@ -132,8 +132,8 @@ class CounterfactualCasesRecord:
         """Counterfactual simulation for a single country"""
 
         # dates for the simulation
-        initial_date = df_dates_data["initial_date"].values[0]
-        maximum_date = df_dates_data["maximum_date"].values[0]
+        initial_date = df_dates_data["initial_date"].iloc[0]
+        maximum_date = df_dates_data["maximum_date"].iloc[0]
 
 
         # starting number of cases
@@ -145,9 +145,9 @@ class CounterfactualCasesRecord:
         n_days_counterfactual_first_restriction = counterfactual_shift[0]
         n_days_counterfactual_lockdown = counterfactual_shift[1]
 
-        df_knots["counterfactual_knot_date_1"] = df_knots["knot_date_1"] - pd.Timedelta(
+        df_knots.loc[:, "counterfactual_knot_date_1"] = df_knots.loc[:,"knot_date_1"] - pd.Timedelta(
             days=n_days_counterfactual_first_restriction)
-        df_knots["counterfactual_knot_date_2"] = df_knots["knot_date_2"] - pd.Timedelta(
+        df_knots.loc[:, "counterfactual_knot_date_2"] = df_knots.loc[:,"knot_date_2"] - pd.Timedelta(
             days=n_days_counterfactual_lockdown)
 
         # Set dates to simulate
@@ -176,16 +176,16 @@ class CounterfactualCasesRecord:
                 # Depending on number of knots
                 if knots.n_knots == 1:
                     if d <= knots.counterfactual_knot_date_1:
-                        growth = knots.growth_factor_1
+                        growth = knots.growth_factor_0_1
                     else:
-                        growth = knots.growth_factor_2
+                        growth = knots.growth_factor_1_2
                 else:  # TWO knot points
                     if d <= knots.counterfactual_knot_date_1:
-                        growth = knots.growth_factor_1
+                        growth = knots.growth_factor_0_1
                     elif d <= knots.counterfactual_knot_date_2:
-                        growth = knots.growth_factor_2
+                        growth = knots.growth_factor_1_2
                     else:
-                        growth = knots.growth_factor_3
+                        growth = knots.growth_factor_2_3
 
                 # Calculate daily cases at time t given the number of cases in t -1 and the growth factor.
                 inc_t = growth * inc_tminus1
