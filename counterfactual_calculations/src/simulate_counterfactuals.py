@@ -185,7 +185,6 @@ def simulate_counterfactuals(
                 (date - pd.Timedelta(days=1)).strftime("%m-%d-%Y")
             ]
 
-
             if n_knots == 1:  # ONE knot point
                 if date <= knot_date_1_i:
                     growth = growth_factor_1_i
