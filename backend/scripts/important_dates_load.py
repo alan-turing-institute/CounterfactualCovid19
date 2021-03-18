@@ -3,7 +3,12 @@ import csv
 import pandas as pd
 from time import monotonic
 from dates.models import ModelDateRange
-from utils import get_country_model, get_country_code, create_code_lookup, create_country_lookup
+from utils import (
+    get_country_model,
+    get_country_code,
+    create_code_lookup,
+    create_country_lookup,
+)
 
 
 def run():
@@ -33,7 +38,6 @@ def run():
     # Create a lookup table from ISO code to Country model
     country_lookup = create_country_lookup(df_dates["iso_code"].unique())
 
-
     for entry in df_dates.itertuples():
         try:
             country = country_lookup[entry.iso_code]
@@ -50,4 +54,6 @@ def run():
         except AttributeError:
             continue
 
-    print(f"Finished loading important dates data after {monotonic() - start:.2f} seconds")
+    print(
+        f"Finished loading important dates data after {monotonic() - start:.2f} seconds"
+    )

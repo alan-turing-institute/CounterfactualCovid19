@@ -2,7 +2,13 @@
 import pandas as pd
 from time import monotonic
 from cases.models import CasesRecord
-from utils import get_country_model, get_country_code, create_code_lookup, create_country_lookup
+from utils import (
+    get_country_model,
+    get_country_code,
+    create_code_lookup,
+    create_country_lookup,
+)
+
 
 def run():
     print("Starting to load cases data...")
@@ -23,7 +29,6 @@ def run():
 
     # Create a lookup table from ISO code to Country model
     country_lookup = create_country_lookup(df_cases["iso_code"].unique())
-
 
     for entry in df_cases.itertuples():
         try:

@@ -2,8 +2,12 @@
 import pandas as pd
 from time import monotonic
 from knotpoints.models import KnotPoints
-from utils import get_country_model, get_country_code, create_code_lookup, create_country_lookup
-
+from utils import (
+    get_country_model,
+    get_country_code,
+    create_code_lookup,
+    create_country_lookup,
+)
 
 
 def run():
