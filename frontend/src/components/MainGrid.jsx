@@ -8,7 +8,6 @@ import Loading from "./Loading";
 import HeaderPanel from "./HeaderPanel";
 import WorldMap from "./WorldMap";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
-import Card from "react-bootstrap/Card";
 
 export default class MainGrid extends React.Component {
   constructor(props) {

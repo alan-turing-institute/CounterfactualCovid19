@@ -96,7 +96,7 @@ def simulate_country_counterfactuals(
 
     daily_cases_sim_cum = daily_cases_sim.copy()
     daily_cases_sim_cum.loc[
-        :, (initial_date - pd.Timedelta(days=1)).strftime("%m-%d-%Y")
+        :, (initial_date).strftime("%m-%d-%Y")
     ] = initial_cumulative_case_number.repeat(daily_cases_sim_cum.shape[0])
     daily_cases_sim_cum = daily_cases_sim_cum.reindex(
         sorted(daily_cases_sim_cum.columns), axis=1
@@ -118,7 +118,7 @@ def simulate_counterfactuals(
     growth inflection dates.
 
 
-    Parameters
+    Parameterse
     ----------
     knots_best: dataframe
         Dataframe that contains the best knot dates estimated and different growth factors for a country
@@ -173,25 +173,19 @@ def simulate_counterfactuals(
 
         daily_cases_sim_i = pd.DataFrame(
             index=[i for i in range(n_runs_i)],
-            columns=pd.date_range(
-                start=initial_date - pd.Timedelta(days=1), end=maximum_date, freq="D"
-            )
+            columns=pd.date_range(start=initial_date, end=maximum_date, freq="D")
             .strftime("%m-%d-%Y")
             .tolist(),
         )
 
         daily_cases_sim_i.iloc[:, 0] = [initial_case_number for _ in range(n_runs_i)]
 
-        for date in dates:
+        for date in dates[1:]:
             inc_tminus1 = daily_cases_sim_i[
                 (date - pd.Timedelta(days=1)).strftime("%m-%d-%Y")
             ]
 
-            # Define growth parameters
-            if n_knots == 0:  # NO knot points
-                growth = growth_factor_1_i
-
-            elif n_knots == 1:  # ONE knot point
+            if n_knots == 1:  # ONE knot point
                 if date <= knot_date_1_i:
                     growth = growth_factor_1_i
                 else:

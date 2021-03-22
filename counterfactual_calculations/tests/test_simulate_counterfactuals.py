@@ -36,15 +36,11 @@ def test_simulate_counterfactuals():
     )
     ts_daily_cases.to_csv("covid_cases_time_series.csv")
 
-    assert ts_daily_cases.shape[0] == 102
-    assert ts_cum_daily_cases.shape[0] == 102
+    assert ts_daily_cases.shape[0] == 101
+    assert ts_cum_daily_cases.shape[0] == 101
 
-    assert ts_daily_cases[-1] == 290.086130250008
+    assert ts_daily_cases[-1] == 256.22020291814306
 
-    assert ts_daily_cases[10] == 243.96895010215303
-    assert ts_daily_cases[50] == 830.3141375717636
-    assert ts_cum_daily_cases[40] == 24954.909695002138
-
-    assert ts_cum_daily_cases.index[10] == "03-11-2020"
+    assert ts_cum_daily_cases.index[10] == "03-12-2020"
     assert ts_cum_daily_cases.index[-1] == "06-10-2020"
-    assert ts_cum_daily_cases.index[0] == "03-01-2020"
+    assert ts_cum_daily_cases.index[0] == "03-02-2020"
