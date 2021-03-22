@@ -3,6 +3,7 @@ from countries.models import Country
 from django.db.models import Sum, F, Window, When, Max
 from .models import ModelDateRange, KnotDateSet, PossibleDateSet
 
+
 class KnotDateSetSerializer(serializers.ModelSerializer):
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
@@ -19,6 +20,7 @@ class KnotDateSetSerializer(serializers.ModelSerializer):
             "weight",
         )
 
+
 class ModelDateRangeSerializer(serializers.ModelSerializer):
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
@@ -31,7 +33,6 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
             "first_restrictions_date",
             "lockdown_date",
         )
-
 
 
 class PossibleDateSetSerializer(serializers.ModelSerializer):

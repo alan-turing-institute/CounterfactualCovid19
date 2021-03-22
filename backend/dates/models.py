@@ -3,6 +3,7 @@
 from django.db import models
 from countries.models import Country
 
+
 class KnotDateSet(models.Model):
 
     country = models.ForeignKey(
@@ -20,6 +21,7 @@ class KnotDateSet(models.Model):
     def __str__(self):
         return f"{self.country}: ({self.knot_date_1}), {self.knot_date_2}"
 
+
 class ModelDateRange(models.Model):
 
     country = models.ForeignKey(
@@ -33,6 +35,7 @@ class ModelDateRange(models.Model):
 
     def __str__(self):
         return f"{self.country}: ({self.first_restrictions_date}), {self.lockdown_date}"
+
 
 class PossibleDateSet(models.Model):
 

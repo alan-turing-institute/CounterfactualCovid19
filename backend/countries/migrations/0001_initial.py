@@ -8,17 +8,22 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('iso_code', models.CharField(max_length=3, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('population', models.PositiveIntegerField(null=True)),
-                ('geometry', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326)),
+                (
+                    "iso_code",
+                    models.CharField(max_length=3, primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("population", models.PositiveIntegerField(null=True)),
+                (
+                    "geometry",
+                    django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),
+                ),
             ],
         ),
     ]
