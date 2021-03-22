@@ -1,6 +1,7 @@
+"""Views for Django cases module"""
 from abc import ABC, abstractmethod
 from django.db.models import ExpressionWrapper, F, FloatField, Max, Sum, Window
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import CasesRecord, CounterfactualCasesRecord
 from .serializers import (
@@ -20,21 +21,23 @@ class CasesCounterfactualViewMixin(ABC):
     @classmethod
     @abstractmethod
     def serializer_class(cls):
+        """serializer_class must be implemented by children"""
         return NotImplementedError
 
     @abstractmethod
     def simulate(self, iso_codes, start_date, end_date):
+        """simulate must be implemented by children"""
         return NotImplementedError
 
     def list(self, request):
         """Response to a GET/LIST request"""
-        iso_code = self.request.query_params.get("iso_code", None)
+        iso_code = request.query_params.get("iso_code", None)
         iso_codes = [iso_code] if iso_code else []
-        start_date = self.request.query_params.get("start_date", None)
-        end_date = self.request.query_params.get("end_date", None)
+        start_date = request.query_params.get("start_date", None)
+        end_date = request.query_params.get("end_date", None)
         records = self.simulate(iso_codes, start_date, end_date)
         serializer = self.serializer_class(instance=records, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data)  # pylint: disable=no-member
 
 
 class CasesCounterfactualDailyAbsoluteView(
@@ -81,6 +84,7 @@ class CasesRealViewMixin(ABC):
     @classmethod
     @abstractmethod
     def serializer_class(cls):
+        """serializer_class must be implemented by children"""
         return NotImplementedError
 
     http_method_names = ["get", "head", "list", "options"]
@@ -91,7 +95,7 @@ class CasesRealViewMixin(ABC):
         # Annotate the queryset with cumulative cases information
         # We run a window function over all entries, summing `cases` over all previous entries
         # We finish by returning the query ordered by date
-        queryset = CasesRecord.objects.annotate(
+        queryset = CasesRecord.objects.annotate(  # pylint: disable=no-member
             summed_avg_cases=Window(
                 expression=Sum("weekly_avg_cases"),
                 partition_by=[F("country")],

@@ -1,10 +1,12 @@
-from django.shortcuts import render
+"""Views for Django countries module"""
 from rest_framework import viewsets
 from .serializers import CountrySerializer
 from .models import Country
 
-# Create your views here.
+
 class CountryView(viewsets.ModelViewSet):
+    """View for Country"""
+
     serializer_class = CountrySerializer
-    queryset = Country.objects.all()
+    queryset = Country.objects.all()  # pylint: disable=no-member
     http_method_names = ["get", "list"]

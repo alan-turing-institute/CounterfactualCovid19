@@ -1,10 +1,10 @@
 """ModelDateRange model"""
-
 from django.db import models
 from countries.models import Country
 
 
 class KnotDateSet(models.Model):
+    """Dates of knot points"""
 
     country = models.ForeignKey(
         Country, related_name="KnotDateSet", on_delete=models.CASCADE
@@ -23,6 +23,7 @@ class KnotDateSet(models.Model):
 
 
 class ModelDateRange(models.Model):
+    """Range of dates where restrictions can be simulated"""
 
     country = models.ForeignKey(
         Country, related_name="ModelDateRange", on_delete=models.CASCADE
@@ -38,6 +39,7 @@ class ModelDateRange(models.Model):
 
 
 class PossibleDateSet(models.Model):
+    """A single possible set of allowable restriction dates"""
 
     country = models.ForeignKey(
         Country, related_name="PossibleDateSet", on_delete=models.CASCADE

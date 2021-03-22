@@ -1,13 +1,16 @@
+"""Serializers for Django dates app"""
 from rest_framework import serializers
-from countries.models import Country
-from django.db.models import Sum, F, Window, When, Max
 from .models import ModelDateRange, KnotDateSet, PossibleDateSet
 
 
 class KnotDateSetSerializer(serializers.ModelSerializer):
+    """Serializer for KnotDateSet"""
+
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
     class Meta:
+        """Metaclass for output fields"""
+
         model = KnotDateSet
         fields = (
             "iso_code",
@@ -22,9 +25,13 @@ class KnotDateSetSerializer(serializers.ModelSerializer):
 
 
 class ModelDateRangeSerializer(serializers.ModelSerializer):
+    """Serializer for ModelDateRange"""
+
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
     class Meta:
+        """Metaclass for output fields"""
+
         model = ModelDateRange
         fields = (
             "iso_code",
@@ -36,9 +43,13 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
 
 
 class PossibleDateSetSerializer(serializers.ModelSerializer):
+    """Serializer for PossibleDateSet"""
+
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
     class Meta:
+        """Metaclass for output fields"""
+
         model = PossibleDateSet
         fields = (
             "iso_code",

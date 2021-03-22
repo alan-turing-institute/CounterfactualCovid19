@@ -18,7 +18,7 @@ def get_country_model(iso_code):
     For a given ISO code get the Country Model
     """
     try:
-        return Country.objects.get(iso_code=iso_code)
+        return Country.objects.get(iso_code=iso_code)  # pylint: disable=no-member
     except ObjectDoesNotExist:
         print(f"Could not find a matching country for {iso_code}")
     return None
