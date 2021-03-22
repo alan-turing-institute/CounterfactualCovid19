@@ -1,7 +1,7 @@
 """Load possible counterfactual dates data into the database"""
 import pandas as pd
 from time import monotonic
-from possibledates.models import PossibleDates
+from dates.models import PossibleDateSet
 from utils import (
     get_country_model,
     get_country_code,
@@ -38,7 +38,7 @@ def run():
     )
 
     # Delete all existing Dates data and regenerate the table
-    PossibleDates.objects.all().delete()
+    PossibleDateSet.objects.all().delete()
 
     # Add an ISO code column lookup table
     code_lookup = create_code_lookup(df_possible_dates["Country"].unique())
@@ -54,7 +54,7 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                m = PossibleDates(
+                m = PossibleDateSet(
                     country=country,
                     n_days_first_restrictions=entry.N_days_first_restriction,
                     n_days_lockdown=entry.N_days_lockdown,

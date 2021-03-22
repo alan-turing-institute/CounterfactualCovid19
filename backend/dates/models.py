@@ -7,7 +7,7 @@ from countries.models import Country
 class ModelDateRange(models.Model):
 
     country = models.ForeignKey(
-        Country, related_name="modeldaterange", on_delete=models.CASCADE
+        Country, related_name="ModelDateRange", on_delete=models.CASCADE
     )
 
     initial_date = models.DateField()
@@ -17,3 +17,35 @@ class ModelDateRange(models.Model):
 
     def __str__(self):
         return f"{self.country}: ({self.first_restrictions_date}), {self.lockdown_date}"
+
+
+class KnotPointSet(models.Model):
+
+    country = models.ForeignKey(
+        Country, related_name="KnotPointSet", on_delete=models.CASCADE
+    )
+
+    knot_date_1 = models.DateField(null=True)
+    knot_date_2 = models.DateField(null=True)
+    n_knots = models.IntegerField()
+    growth_factor_0_1 = models.FloatField(null=True)
+    growth_factor_1_2 = models.FloatField(null=True)
+    growth_factor_2_3 = models.FloatField(null=True)
+    weight = models.IntegerField(null=True)
+
+    def __str__(self):
+        return f"{self.country}: ({self.knot_date_1}), {self.knot_date_2}"
+
+class PossibleDateSet(models.Model):
+
+    country = models.ForeignKey(
+        Country, related_name="PossibleDateSet", on_delete=models.CASCADE
+    )
+
+    n_days_first_restrictions = models.FloatField(null=True)
+    n_days_lockdown = models.FloatField(null=True)
+    dates_counterfactual_first_restrictions = models.DateField(null=True)
+    dates_counterfactual_lockdown = models.DateField(null=True)
+
+    def __str__(self):
+        return f"{self.country}: ({self.dates_counterfactual_first_restrictions}), {self.dates_counterfactual_lockdown}"

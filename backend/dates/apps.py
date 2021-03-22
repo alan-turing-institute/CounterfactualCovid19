@@ -1,5 +1,11 @@
 from django.apps import AppConfig
 
 
+class KnotPointSetConfig(AppConfig):
+    name = "KnotPointSet"
+
 class ModelDateRangeConfig(AppConfig):
-    name = "modeldaterange"
+    name = "ModelDateRange"
+
+class PossibleDateSetConfig(AppConfig):
+    name = "PossibleDateSet"
