@@ -4,8 +4,7 @@ from contextlib import suppress
 import pandas as pd
 from .concrete import CasesRecord
 from django.db import models
-from knotpoints.models import KnotPoints
-from dates.models import ModelDateRange
+from dates.models import KnotPointSet, ModelDateRange
 
 
 class CounterfactualCasesRecord:
@@ -15,8 +14,8 @@ class CounterfactualCasesRecord:
         self.weekly_avg_cases = weekly_avg_cases
         self.summed_avg_cases = summed_avg_cases
 
-    KnotPoints = models.ForeignKey(
-        KnotPoints,
+    KnotPointSet = models.ForeignKey(
+        KnotPointSet,
         related_name="counterfactual_knotPoints_records",
         on_delete=models.CASCADE,
     )
@@ -44,7 +43,7 @@ class CounterfactualCasesRecord:
 
         # Load knotpoints from database
         df_data_knotpoints = pd.DataFrame.from_records(
-            KnotPoints.objects.all().values(
+            KnotPointSet.objects.all().values(
                 "country",
                 "knot_date_1",
                 "knot_date_2",
