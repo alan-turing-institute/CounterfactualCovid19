@@ -1,7 +1,23 @@
 from rest_framework import serializers
 from countries.models import Country
 from django.db.models import Sum, F, Window, When, Max
-from .models import ModelDateRange, KnotPointSet, PossibleDateSet
+from .models import ModelDateRange, KnotDateSet, PossibleDateSet
+
+class KnotDateSetSerializer(serializers.ModelSerializer):
+    iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
+
+    class Meta:
+        model = KnotDateSet
+        fields = (
+            "iso_code",
+            "knot_date_1",
+            "knot_date_2",
+            "n_knots",
+            "growth_factor_0_1",
+            "growth_factor_1_2",
+            "growth_factor_2_3",
+            "weight",
+        )
 
 class ModelDateRangeSerializer(serializers.ModelSerializer):
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
@@ -17,21 +33,6 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
         )
 
 
-class KnotPointSetSerializer(serializers.ModelSerializer):
-    iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
-
-    class Meta:
-        model = KnotPointSet
-        fields = (
-            "iso_code",
-            "knot_date_1",
-            "knot_date_2",
-            "n_knots",
-            "growth_factor_0_1",
-            "growth_factor_1_2",
-            "growth_factor_2_3",
-            "weight",
-        )
 
 class PossibleDateSetSerializer(serializers.ModelSerializer):
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)

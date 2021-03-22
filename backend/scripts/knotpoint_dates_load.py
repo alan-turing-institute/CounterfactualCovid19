@@ -1,7 +1,7 @@
 """Load COVID knot points dates data into the database"""
 import pandas as pd
 from time import monotonic
-from dates.models import KnotPointSet
+from dates.models import KnotDateSet
 from utils import (
     get_country_model,
     get_country_code,
@@ -38,8 +38,8 @@ def run():
         {float("nan"): None}
     )
 
-    # Delete all existing KnotPointSet data and regenerate the table
-    KnotPointSet.objects.all().delete()
+    # Delete all existing KnotDateSet data and regenerate the table
+    KnotDateSet.objects.all().delete()
 
     # Add an ISO code column lookup table
     code_lookup = create_code_lookup(df_best_knot["Country"].unique())
@@ -55,7 +55,7 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                m = KnotPointSet(
+                m = KnotDateSet(
                     country=country,
                     knot_date_1=entry.Knot_date_1,
                     knot_date_2=entry.Knot_date_2,
