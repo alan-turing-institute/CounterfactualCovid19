@@ -86,7 +86,8 @@ class CounterfactualCasesRecord:
             iso_codes = df_data.iso_code.unique()
 
         # Number of days to shift the two knotpoints by
-        counterfactual_shift = (0, 0)
+        n_days_counterfactual_first_restriction = 0
+        n_days_counterfactual_lockdown = 0
 
         # Simulate each requested country
         df_counterfactuals = []
@@ -95,14 +96,15 @@ class CounterfactualCasesRecord:
             df_country_dates = df_dates[df_dates["iso_code"] == iso_code]
             df_country_knotpoints = df_data_knotpoints[
                 df_data_knotpoints["iso_code"] == iso_code
-            ]
+            ].copy()
 
             # Simulate a single country using cases data, model dates and knotpoints
             single_country = CounterfactualCasesRecord.simulate_single_country(
-                counterfactual_shift,
                 df_country_data,
                 df_country_dates,
                 df_country_knotpoints,
+                n_days_counterfactual_first_restriction,
+                n_days_counterfactual_lockdown,
             )
 
             # Calculate the number of cumulative cases that occurred before the simulation start date
@@ -157,7 +159,11 @@ class CounterfactualCasesRecord:
 
     @staticmethod
     def simulate_single_country(
-        counterfactual_shift, df_country_data, df_dates_data, df_knots
+        df_country_data,
+        df_dates_data,
+        df_knots,
+        n_days_counterfactual_first_restriction,
+        n_days_counterfactual_lockdown,
     ):
         """Counterfactual simulation for a single country"""
         # Date range for the simulation
@@ -169,17 +175,13 @@ class CounterfactualCasesRecord:
             "weekly_avg_cases"
         ].values[0]
 
-        # Counterfactual shift for restrictions and lockdown
-        n_days_counterfactual_first_restriction = counterfactual_shift[0]
-        n_days_counterfactual_lockdown = counterfactual_shift[1]
-
         # Add a column for the counterfactual knot dates
-        df_knots.loc[:, "counterfactual_knot_date_1"] = df_knots.loc[
-            :, "knot_date_1"
-        ] - pd.Timedelta(days=n_days_counterfactual_first_restriction)
-        df_knots.loc[:, "counterfactual_knot_date_2"] = df_knots.loc[
-            :, "knot_date_2"
-        ] - pd.Timedelta(days=n_days_counterfactual_lockdown)
+        df_knots["counterfactual_knot_date_1"] = df_knots["knot_date_1"] - pd.Timedelta(
+            days=n_days_counterfactual_first_restriction
+        )
+        df_knots["counterfactual_knot_date_2"] = df_knots["knot_date_2"] - pd.Timedelta(
+            days=n_days_counterfactual_lockdown
+        )
 
         # Set dates to simulate
         dates_range = pd.date_range(
@@ -187,21 +189,24 @@ class CounterfactualCasesRecord:
         ).tolist()
 
         # Simulated number of cases on each day
-        daily_cases_sim = []
+        simulated_daily_cases = []
         for knots in df_knots.itertuples():
-            # Create an empty dataframe with dates to simulate as columns and as many rows as the weight of this knot point
-            daily_cases_sim_i = pd.DataFrame(
-                index=[_ for _ in range(knots.weight)],
-                columns=pd.date_range(
-                    start=initial_date, end=maximum_date, freq="D"
-                ).tolist(),
+            # Add an empty dataframe to the list of simulations
+            # The columns are the dates to simulate and there are as many rows as the weight of this knot point
+            simulated_daily_cases.append(
+                pd.DataFrame(
+                    index=[_ for _ in range(knots.weight)],
+                    columns=pd.date_range(
+                        start=initial_date, end=maximum_date, freq="D"
+                    ).tolist(),
+                )
             )
 
             # Set the first day to the actual number of cases as initial seed for the simulation
-            daily_cases_sim_i.iloc[:, 0] = [
+            simulated_daily_cases[-1].iloc[:, 0] = [
                 initial_case_number for _ in range(knots.weight)
             ]
-            n_cases_series_tminus1 = daily_cases_sim_i[dates_range[0]]
+            n_cases_series_tminus1 = simulated_daily_cases[-1][dates_range[0]]
 
             # Construct a list of time-period boundaries and associated growth factors
             # There is always one more time period to simulate than the number of knot points
@@ -229,14 +234,11 @@ class CounterfactualCasesRecord:
                 n_cases_series_t = growth * n_cases_series_tminus1
 
                 # Store number of cases in the dataframe
-                daily_cases_sim_i.loc[:, day_t] = n_cases_series_t
+                simulated_daily_cases[-1].loc[:, day_t] = n_cases_series_t
                 n_cases_series_tminus1 = n_cases_series_t
 
-            # Add this simulation to the simulation ensemble
-            daily_cases_sim.append(daily_cases_sim_i)
-
         # Combine all the simulations and take the mean
-        counterfactual_cases_series = pd.concat(daily_cases_sim).mean(axis=0)
+        counterfactual_cases_series = pd.concat(simulated_daily_cases).mean(axis=0)
         df_counterfactual_cases = pd.DataFrame(
             {
                 "date": pd.to_datetime(
