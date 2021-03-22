@@ -1,4 +1,6 @@
+from bisect import bisect_left
 from datetime import date
+from contextlib import suppress
 import pandas as pd
 from .concrete import CasesRecord
 from django.db import models
@@ -187,9 +189,9 @@ class CounterfactualCasesRecord:
         # Simulated number of cases on each day
         daily_cases_sim = []
         for knots in df_knots.itertuples():
-            # Create an empty dataframe with dates of the simulation as columns and rows as the weight of this knot point
+            # Create an empty dataframe with dates to simulate as columns and as many rows as the weight of this knot point
             daily_cases_sim_i = pd.DataFrame(
-                index=[i for i in range(knots.weight)],
+                index=[_ for _ in range(knots.weight)],
                 columns=pd.date_range(
                     start=initial_date, end=maximum_date, freq="D"
                 ).tolist(),
@@ -199,25 +201,36 @@ class CounterfactualCasesRecord:
             daily_cases_sim_i.iloc[:, 0] = [
                 initial_case_number for _ in range(knots.weight)
             ]
-            n_cases_tminus1 = daily_cases_sim_i[0]
+            n_cases_series_tminus1 = daily_cases_sim_i[dates_range[0]]
+
+            # Construct a list of time-period boundaries and associated growth factors
+            # There is always one more time period to simulate than the number of knot points
+            # As the growth factors correspond to the time in between the time-period boundaries
+            time_period_boundaries = [pd.Timestamp.min, pd.Timestamp.max]
+            growth_factors = [knots.growth_factor_0_1]
+            with suppress(AttributeError):
+                # If knot_date_1 exists then we know that growth_factor_1_2 exists
+                time_period_boundaries.append(knots.counterfactual_knot_date_1)
+                growth_factors.append(knots.growth_factor_1_2)
+            with suppress(AttributeError):
+                # If knot_date_2 exists then we know that growth_factor_2_3 exists
+                time_period_boundaries.append(knots.counterfactual_knot_date_2)
+                growth_factors.append(knots.growth_factor_2_3)
+            time_period_boundaries = sorted(time_period_boundaries)
 
             # Simulate all days from the second onwards
             for day_t in dates_range[1:]:
-                # If there is one knot point then there are two possible time periods
-                # If there are two knot points then there are three possible time periods
-                if day_t <= knots.counterfactual_knot_date_1:
-                    growth = knots.growth_factor_0_1
-                else:
-                    growth = knots.growth_factor_1_2
-                    if knots.n_knots == 2 and day_t > knots.counterfactual_knot_date_2:
-                        growth = knots.growth_factor_2_3
+                # Get the growth factor by finding the insertion point in the time-period boundaries list
+                # Using bisect_left means that we choose the left-hand side when day_t equals the boundary day
+                # Subtracting 1 translates from bisection point into index in the growth factor list
+                growth = growth_factors[bisect_left(time_period_boundaries, day_t) - 1]
 
                 # Calculate daily cases at time t given the number of cases in t -1 and the growth factor.
-                n_cases_t = growth * n_cases_tminus1
+                n_cases_series_t = growth * n_cases_series_tminus1
 
                 # Store number of cases in the dataframe
-                daily_cases_sim_i.loc[:, day_t] = n_cases_t
-                n_cases_tminus1 = n_cases_t
+                daily_cases_sim_i.loc[:, day_t] = n_cases_series_t
+                n_cases_series_tminus1 = n_cases_series_t
 
             # Add this simulation to the simulation ensemble
             daily_cases_sim.append(daily_cases_sim_i)
