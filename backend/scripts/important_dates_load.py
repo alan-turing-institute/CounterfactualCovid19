@@ -1,17 +1,12 @@
 """Load important lockdown dates country data into the database"""
-import csv
-import pandas as pd
 from time import monotonic
+import pandas as pd
 from dates.models import ModelDateRange
-from utils import (
-    get_country_model,
-    get_country_code,
-    create_code_lookup,
-    create_country_lookup,
-)
+from utils import create_code_lookup, create_country_lookup
 
 
 def run():
+    """Load important lockdown dates country data into the database"""
     print("Starting to load important dates data...")
     start = monotonic()
 
@@ -28,7 +23,7 @@ def run():
     df_dates.Date_lockdown = df_dates.Date_lockdown.replace({float("nan"): None})
 
     # Delete all existing ModelDateRange data and regenerate the table
-    ModelDateRange.objects.all().delete()
+    ModelDateRange.objects.all().delete()  # pylint: disable=no-member
 
     # Add an ISO code column lookup table
     code_lookup = create_code_lookup(df_dates["Country"].unique())
@@ -42,14 +37,14 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                m = ModelDateRange(
+                record = ModelDateRange(
                     country=country,
                     initial_date=entry.Date_start,
                     maximum_date=entry.Date_T,
                     first_restrictions_date=entry.Date_first_restriction,
                     lockdown_date=entry.Date_lockdown,
                 )
-                m.save()
+                record.save()
 
         except AttributeError:
             continue

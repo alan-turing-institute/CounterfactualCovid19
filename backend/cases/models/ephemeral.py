@@ -1,22 +1,23 @@
+"""Ephemeral models for Django cases app"""
 from bisect import bisect_left
-from datetime import date
 from contextlib import suppress
 import pandas as pd
-from .concrete import CasesRecord
 from django.db import models
-from knotpoints.models import KnotPoints
-from dates.models import ModelDateRange
+from dates.models import KnotDateSet, ModelDateRange
+from .concrete import CasesRecord
 
 
 class CounterfactualCasesRecord:
+    """Counterfactual rolling weekly average cases numbers on a daily basis"""
+
     def __init__(self, iso_code, date, weekly_avg_cases, summed_avg_cases):
         self.iso_code = iso_code
         self.date = date
         self.weekly_avg_cases = weekly_avg_cases
         self.summed_avg_cases = summed_avg_cases
 
-    KnotPoints = models.ForeignKey(
-        KnotPoints,
+    KnotDateSet = models.ForeignKey(
+        KnotDateSet,
         related_name="counterfactual_knotPoints_records",
         on_delete=models.CASCADE,
     )
@@ -27,11 +28,13 @@ class CounterfactualCasesRecord:
     )
 
     @staticmethod
-    def simulate_counterfactual_dataframes(iso_codes, start_date, end_date):
+    def simulate_counterfactual_dataframes(
+        iso_codes, start_date, end_date
+    ):  # pylint: disable=too-many-locals
         """List of dicts containing counterfactual simulations for one or more countries"""
         # Load cases data from database
         df_data = pd.DataFrame.from_records(
-            CasesRecord.objects.all().values(
+            CasesRecord.objects.all().values(  # pylint: disable=no-member
                 "country__iso_code", "country__population", "date", "weekly_avg_cases"
             )
         ).rename(
@@ -44,7 +47,7 @@ class CounterfactualCasesRecord:
 
         # Load knotpoints from database
         df_data_knotpoints = pd.DataFrame.from_records(
-            KnotPoints.objects.all().values(
+            KnotDateSet.objects.all().values(  # pylint: disable=no-member
                 "country",
                 "knot_date_1",
                 "knot_date_2",
@@ -64,7 +67,7 @@ class CounterfactualCasesRecord:
 
         # Load date range that the simulation can run over
         df_dates = pd.DataFrame.from_records(
-            ModelDateRange.objects.all().values(
+            ModelDateRange.objects.all().values(  # pylint: disable=no-member
                 "country", "initial_date", "maximum_date"
             )
         ).rename(columns={"country": "iso_code"})
@@ -130,6 +133,7 @@ class CounterfactualCasesRecord:
 
     @staticmethod
     def simulate_counterfactual_records(iso_codes, start_date, end_date, summary=False):
+        """Simulate counterfactual records for one or more countries"""
         df_counterfactuals = (
             CounterfactualCasesRecord.simulate_counterfactual_dataframes(
                 iso_codes, start_date, end_date
@@ -145,7 +149,7 @@ class CounterfactualCasesRecord:
 
     @staticmethod
     def add_cumulative_sum(df_country_data, initial_date, initial_cum_cases=0):
-        """Counterfactual simulation for a single country"""
+        """Add the cumulative sum to a set of counterfactual records"""
         # Make a copy of the input dataframe and sort it by date
         df_out = df_country_data.copy().sort_values(by=["date"])
         # Add an offset number of cases to the first entry
@@ -164,8 +168,8 @@ class CounterfactualCasesRecord:
         df_knots,
         n_days_counterfactual_first_restriction,
         n_days_counterfactual_lockdown,
-    ):
-        """Counterfactual simulation for a single country"""
+    ):  # pylint: disable=too-many-locals
+        """Simulate counterfactual records for a single country"""
         # Date range for the simulation
         initial_date = df_dates_data["initial_date"].iloc[0]
         maximum_date = df_dates_data["maximum_date"].iloc[0]
@@ -195,7 +199,7 @@ class CounterfactualCasesRecord:
             # The columns are the dates to simulate and there are as many rows as the weight of this knot point
             simulated_daily_cases.append(
                 pd.DataFrame(
-                    index=[_ for _ in range(knots.weight)],
+                    index=list(range(knots.weight)),
                     columns=pd.date_range(
                         start=initial_date, end=maximum_date, freq="D"
                     ).tolist(),

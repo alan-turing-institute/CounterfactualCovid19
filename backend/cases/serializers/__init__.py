@@ -1,3 +1,4 @@
+"""Serializers for Django cases app"""
 from .concrete import (
     CasesRealDailyAbsoluteSerializer,
     CasesRealDailyNormalisedSerializer,

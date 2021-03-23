@@ -1,16 +1,12 @@
 """Load COVID knot points dates data into the database"""
-import pandas as pd
 from time import monotonic
-from knotpoints.models import KnotPoints
-from utils import (
-    get_country_model,
-    get_country_code,
-    create_code_lookup,
-    create_country_lookup,
-)
+import pandas as pd
+from dates.models import KnotDateSet
+from utils import create_code_lookup, create_country_lookup
 
 
 def run():
+    """Load COVID knot points dates data into the database"""
     print("Starting to load knot points data...")
     start = monotonic()
 
@@ -38,8 +34,8 @@ def run():
         {float("nan"): None}
     )
 
-    # Delete all existing KnotPoints data and regenerate the table
-    KnotPoints.objects.all().delete()
+    # Delete all existing KnotDateSet data and regenerate the table
+    KnotDateSet.objects.all().delete()  # pylint: disable=no-member
 
     # Add an ISO code column lookup table
     code_lookup = create_code_lookup(df_best_knot["Country"].unique())
@@ -55,7 +51,7 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                m = KnotPoints(
+                record = KnotDateSet(
                     country=country,
                     knot_date_1=entry.Knot_date_1,
                     knot_date_2=entry.Knot_date_2,
@@ -65,7 +61,7 @@ def run():
                     growth_factor_2_3=entry.Growth_factor_3,
                     weight=entry.Min_n_unequal,
                 )
-                m.save()
+                record.save()
 
         except AttributeError:
             continue

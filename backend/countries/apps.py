@@ -1,5 +1,8 @@
+"""Django config for countries app"""
 from django.apps import AppConfig
 
 
 class CountriesConfig(AppConfig):
-    name = "countries"
+    """Django app config for Ccountries"""
+
+    name = "Countries"

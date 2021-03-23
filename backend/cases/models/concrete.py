@@ -1,10 +1,14 @@
-"""Countries model"""
+"""Concrete models for Django cases app"""
 from django.db import models
 from countries.models import Country
 
 
 class CasesRecord(models.Model):
+    """Rolling weekly average cases numbers on a daily basis"""
+
     class Meta:
+        """Metaclass for imposing constraints"""
+
         # As Django does not support compount keys we explicitly require uniqueness
         unique_together = (("country", "date"),)
 

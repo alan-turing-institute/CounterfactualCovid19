@@ -34,6 +34,6 @@ CMD poetry run python3 manage.py makemigrations && \
     poetry run python3 manage.py loaddata countries && \
     poetry run python3 manage.py runscript cases_load && \
     poetry run python3 manage.py runscript important_dates_load && \
-    poetry run python3 manage.py runscript knotpoints_load && \
+    poetry run python3 manage.py runscript knotpoint_dates_load && \
     poetry run python3 manage.py runscript possibledates_load && \
     poetry run python3 manage.py runserver 0.0.0.0:8000

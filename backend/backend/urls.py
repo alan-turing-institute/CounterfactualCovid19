@@ -17,9 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from countries.views import CountryView
-from dates.views import ModelDateRangeView
-from knotpoints.views import KnotPointsView
-from possibledates.views import PossibleDatesView
+from dates.views import KnotDateSetView, ModelDateRangeView, PossibleDateSetView
 
 from cases.views import (
     CasesCounterfactualDailyAbsoluteView,
@@ -32,9 +30,9 @@ from cases.views import (
 
 router = routers.DefaultRouter()
 router.register("countries", CountryView)
+router.register("knotpoints", KnotDateSetView)
 router.register("modeldaterange", ModelDateRangeView)
-router.register("knotpoints", KnotPointsView)
-router.register("possibledates", PossibleDatesView)
+router.register("possibledates", PossibleDateSetView)
 
 
 router.register(

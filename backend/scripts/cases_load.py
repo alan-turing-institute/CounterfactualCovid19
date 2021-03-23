@@ -1,16 +1,12 @@
 """Load COVID cases data into the database"""
-import pandas as pd
 from time import monotonic
+import pandas as pd
 from cases.models import CasesRecord
-from utils import (
-    get_country_model,
-    get_country_code,
-    create_code_lookup,
-    create_country_lookup,
-)
+from utils import create_code_lookup, create_country_lookup
 
 
 def run():
+    """Load COVID cases data into the database"""
     print("Starting to load cases data...")
     start = monotonic()
 
@@ -21,7 +17,7 @@ def run():
     df_cases = pd.read_csv(url_cases, parse_dates=["Date"])
 
     # Delete all existing CasesRecord data and regenerate the table
-    CasesRecord.objects.all().delete()
+    CasesRecord.objects.all().delete()  # pylint: disable=no-member
 
     # Add an ISO code column lookup table
     code_lookup = create_code_lookup(df_cases["Country"].unique())
@@ -34,12 +30,12 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                m = CasesRecord(
+                record = CasesRecord(
                     country=country,
                     date=entry.Date,
                     weekly_avg_cases=entry.Daily_cases_MA7,
                 )
-                m.save()
+                record.save()
 
         except AttributeError:
             continue
