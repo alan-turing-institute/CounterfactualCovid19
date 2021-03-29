@@ -22,7 +22,7 @@ export default class InfoPanel extends React.Component {
                   bg={"light"}
                 >
                   <Card.Body>
-                    <Card.Title>{`${this.props.isoCode}`}</Card.Title>
+                    <Card.Title>{`${this.props.countryName}`}</Card.Title>
                     <Card.Text>
                       {`Total Cases per Million: ${this.props.summedAvgCases
                         .toFixed(2)
