@@ -49,7 +49,9 @@ export default class MainGrid extends React.Component {
         sizeHistogramComponent: "0vh",
       });
     } else {
-      const country = this.state.countries.find(country => country.id === iso_code);
+      const country = this.state.countries.find(
+        (country) => country.id === iso_code
+      );
       this.setState({
         isoCode: iso_code,
         countryName: country.properties.name,
