@@ -50,7 +50,7 @@ export default class MainGrid extends React.Component {
       });
     } else {
       const selectedCountry = this.state.countries.find(
-        country => country.id === iso_code
+        (country) => country.id === iso_code
       );
       this.setState({
         isoCode: iso_code,
