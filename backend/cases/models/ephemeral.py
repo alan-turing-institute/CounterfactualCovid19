@@ -1,9 +1,10 @@
 """Ephemeral models for Django cases app"""
 from bisect import bisect_left
 from contextlib import suppress
+import datetime
 import pandas as pd
 from django.db import models
-from dates.models import KnotDateSet, ModelDateRange
+from dates.models import KnotDateSet, ModelDateRange, PossibleDateSet
 from .concrete import CasesRecord
 
 
@@ -28,8 +29,12 @@ class CounterfactualCasesRecord:
     )
 
     @staticmethod
+    def to_date(input_string):
+        return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
+
+    @staticmethod
     def simulate_counterfactual_dataframes(
-        iso_codes, start_date, end_date
+        iso_codes, start_date, end_date, first_restriction_date, lockdown_date
     ):  # pylint: disable=too-many-locals
         """List of dicts containing counterfactual simulations for one or more countries"""
         # Load cases data from database
@@ -66,16 +71,16 @@ class CounterfactualCasesRecord:
         )
 
         # Load date range that the simulation can run over
-        df_dates = pd.DataFrame.from_records(
+        df_real_dates = pd.DataFrame.from_records(
             ModelDateRange.objects.all().values(  # pylint: disable=no-member
                 "country", "initial_date", "maximum_date"
             )
         ).rename(columns={"country": "iso_code"})
-        df_dates["initial_date"] = pd.to_datetime(
-            df_dates.initial_date, format=r"%Y-%m-%d"
+        df_real_dates["initial_date"] = pd.to_datetime(
+            df_real_dates.initial_date, format=r"%Y-%m-%d"
         )
-        df_dates["maximum_date"] = pd.to_datetime(
-            df_dates.maximum_date, format=r"%Y-%m-%d"
+        df_real_dates["maximum_date"] = pd.to_datetime(
+            df_real_dates.maximum_date, format=r"%Y-%m-%d"
         )
 
         # Filter by date if requested
@@ -88,31 +93,78 @@ class CounterfactualCasesRecord:
         if not iso_codes:
             iso_codes = df_data.iso_code.unique()
 
-        # Number of days to shift the two knotpoints by
-        n_days_counterfactual_first_restriction = 0
-        n_days_counterfactual_lockdown = 0
+        # Load all possibilities for dates of first restrictions and lockdown
+        df_possible_dates = pd.DataFrame.from_records(
+            PossibleDateSet.objects.all().values(  # pylint: disable=no-member
+                "n_days_first_restrictions",
+                "n_days_lockdown",
+                "dates_counterfactual_first_restrictions",
+                "dates_counterfactual_lockdown",
+                "country",
+            )
+        ).rename(columns={"country": "iso_code"})
 
         # Simulate each requested country
         df_counterfactuals = []
         for iso_code in sorted(iso_codes):
+            # Select the rows of each dataframe corresponding to the country we are working on
             df_country_data = df_data[df_data["iso_code"] == iso_code]
-            df_country_dates = df_dates[df_dates["iso_code"] == iso_code]
+            df_country_real_dates = df_real_dates[df_real_dates["iso_code"] == iso_code]
             df_country_knotpoints = df_data_knotpoints[
                 df_data_knotpoints["iso_code"] == iso_code
             ].copy()
+            df_country_possible_dates = df_possible_dates[
+                df_possible_dates["iso_code"] == iso_code
+            ]
 
-            # Simulate a single country using cases data, model dates and knotpoints
-            single_country = CounterfactualCasesRecord.simulate_single_country(
-                df_country_data,
-                df_country_dates,
-                df_country_knotpoints,
-                n_days_counterfactual_first_restriction,
-                n_days_counterfactual_lockdown,
-            )
+            try:
+                # If a first restriction date is provided then use it to calculate the number of days to vary first restrictions by
+                if first_restriction_date:
+                    n_days_first_restrictions = int(
+                        df_country_possible_dates[
+                            df_country_possible_dates[
+                                "dates_counterfactual_first_restrictions"
+                            ]
+                            == CounterfactualCasesRecord.to_date(first_restriction_date)
+                        ]["n_days_first_restrictions"].unique()[0]
+                    )
+                else:
+                    n_days_first_restrictions = 0
+
+                # If a lockdown date is provided then use it to calculate the number of days to vary lockdown by, while requiring that this is compatible with the first restrictions shift
+                if lockdown_date:
+                    n_days_lockdown = int(
+                        df_country_possible_dates[
+                            (
+                                df_country_possible_dates[
+                                    "dates_counterfactual_lockdown"
+                                ]
+                                == CounterfactualCasesRecord.to_date(lockdown_date)
+                            )
+                            & (
+                                df_country_possible_dates["n_days_first_restrictions"]
+                                == n_days_first_restrictions
+                            )
+                        ]["n_days_lockdown"].unique()[0]
+                    )
+                else:
+                    n_days_lockdown = 0
+
+                # Simulate a single country using cases data, model dates and knotpoints
+                single_country = CounterfactualCasesRecord.simulate_single_country(
+                    df_country_data,
+                    df_country_real_dates,
+                    df_country_knotpoints,
+                    n_days_first_restrictions,
+                    n_days_lockdown,
+                )
+            except IndexError:
+                # If we cannot extract a number of days offset for first restrictions or lockdown then we return an empty dataframe
+                single_country = pd.DataFrame({"date": [], "weekly_avg_cases": []})
 
             # Calculate the number of cumulative cases that occurred before the simulation start date
             initial_date = pd.to_datetime(
-                df_country_dates.initial_date.values[0], format=r"%Y-%m-%d"
+                df_country_real_dates.initial_date.values[0], format=r"%Y-%m-%d"
             )
             initial_cum_cases = (
                 df_country_data[df_country_data["date"] < initial_date][
@@ -132,11 +184,18 @@ class CounterfactualCasesRecord:
         return df_counterfactuals
 
     @staticmethod
-    def simulate_counterfactual_records(iso_codes, start_date, end_date, summary=False):
+    def simulate_counterfactual_records(
+        iso_codes,
+        start_date,
+        end_date,
+        first_restriction_date,
+        lockdown_date,
+        summary=False,
+    ):
         """Simulate counterfactual records for one or more countries"""
         df_counterfactuals = (
             CounterfactualCasesRecord.simulate_counterfactual_dataframes(
-                iso_codes, start_date, end_date
+                iso_codes, start_date, end_date, first_restriction_date, lockdown_date
             )
         )
         # Get the total number of cases on the final day of simulation
@@ -164,15 +223,15 @@ class CounterfactualCasesRecord:
     @staticmethod
     def simulate_single_country(
         df_country_data,
-        df_dates_data,
+        df_real_dates_data,
         df_knots,
         n_days_counterfactual_first_restriction,
         n_days_counterfactual_lockdown,
     ):  # pylint: disable=too-many-locals
         """Simulate counterfactual records for a single country"""
         # Date range for the simulation
-        initial_date = df_dates_data["initial_date"].iloc[0]
-        maximum_date = df_dates_data["maximum_date"].iloc[0]
+        initial_date = df_real_dates_data["initial_date"].iloc[0]
+        maximum_date = df_real_dates_data["maximum_date"].iloc[0]
 
         # Starting number of cases
         initial_case_number = df_country_data[df_country_data["date"] == initial_date][
