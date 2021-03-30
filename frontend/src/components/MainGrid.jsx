@@ -38,8 +38,8 @@ export default class MainGrid extends React.Component {
 
   // Update the state for a new country
   handleCountryChange(iso_code, summed_avg_cases) {
-    console.log(`Setting country of interest to ${iso_code}`);
     if (iso_code === this.state.isoCode) {
+      console.log(`Setting currently selected country to none`);
       this.setState({
         isoCode: null,
         summedAvgCases: null,
@@ -47,6 +47,7 @@ export default class MainGrid extends React.Component {
         sizeHistogramComponent: "0vh",
       });
     } else {
+      console.log(`Setting currently selected country to ${iso_code}`);
       this.setState({
         isoCode: iso_code,
         summedAvgCases: summed_avg_cases,
