@@ -24,7 +24,7 @@ var legendItems = [
 
   new LegendItem("0 - 499", "#ffffcc", (cases) => cases > 0 && cases < 500),
 
-  new LegendItem("No Data", "#D6DBDF", (cases) => true),
+  new LegendItem("No Data", "#ffffff", (cases) => true),
 ];
 
 export default legendItems;
