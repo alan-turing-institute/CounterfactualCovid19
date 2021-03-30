@@ -32,7 +32,7 @@ router = routers.DefaultRouter()
 router.register("countries", CountryView)
 router.register("knotpoints", KnotDateSetView)
 router.register("modeldaterange", ModelDateRangeView)
-router.register("possibledates", PossibleDateSetView)
+router.register("possibledates", PossibleDateSetView, basename="possibledates")
 
 
 router.register(
