@@ -15,13 +15,13 @@ export default class WorldMap extends React.Component {
     // Component-level constants
     this.styles = {
       default: {
-        weight: 1,
+        weight: 0.5,
         color: "black",
         fillOpacity: 1,
       },
       highlight: {
-        weight: 5,
-        color: "grey",
+        weight: 3.5,
+        color: "black",
         fillOpacity: 0.7,
       },
     };
