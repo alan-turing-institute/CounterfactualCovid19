@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from django.db.models import ExpressionWrapper, F, FloatField, Max, Sum, Window
 from rest_framework import viewsets
 from rest_framework.response import Response
+from counterfactual import simulate_records
 from .models import CasesRecord, CounterfactualCasesRecord
 from .serializers import (
     CasesCounterfactualDailyAbsoluteSerializer,
@@ -24,11 +25,6 @@ class CasesCounterfactualViewMixin(ABC):
         """serializer_class must be implemented by children"""
         return NotImplementedError
 
-    @abstractmethod
-    def simulate(self, iso_codes, boundary_dates, knot_dates):
-        """simulate must be implemented by children"""
-        return NotImplementedError
-
     def list(self, request):
         """Response to a GET/LIST request"""
         iso_code = request.query_params.get("iso_code", None)
@@ -45,6 +41,10 @@ class CasesCounterfactualViewMixin(ABC):
         serializer = self.serializer_class(instance=records, many=True)
         return Response(serializer.data)  # pylint: disable=no-member
 
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
+        """Simulate counterfactual records"""
+        return simulate_records(iso_codes, boundary_dates, knot_dates)
+
 
 class CasesCounterfactualDailyAbsoluteView(
     CasesCounterfactualViewMixin, viewsets.ViewSet
@@ -53,11 +53,6 @@ class CasesCounterfactualDailyAbsoluteView(
 
     serializer_class = CasesCounterfactualDailyAbsoluteSerializer
 
-    def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, boundary_dates, knot_dates
-        )
-
 
 class CasesCounterfactualDailyNormalisedView(
     CasesCounterfactualViewMixin, viewsets.ViewSet
@@ -65,11 +60,6 @@ class CasesCounterfactualDailyNormalisedView(
     """Counterfactual daily new and cumulative cases normalised by population"""
 
     serializer_class = CasesCounterfactualDailyNormalisedSerializer
-
-    def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, boundary_dates, knot_dates
-        )
 
 
 class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.ViewSet):
