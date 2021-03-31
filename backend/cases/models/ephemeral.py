@@ -3,7 +3,6 @@ from bisect import bisect_left
 from contextlib import suppress
 import datetime
 import pandas as pd
-from django.db import models
 from dates.models import KnotDateSet, ModelDateRange, PossibleDateSet
 from .concrete import CasesRecord
 
@@ -17,19 +16,9 @@ class CounterfactualCasesRecord:
         self.weekly_avg_cases = weekly_avg_cases
         self.summed_avg_cases = summed_avg_cases
 
-    KnotDateSet = models.ForeignKey(
-        KnotDateSet,
-        related_name="counterfactual_knotPoints_records",
-        on_delete=models.CASCADE,
-    )
-    ModelDateRange = models.ForeignKey(
-        ModelDateRange,
-        related_name="conterfactual_dates_records",
-        on_delete=models.CASCADE,
-    )
-
     @staticmethod
     def to_date(input_string):
+        """Convert a string to a datetime date"""
         return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
 
     @staticmethod
