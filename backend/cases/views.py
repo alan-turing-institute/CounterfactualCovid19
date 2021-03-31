@@ -56,6 +56,7 @@ class CasesCounterfactualDailyAbsoluteView(
     def simulate(self, iso_codes, boundary_dates, knot_dates):
         return NotImplementedError
 
+
 class CasesCounterfactualDailyNormalisedView(
     CasesCounterfactualViewMixin, viewsets.ViewSet
 ):

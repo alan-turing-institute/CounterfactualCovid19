@@ -1,4 +1,5 @@
 """Ephemeral models for Django cases app"""
+import datetime
 import pandas as pd
 from counterfactual import simulate_records
 from dates.models import KnotDateSet, ModelDateRange, PossibleDateSet
@@ -15,7 +16,19 @@ class CounterfactualCasesRecord:
         self.summed_avg_cases = summed_avg_cases
 
     @staticmethod
+    def to_date(input_string):
+        """Convert a string to a datetime date"""
+        if input_string:
+            return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
+        return None
+
+    @staticmethod
     def simulate(iso_codes, boundary_dates, knot_dates, summary):
+        """Simulate counterfactual records for one or more countries"""
+        # Convert strings into datetime.date
+        start_date, end_date = map(CounterfactualCasesRecord.to_date, boundary_dates)
+        knot_dates = [CounterfactualCasesRecord.to_date(s) for s in knot_dates]
+
         # Load real cases data from database and filter by date and iso_code if requested
         df_casesrecord = pd.DataFrame.from_records(
             CasesRecord.objects.all().values(  # pylint: disable=no-member
@@ -27,8 +40,6 @@ class CounterfactualCasesRecord:
                 "country__population": "population",
             }
         )
-        df_casesrecord["date"] = pd.to_datetime(df_casesrecord.date, format=r"%Y-%m-%d")
-        start_date, end_date = boundary_dates
         if start_date:
             df_casesrecord = df_casesrecord[df_casesrecord["date"] >= start_date]
         if end_date:
@@ -48,12 +59,6 @@ class CounterfactualCasesRecord:
                 "weight",
             )
         ).rename(columns={"country": "iso_code"})
-        df_knotdateset["knot_date_1"] = pd.to_datetime(
-            df_knotdateset.knot_date_1, format=r"%Y-%m-%d"
-        )
-        df_knotdateset["knot_date_2"] = pd.to_datetime(
-            df_knotdateset.knot_date_2, format=r"%Y-%m-%d"
-        )
 
         # Load date range that the simulation can run over
         df_modeldaterange = pd.DataFrame.from_records(
@@ -61,12 +66,6 @@ class CounterfactualCasesRecord:
                 "country", "initial_date", "maximum_date"
             )
         ).rename(columns={"country": "iso_code"})
-        df_modeldaterange["initial_date"] = pd.to_datetime(
-            df_modeldaterange.initial_date, format=r"%Y-%m-%d"
-        )
-        df_modeldaterange["maximum_date"] = pd.to_datetime(
-            df_modeldaterange.maximum_date, format=r"%Y-%m-%d"
-        )
 
         # Load all possibilities for dates of first restrictions and lockdown
         df_possibledateset = pd.DataFrame.from_records(
@@ -79,7 +78,14 @@ class CounterfactualCasesRecord:
             )
         ).rename(columns={"country": "iso_code"})
 
-        return simulate_records(df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates, summary)
+        return simulate_records(
+            df_casesrecord,
+            df_knotdateset,
+            df_modeldaterange,
+            df_possibledateset,
+            knot_dates,
+            summary,
+        )
 
     def __str__(self):
         return f"({self.iso_code}) [{self.date}] => {self.weekly_avg_cases} ({self.summed_avg_cases})"

@@ -1,18 +1,59 @@
 """Utility functions for simulating counterfactual data"""
 from bisect import bisect_left
 from contextlib import suppress
-import datetime
 import pandas as pd
 
 
-def to_date(input_string):
-    """Convert a string to a datetime date"""
-    return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
+def simulate_records(
+    df_casesrecord,
+    df_knotdateset,
+    df_modeldaterange,
+    df_possibledateset,
+    knot_dates,
+    summary,
+):
+    """
+    Simulate counterfactual records for one or more countries
 
+    :param df_casesrecord: A dataframe with columns
+        date                                        datetime.date
+        iso_code                                           string
+        population                                            int
+        weekly_avg_cases                                    float
+    :param df_knotdateset: A dataframe with columns
+        growth_factor_0_1                                   float
+        growth_factor_1_2                                   float
+        growth_factor_2_3                                   float
+        iso_code                                           string
+        knot_date_1                                 datetime.date
+        knot_date_2                                 datetime.date
+        weight                                                int
+    :param df_modeldaterange: A dataframe with columns
+        initial_date                                datetime.date
+        iso_code                                           string
+        maximum_date                                datetime.date
+    :param df_possibledateset: A dataframe with columns
+        dates_counterfactual_first_restrictions     datetime.date
+        dates_counterfactual_lockdown               datetime.date
+        iso_code                                           string
+        n_days_first_restrictions                             int
+        n_days_lockdown                                       int
+    :param knot_dates: A tuple of (datetime.date, datetime.date)
 
-def simulate_records(df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates, summary):
-    """Simulate counterfactual records for one or more countries"""
-    df_counterfactuals = simulate_dataframes(df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates)
+    :returns: A list of dictionaries, each of which has the following keys
+        iso_code                                       string
+        population                                        int
+        date                                    datetime.date
+        weekly_avg_cases                                float
+        summed_avg_cases                                float
+    """
+    df_counterfactuals = simulate_dataframes(
+        df_casesrecord,
+        df_knotdateset,
+        df_modeldaterange,
+        df_possibledateset,
+        knot_dates,
+    )
     # Get the total number of cases on the final day of simulation
     if summary:
         df_counterfactuals = [
@@ -25,9 +66,39 @@ def simulate_records(df_casesrecord, df_knotdateset, df_modeldaterange, df_possi
 def simulate_dataframes(
     df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates
 ):  # pylint: disable=too-many-locals
-    """List of dicts containing counterfactual simulations for one or more countries"""
+    """
+    Simulate counterfactual dataframes for one or more countries
 
-
+    :param df_casesrecord: A dataframe with columns
+        date                                        datetime.date
+        iso_code                                           string
+        population                                            int
+        weekly_avg_cases                                    float
+    :param df_knotdateset: A dataframe with columns
+        growth_factor_0_1                                   float
+        growth_factor_1_2                                   float
+        growth_factor_2_3                                   float
+        iso_code                                           string
+        knot_date_1                                 datetime.date
+        knot_date_2                                 datetime.date
+        weight                                                int
+    :param df_modeldaterange: A dataframe with columns
+        initial_date                                datetime.date
+        iso_code                                           string
+        maximum_date                                datetime.date
+    :param df_possibledateset: A dataframe with columns
+        dates_counterfactual_first_restrictions     datetime.date
+        dates_counterfactual_lockdown               datetime.date
+        iso_code                                           string
+        n_days_first_restrictions                             int
+        n_days_lockdown                                       int
+    :returns: A list of dataframes, each of which has the following columns
+        iso_code                                           string
+        population                                            int
+        date                                        datetime.date
+        weekly_avg_cases                                    float
+        summed_avg_cases                                    float
+    """
     first_restriction_date, lockdown_date = knot_dates
 
     # Simulate each requested country
@@ -38,9 +109,7 @@ def simulate_dataframes(
         df_country_modeldaterange = df_modeldaterange[
             df_modeldaterange["iso_code"] == iso_code
         ]
-        df_country_knotdateset = df_knotdateset[
-            df_knotdateset["iso_code"] == iso_code
-        ].copy()
+        df_country_knotdateset = df_knotdateset[df_knotdateset["iso_code"] == iso_code]
         df_country_possibledateset = df_possibledateset[
             df_possibledateset["iso_code"] == iso_code
         ]
@@ -65,7 +134,7 @@ def simulate_dataframes(
                         df_country_possibledateset[
                             "dates_counterfactual_first_restrictions"
                         ]
-                        == to_date(first_restriction_date)
+                        == first_restriction_date
                     ]["n_days_first_restrictions"].unique()[0]
                 )
             else:
@@ -77,7 +146,7 @@ def simulate_dataframes(
                     df_country_possibledateset[
                         (
                             df_country_possibledateset["dates_counterfactual_lockdown"]
-                            == to_date(lockdown_date)
+                            == lockdown_date
                         )
                         & (
                             df_country_possibledateset["n_days_first_restrictions"]
@@ -91,7 +160,7 @@ def simulate_dataframes(
             # Simulate a single country using cases data, model dates and knotpoints
             df_counterfactual_country = simulate_single_country(
                 df_country_casesrecord,
-                df_country_knotdateset,
+                df_country_knotdateset.copy(),
                 (simulation_start_date, simulation_end_date),
                 (n_days_first_restrictions, n_days_lockdown),
             )
@@ -128,7 +197,31 @@ def simulate_single_country(
     simulation_dates,
     counterfactual_shifts,
 ):  # pylint: disable=too-many-locals
-    """Simulate counterfactual records for a single country"""
+    """
+    Simulate counterfactual records for a single country
+
+    :param df_casesrecord: A dataframe with columns
+        date                                        datetime.date
+        iso_code                                           string
+        population                                            int
+        weekly_avg_cases                                    float
+    :param df_knotdateset: A dataframe with columns
+        growth_factor_0_1                                   float
+        growth_factor_1_2                                   float
+        growth_factor_2_3                                   float
+        iso_code                                           string
+        knot_date_1                                 datetime.date
+        knot_date_2                                 datetime.date
+        weight                                                int
+    :param simulation_dates: A tuple of (datetime.date, datetime.date) giving simulation start/end times
+    :param counterfactual_shifts: A tuple of (int, int) giving offsets to apply
+
+    :returns: A dataframe with columns
+        iso_code                                          string
+        population                                         int64
+        date                                       datetime.date
+        weekly_avg_cases                                   float
+    """
     simulation_start_date, simulation_end_date = simulation_dates
     first_restriction_shift_days, lockdown_shift_days = counterfactual_shifts
     # Starting number of cases
@@ -144,10 +237,10 @@ def simulate_single_country(
         "knot_date_2"
     ] - pd.Timedelta(days=lockdown_shift_days)
 
-    # Set dates to simulate
+    # Construct a list of datetime.date to simulate
     dates_range = pd.date_range(
         start=simulation_start_date, end=simulation_end_date, freq="D"
-    ).tolist()
+    ).date.tolist()  # pylint: disable=no-member
 
     # Simulated number of cases on each day
     simulated_daily_cases = []
@@ -155,10 +248,7 @@ def simulate_single_country(
         # Add an empty dataframe to the list of simulations
         # The columns are the dates to simulate and there are as many rows as the weight of this knot point
         simulated_daily_cases.append(
-            pd.DataFrame(
-                index=list(range(knots.weight)),
-                columns=dates_range.copy(),
-            )
+            pd.DataFrame(index=list(range(knots.weight)), columns=dates_range)
         )
 
         # Set the first day to the actual number of cases as initial seed for the simulation
@@ -189,7 +279,7 @@ def simulate_single_country(
             # Subtracting 1 translates from bisection point into index in the growth factor list
             growth = growth_factors[bisect_left(time_period_boundaries, day_t) - 1]
 
-            # Calculate daily cases at time t given the number of cases in t -1 and the growth factor.
+            # Calculate daily cases on day t given the number of cases on t-1 and the growth factor.
             n_cases_series_t = growth * n_cases_series_tminus1
 
             # Store number of cases in the dataframe
@@ -200,24 +290,18 @@ def simulate_single_country(
     counterfactual_cases_series = pd.concat(simulated_daily_cases).mean(axis=0)
     df_counterfactual_cases = pd.DataFrame(
         {
-            "date": pd.to_datetime(
-                counterfactual_cases_series.index, format=r"%Y-%m-%d"
-            ),
+            "date": counterfactual_cases_series.index,
             "weekly_avg_cases": counterfactual_cases_series.values,
         }
     )
 
     # Remove columns of weekly_avg_cases because it will be replaced with counterfactual cases
-    df_real_cases = df_country_casesrecord.copy()
-    df_real_cases.drop(columns=["weekly_avg_cases"], inplace=True)
+    df_real_cases = df_country_casesrecord.drop(columns=["weekly_avg_cases"])
 
     # Merge real and counterfactual dataframes and fill missing values
-    df_out = pd.merge(df_real_cases, df_counterfactual_cases, on="date", how="outer")
-    df_out.fillna(0, inplace=True)
-
-    # Make sure type is the expected one.
-    df_out["date"] = df_out["date"].dt.date
-    return df_out
+    return pd.merge(
+        df_real_cases, df_counterfactual_cases, on="date", how="outer"
+    ).fillna(0)
 
 
 def add_cumulative_sum(df_casesrecord, initial_cum_cases):
