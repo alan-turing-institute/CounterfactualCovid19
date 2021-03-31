@@ -146,12 +146,13 @@ class CounterfactualCasesRecord:
                     n_days_lockdown = 0
 
                 # Simulate a single country using cases data, model dates and knotpoints
-                single_country = CounterfactualCasesRecord.simulate_single_country(
-                    df_country_casesrecord,
-                    df_country_modeldaterange,
-                    df_country_knotdateset,
-                    n_days_first_restrictions,
-                    n_days_lockdown,
+                df_counterfactual_country = (
+                    CounterfactualCasesRecord.simulate_single_country(
+                        df_country_casesrecord,
+                        df_country_knotdateset,
+                        (simulation_start_date, simulation_end_date),
+                        (n_days_first_restrictions, n_days_lockdown),
+                    )
                 )
             except IndexError:
                 # If we cannot extract a number of days offset for first restrictions or lockdown then we return an empty dataframe
@@ -216,32 +217,29 @@ class CounterfactualCasesRecord:
     @staticmethod
     def simulate_single_country(
         df_country_casesrecord,
-        df_country_modeldaterange,
         df_country_knotdateset,
-        counterfactual_first_restriction_shift_days,
-        counterfactual_lockdown_shift_days,
+        simulation_dates,
+        counterfactual_shifts,
     ):  # pylint: disable=too-many-locals
         """Simulate counterfactual records for a single country"""
-        # Date range for the simulation
-        initial_date = df_country_modeldaterange["initial_date"].iloc[0]
-        maximum_date = df_country_modeldaterange["maximum_date"].iloc[0]
-
+        simulation_start_date, simulation_end_date = simulation_dates
+        first_restriction_shift_days, lockdown_shift_days = counterfactual_shifts
         # Starting number of cases
         initial_case_number = df_country_casesrecord[
-            df_country_casesrecord["date"] == initial_date
+            df_country_casesrecord["date"] == simulation_start_date
         ]["weekly_avg_cases"].values[0]
 
         # Add a column for the counterfactual knot dates
         df_country_knotdateset["counterfactual_knot_date_1"] = df_country_knotdateset[
             "knot_date_1"
-        ] - pd.Timedelta(days=counterfactual_first_restriction_shift_days)
+        ] - pd.Timedelta(days=first_restriction_shift_days)
         df_country_knotdateset["counterfactual_knot_date_2"] = df_country_knotdateset[
             "knot_date_2"
-        ] - pd.Timedelta(days=counterfactual_lockdown_shift_days)
+        ] - pd.Timedelta(days=lockdown_shift_days)
 
         # Set dates to simulate
         dates_range = pd.date_range(
-            start=initial_date, end=maximum_date, freq="D"
+            start=simulation_start_date, end=simulation_end_date, freq="D"
         ).tolist()
 
         # Simulated number of cases on each day
@@ -253,7 +251,7 @@ class CounterfactualCasesRecord:
                 pd.DataFrame(
                     index=list(range(knots.weight)),
                     columns=pd.date_range(
-                        start=initial_date, end=maximum_date, freq="D"
+                        start=simulation_start_date, end=simulation_end_date, freq="D"
                     ).tolist(),
                 )
             )
