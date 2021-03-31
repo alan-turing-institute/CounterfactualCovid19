@@ -112,6 +112,18 @@ class CounterfactualCasesRecord:
                 df_possibledateset["iso_code"] == iso_code
             ]
 
+            # Get date range for this simulation noting that the user of this API may have used "start_date" and "end_date" to restrict the range
+            # The start date is whichever is later of the model's "initial_date" and the first date for which there is real data
+            # The end date is whichever is earlier of the model's "maximum_date" and the last date for which there is real data
+            simulation_start_date = max(
+                df_country_modeldaterange["initial_date"].iloc[0],
+                min(df_country_casesrecord["date"]),
+            )
+            simulation_end_date = min(
+                df_country_modeldaterange["maximum_date"].iloc[0],
+                max(df_country_casesrecord["date"]),
+            )
+
             try:
                 # If a first restriction date is provided then use it to calculate the number of days to vary first restrictions by
                 if first_restriction_date:
@@ -156,24 +168,27 @@ class CounterfactualCasesRecord:
                 )
             except IndexError:
                 # If we cannot extract a number of days offset for first restrictions or lockdown then we return an empty dataframe
-                single_country = pd.DataFrame({"date": [], "weekly_avg_cases": []})
+                df_counterfactual_country = pd.DataFrame(
+                    {"date": [], "weekly_avg_cases": []}
+                )
 
             # Calculate the number of cumulative cases that occurred before the simulation start date
-            initial_date = pd.to_datetime(
-                df_country_modeldaterange.initial_date.values[0], format=r"%Y-%m-%d"
-            )
-            initial_cum_cases = (
-                df_country_casesrecord[df_country_casesrecord["date"] < initial_date][
-                    "weekly_avg_cases"
-                ]
-                .cumsum()
-                .iloc[-1]
-            )
+            # If there are no caserecords before the simulation start date we catch the IndexError and set initial_cum_cases to 0
+            try:
+                initial_cum_cases = (
+                    df_country_casesrecord[
+                        df_country_casesrecord["date"] < simulation_start_date
+                    ]["weekly_avg_cases"]
+                    .cumsum()
+                    .iloc[-1]
+                )
+            except IndexError:
+                initial_cum_cases = 0
 
             # Add cumulative cases that occurred before the simulation start date
             df_counterfactuals.append(
                 CounterfactualCasesRecord.add_cumulative_sum(
-                    single_country, initial_date, initial_cum_cases
+                    df_counterfactual_country, simulation_start_date, initial_cum_cases
                 )
             )
 
@@ -201,7 +216,7 @@ class CounterfactualCasesRecord:
         return sum([df.to_dict("records") for df in df_counterfactuals], [])
 
     @staticmethod
-    def add_cumulative_sum(df_country_casesrecord, initial_date, initial_cum_cases=0):
+    def add_cumulative_sum(df_country_casesrecord, initial_date, initial_cum_cases):
         """Add the cumulative sum to a set of counterfactual records"""
         # Make a copy of the input dataframe and sort it by date
         df_out = df_country_casesrecord.copy().sort_values(by=["date"])
