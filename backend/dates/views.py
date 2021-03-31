@@ -28,5 +28,13 @@ class PossibleDateSetView(viewsets.ModelViewSet):
     """View for PossibleDateSet"""
 
     serializer_class = PossibleDateSetSerializer
-    queryset = PossibleDateSet.objects.all()  # pylint: disable=no-member
     http_method_names = ["get", "list"]
+
+    def get_queryset(self):
+        """Construct a default queryset with filters"""
+        queryset = PossibleDateSet.objects.all()  # pylint: disable=no-member
+        # Apply filter on ISO code
+        iso_code = self.request.query_params.get("iso_code", None)
+        if iso_code:
+            queryset = queryset.filter(country__iso_code=iso_code)
+        return queryset

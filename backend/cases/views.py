@@ -25,7 +25,7 @@ class CasesCounterfactualViewMixin(ABC):
         return NotImplementedError
 
     @abstractmethod
-    def simulate(self, iso_codes, start_date, end_date):
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
         """simulate must be implemented by children"""
         return NotImplementedError
 
@@ -35,7 +35,13 @@ class CasesCounterfactualViewMixin(ABC):
         iso_codes = [iso_code] if iso_code else []
         start_date = request.query_params.get("start_date", None)
         end_date = request.query_params.get("end_date", None)
-        records = self.simulate(iso_codes, start_date, end_date)
+        first_restriction_date = request.query_params.get(
+            "first_restriction_date", None
+        )
+        lockdown_date = request.query_params.get("lockdown_date", None)
+        records = self.simulate(
+            iso_codes, (start_date, end_date), (first_restriction_date, lockdown_date)
+        )
         serializer = self.serializer_class(instance=records, many=True)
         return Response(serializer.data)  # pylint: disable=no-member
 
@@ -47,9 +53,9 @@ class CasesCounterfactualDailyAbsoluteView(
 
     serializer_class = CasesCounterfactualDailyAbsoluteSerializer
 
-    def simulate(self, iso_codes, start_date, end_date):
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
         return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, start_date, end_date
+            iso_codes, boundary_dates, knot_dates
         )
 
 
@@ -60,9 +66,9 @@ class CasesCounterfactualDailyNormalisedView(
 
     serializer_class = CasesCounterfactualDailyNormalisedSerializer
 
-    def simulate(self, iso_codes, start_date, end_date):
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
         return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, start_date, end_date
+            iso_codes, boundary_dates, knot_dates
         )
 
 
@@ -71,9 +77,9 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
 
     serializer_class = CasesCounterfactualIntegratedSerializer
 
-    def simulate(self, iso_codes, start_date, end_date):
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
         return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, start_date, end_date, summary=True
+            iso_codes, boundary_dates, knot_dates, summary=True
         )
 
 
