@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from django.db.models import ExpressionWrapper, F, FloatField, Max, Sum, Window
 from rest_framework import viewsets
 from rest_framework.response import Response
-from counterfactual import simulate_records
 from .models import CasesRecord, CounterfactualCasesRecord
 from .serializers import (
     CasesCounterfactualDailyAbsoluteSerializer,
@@ -25,6 +24,11 @@ class CasesCounterfactualViewMixin(ABC):
         """serializer_class must be implemented by children"""
         return NotImplementedError
 
+    @abstractmethod
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
+        """Simulate counterfactual records"""
+        return NotImplementedError
+
     def list(self, request):
         """Response to a GET/LIST request"""
         iso_code = request.query_params.get("iso_code", None)
@@ -41,10 +45,6 @@ class CasesCounterfactualViewMixin(ABC):
         serializer = self.serializer_class(instance=records, many=True)
         return Response(serializer.data)  # pylint: disable=no-member
 
-    def simulate(self, iso_codes, boundary_dates, knot_dates):
-        """Simulate counterfactual records"""
-        return simulate_records(iso_codes, boundary_dates, knot_dates)
-
 
 class CasesCounterfactualDailyAbsoluteView(
     CasesCounterfactualViewMixin, viewsets.ViewSet
@@ -53,6 +53,8 @@ class CasesCounterfactualDailyAbsoluteView(
 
     serializer_class = CasesCounterfactualDailyAbsoluteSerializer
 
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
+        return NotImplementedError
 
 class CasesCounterfactualDailyNormalisedView(
     CasesCounterfactualViewMixin, viewsets.ViewSet
@@ -61,6 +63,11 @@ class CasesCounterfactualDailyNormalisedView(
 
     serializer_class = CasesCounterfactualDailyNormalisedSerializer
 
+    def simulate(self, iso_codes, boundary_dates, knot_dates):
+        return CounterfactualCasesRecord.simulate(
+            iso_codes, boundary_dates, knot_dates, summary=False
+        )
+
 
 class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.ViewSet):
     """Counterfactual integrated number of cases normalised by population"""
@@ -68,7 +75,7 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
     serializer_class = CasesCounterfactualIntegratedSerializer
 
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate_counterfactual_records(
+        return CounterfactualCasesRecord.simulate(
             iso_codes, boundary_dates, knot_dates, summary=True
         )
 

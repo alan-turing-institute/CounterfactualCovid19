@@ -3,8 +3,6 @@ from bisect import bisect_left
 from contextlib import suppress
 import datetime
 import pandas as pd
-from dates.models import KnotDateSet, ModelDateRange, PossibleDateSet
-from cases.models import CasesRecord
 
 
 def to_date(input_string):
@@ -12,9 +10,9 @@ def to_date(input_string):
     return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
 
 
-def simulate_records(iso_codes, boundary_dates, knot_dates, summary=False):
+def simulate_records(df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates, summary):
     """Simulate counterfactual records for one or more countries"""
-    df_counterfactuals = simulate_dataframes(iso_codes, boundary_dates, knot_dates)
+    df_counterfactuals = simulate_dataframes(df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates)
     # Get the total number of cases on the final day of simulation
     if summary:
         df_counterfactuals = [
@@ -25,81 +23,16 @@ def simulate_records(iso_codes, boundary_dates, knot_dates, summary=False):
 
 
 def simulate_dataframes(
-    iso_codes, boundary_dates, knot_dates
+    df_casesrecord, df_knotdateset, df_modeldaterange, df_possibledateset, knot_dates
 ):  # pylint: disable=too-many-locals
     """List of dicts containing counterfactual simulations for one or more countries"""
-    # Load cases data from database
-    df_casesrecord = pd.DataFrame.from_records(
-        CasesRecord.objects.all().values(  # pylint: disable=no-member
-            "country__iso_code", "country__population", "date", "weekly_avg_cases"
-        )
-    ).rename(
-        columns={
-            "country__iso_code": "iso_code",
-            "country__population": "population",
-        }
-    )
-    df_casesrecord["date"] = pd.to_datetime(df_casesrecord.date, format=r"%Y-%m-%d")
 
-    # Load knotpoints from database
-    df_knotdateset = pd.DataFrame.from_records(
-        KnotDateSet.objects.all().values(  # pylint: disable=no-member
-            "country",
-            "knot_date_1",
-            "knot_date_2",
-            "n_knots",
-            "growth_factor_0_1",
-            "growth_factor_1_2",
-            "growth_factor_2_3",
-            "weight",
-        )
-    ).rename(columns={"country": "iso_code"})
-    df_knotdateset["knot_date_1"] = pd.to_datetime(
-        df_knotdateset.knot_date_1, format=r"%Y-%m-%d"
-    )
-    df_knotdateset["knot_date_2"] = pd.to_datetime(
-        df_knotdateset.knot_date_2, format=r"%Y-%m-%d"
-    )
 
-    # Filter real cases by date if requested
-    start_date, end_date = boundary_dates
-    if start_date:
-        df_casesrecord = df_casesrecord[df_casesrecord["date"] >= start_date]
-    if end_date:
-        df_casesrecord = df_casesrecord[df_casesrecord["date"] < end_date]
-
-    # Load date range that the simulation can run over
-    df_modeldaterange = pd.DataFrame.from_records(
-        ModelDateRange.objects.all().values(  # pylint: disable=no-member
-            "country", "initial_date", "maximum_date"
-        )
-    ).rename(columns={"country": "iso_code"})
-    df_modeldaterange["initial_date"] = pd.to_datetime(
-        df_modeldaterange.initial_date, format=r"%Y-%m-%d"
-    )
-    df_modeldaterange["maximum_date"] = pd.to_datetime(
-        df_modeldaterange.maximum_date, format=r"%Y-%m-%d"
-    )
-
-    # Use all countries if none are provided
-    if not iso_codes:
-        iso_codes = df_casesrecord.iso_code.unique()
-
-    # Load all possibilities for dates of first restrictions and lockdown
-    df_possibledateset = pd.DataFrame.from_records(
-        PossibleDateSet.objects.all().values(  # pylint: disable=no-member
-            "n_days_first_restrictions",
-            "n_days_lockdown",
-            "dates_counterfactual_first_restrictions",
-            "dates_counterfactual_lockdown",
-            "country",
-        )
-    ).rename(columns={"country": "iso_code"})
     first_restriction_date, lockdown_date = knot_dates
 
     # Simulate each requested country
     df_counterfactuals = []
-    for iso_code in sorted(iso_codes):
+    for iso_code in sorted(df_casesrecord.iso_code.unique()):
         # Select the rows of each dataframe corresponding to the country we are working on
         df_country_casesrecord = df_casesrecord[df_casesrecord["iso_code"] == iso_code]
         df_country_modeldaterange = df_modeldaterange[
