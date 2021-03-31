@@ -188,7 +188,7 @@ class CounterfactualCasesRecord:
             # Add cumulative cases that occurred before the simulation start date
             df_counterfactuals.append(
                 CounterfactualCasesRecord.add_cumulative_sum(
-                    df_counterfactual_country, simulation_start_date, initial_cum_cases
+                    df_counterfactual_country, initial_cum_cases
                 )
             )
 
@@ -216,15 +216,12 @@ class CounterfactualCasesRecord:
         return sum([df.to_dict("records") for df in df_counterfactuals], [])
 
     @staticmethod
-    def add_cumulative_sum(df_country_casesrecord, initial_date, initial_cum_cases):
+    def add_cumulative_sum(df_casesrecord, initial_cum_cases):
         """Add the cumulative sum to a set of counterfactual records"""
         # Make a copy of the input dataframe and sort it by date
-        df_out = df_country_casesrecord.copy().sort_values(by=["date"])
+        df_out = df_casesrecord.copy().sort_values(by=["date"])
         # Add an offset number of cases to the first entry
-        df_out.loc[df_out["date"] == initial_date, ["weekly_avg_cases"]] = (
-            df_out[df_out["date"] == initial_date]["weekly_avg_cases"]
-            + initial_cum_cases
-        )
+        df_out.at[0, "weekly_avg_cases"] += initial_cum_cases
         # Calculate the cumulative sum
         df_out["summed_avg_cases"] = df_out["weekly_avg_cases"].cumsum()
         return df_out
@@ -265,9 +262,7 @@ class CounterfactualCasesRecord:
             simulated_daily_cases.append(
                 pd.DataFrame(
                     index=list(range(knots.weight)),
-                    columns=pd.date_range(
-                        start=simulation_start_date, end=simulation_end_date, freq="D"
-                    ).tolist(),
+                    columns=dates_range.copy(),
                 )
             )
 
