@@ -14,32 +14,38 @@ def simulate_records_on_date(
     """
     Simulate counterfactual records for one or more countries and return the most recent
 
-    :param df_casesrecord: A dataframe with columns
+    Parameters
+    ----------
+    df_casesrecord: pd.DataFrame
         date                                        datetime.date
         iso_code                                           string
-        population                                            int
-        weekly_avg_cases                                    float
-    :param df_knotdateset: A dataframe with columns
-        growth_factor_0_1                                   float
-        growth_factor_1_2                                   float
-        growth_factor_2_3                                   float
+        population                                          int64
+        weekly_avg_cases                                  float64
+    df_knotdateset: pd.DataFrame
+        growth_factor_0_1                                 float64
+        growth_factor_1_2                                 float64
+        growth_factor_2_3                                 float64
         iso_code                                           string
         knot_date_1                                 datetime.date
         knot_date_2                                 datetime.date
-        weight                                                int
-    :param df_modeldaterange: A dataframe with columns
+        weight                                              int64
+    df_modeldaterange: pd.DataFrame
         initial_date                                datetime.date
         iso_code                                           string
         maximum_date                                datetime.date
-    :param df_possibledateset: A dataframe with columns
+    df_possibledateset: pd.DataFrame
         dates_counterfactual_first_restrictions     datetime.date
         dates_counterfactual_lockdown               datetime.date
         iso_code                                           string
-        n_days_first_restrictions                             int
-        n_days_lockdown                                       int
-    :param knot_dates: A tuple of (datetime.date, datetime.date)
+        n_days_first_restrictions                           int64
+        n_days_lockdown                                     int64
+    knot_dates: (datetime.date, datetime.date)
+        Dates of first lockdown and first restrictions (if any)
 
-    :returns: A list of dictionaries, each of which has the following keys
+    Returns
+    -------
+    list(dict)
+        One entry for each date. Each dictionary has the following keys:
         iso_code                                           string
         population                                            int
         date                                        datetime.date
@@ -71,32 +77,38 @@ def simulate_records(
     """
     Simulate counterfactual records for one or more countries
 
-    :param df_casesrecord: A dataframe with columns
+    Parameters
+    ----------
+    df_casesrecord: pd.DataFrame
         date                                        datetime.date
         iso_code                                           string
-        population                                            int
-        weekly_avg_cases                                    float
-    :param df_knotdateset: A dataframe with columns
-        growth_factor_0_1                                   float
-        growth_factor_1_2                                   float
-        growth_factor_2_3                                   float
+        population                                          int64
+        weekly_avg_cases                                  float64
+    df_knotdateset: pd.DataFrame
+        growth_factor_0_1                                 float64
+        growth_factor_1_2                                 float64
+        growth_factor_2_3                                 float64
         iso_code                                           string
         knot_date_1                                 datetime.date
         knot_date_2                                 datetime.date
-        weight                                                int
-    :param df_modeldaterange: A dataframe with columns
+        weight                                              int64
+    df_modeldaterange: pd.DataFrame
         initial_date                                datetime.date
         iso_code                                           string
         maximum_date                                datetime.date
-    :param df_possibledateset: A dataframe with columns
+    df_possibledateset: pd.DataFrame
         dates_counterfactual_first_restrictions     datetime.date
         dates_counterfactual_lockdown               datetime.date
         iso_code                                           string
-        n_days_first_restrictions                             int
-        n_days_lockdown                                       int
-    :param knot_dates: A tuple of (datetime.date, datetime.date)
+        n_days_first_restrictions                           int64
+        n_days_lockdown                                     int64
+    knot_dates: (datetime.date, datetime.date)
+        Dates of first lockdown and first restrictions (if any)
 
-    :returns: A list of dictionaries, each of which has the following keys
+    Returns
+    -------
+    list(dict)
+        One entry for each date. Each dictionary has the following keys:
         iso_code                                           string
         population                                            int
         date                                        datetime.date
@@ -120,35 +132,41 @@ def simulate_dataframes(
     """
     Simulate counterfactual dataframes for one or more countries
 
-    :param df_casesrecord: A dataframe with columns
+    Parameters
+    ----------
+    df_casesrecord: pd.DataFrame
         date                                        datetime.date
         iso_code                                           string
-        population                                            int
-        weekly_avg_cases                                    float
-    :param df_knotdateset: A dataframe with columns
-        growth_factor_0_1                                   float
-        growth_factor_1_2                                   float
-        growth_factor_2_3                                   float
+        population                                          int64
+        weekly_avg_cases                                  float64
+    df_knotdateset: pd.DataFrame
+        growth_factor_0_1                                 float64
+        growth_factor_1_2                                 float64
+        growth_factor_2_3                                 float64
         iso_code                                           string
         knot_date_1                                 datetime.date
         knot_date_2                                 datetime.date
-        weight                                                int
-    :param df_modeldaterange: A dataframe with columns
+        weight                                              int64
+    df_modeldaterange: pd.DataFrame
         initial_date                                datetime.date
         iso_code                                           string
         maximum_date                                datetime.date
-    :param df_possibledateset: A dataframe with columns
+    df_possibledateset: pd.DataFrame
         dates_counterfactual_first_restrictions     datetime.date
         dates_counterfactual_lockdown               datetime.date
         iso_code                                           string
-        n_days_first_restrictions                             int
-        n_days_lockdown                                       int
-    :returns: A list of dataframes, each of which has the following columns
+        n_days_first_restrictions                           int64
+        n_days_lockdown                                     int64
+
+    Returns
+    -------
+    list(pd.DataFrame)
+        One entry for each country. Each dataframe has the following columns:
         iso_code                                           string
-        population                                            int
+        population                                          int64
         date                                        datetime.date
-        weekly_avg_cases                                    float
-        summed_avg_cases                                    float
+        weekly_avg_cases                                  float64
+        summed_avg_cases                                  float64
     """
     first_restriction_date, lockdown_date = knot_dates
 
@@ -251,27 +269,33 @@ def simulate_single_country(
     """
     Simulate counterfactual records for a single country
 
-    :param df_casesrecord: A dataframe with columns
+    Parameters
+    ----------
+    df_casesrecord: pd.DataFrame
         date                                        datetime.date
         iso_code                                           string
-        population                                            int
-        weekly_avg_cases                                    float
-    :param df_knotdateset: A dataframe with columns
-        growth_factor_0_1                                   float
-        growth_factor_1_2                                   float
-        growth_factor_2_3                                   float
+        population                                          int64
+        weekly_avg_cases                                  float64
+    df_knotdateset: pd.DataFrame
+        growth_factor_0_1                                 float64
+        growth_factor_1_2                                 float64
+        growth_factor_2_3                                 float64
         iso_code                                           string
         knot_date_1                                 datetime.date
         knot_date_2                                 datetime.date
-        weight                                                int
-    :param simulation_dates: A tuple of (datetime.date, datetime.date) giving simulation start/end times
-    :param counterfactual_shifts: A tuple of (int, int) giving offsets to apply
+        weight                                              int64
+    simulation_dates: (datetime.date, datetime.date)
+        Start and end dates for the simulation
+    counterfactual_shifts: (int, int)
+        Counterfactual shift (in days) to apply to the first lockdown and first restrictions
 
-    :returns: A dataframe with columns
-        iso_code                                          string
-        population                                         int64
-        date                                       datetime.date
-        weekly_avg_cases                                   float
+    Returns
+    -------
+    pd.DataFrame
+        iso_code                                           string
+        population                                          int64
+        date                                        datetime.date
+        weekly_avg_cases                                  float64
     """
     simulation_start_date, simulation_end_date = simulation_date_range
     first_restriction_shift_days, lockdown_shift_days = counterfactual_shifts
@@ -356,7 +380,28 @@ def simulate_single_country(
 
 
 def add_cumulative_sum(df_casesrecord, initial_cum_cases):
-    """Add the cumulative sum to a set of counterfactual records"""
+    """
+    Add the cumulative sum to a set of counterfactual records
+
+    Parameters
+    ----------
+    df_casesrecord: pd.DataFrame
+        date                                        datetime.date
+        iso_code                                           string
+        population                                            int
+        weekly_avg_cases                                    float
+    initial_cum_cases: int
+        Offset to apply to the initial number of cases before calculating the cumulative sum
+
+    Returns
+    -------
+    pd.DataFrame
+        date                                        datetime.date
+        iso_code                                           string
+        population                                          int64
+        weekly_avg_cases                                  float64
+        summed_avg_cases                                  float64
+    """
     # Make a copy of the input dataframe and sort it by date
     df_out = df_casesrecord.copy().sort_values(by=["date"])
     # Add an offset number of cases to the first entry
