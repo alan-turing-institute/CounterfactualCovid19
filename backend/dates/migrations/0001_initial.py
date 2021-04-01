@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("n_days_first_restrictions", models.FloatField(null=True)),
-                ("n_days_lockdown", models.FloatField(null=True)),
+                ("n_days_first_restrictions", models.IntegerField(null=True)),
+                ("n_days_lockdown", models.IntegerField(null=True)),
                 (
                     "dates_counterfactual_first_restrictions",
                     models.DateField(null=True),
