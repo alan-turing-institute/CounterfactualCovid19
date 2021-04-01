@@ -1,9 +1,9 @@
 """Ephemeral models for Django cases app"""
 import datetime
 import pandas as pd
-from counterfactual import simulate_records
+from counterfactual import simulate_records, simulate_records_on_date
 from dates.models import KnotDateSet, ModelDateRange, PossibleDateSet
-from cases.models import CasesRecord
+from .concrete import CasesRecord
 
 
 class CounterfactualCasesRecord:
@@ -78,13 +78,20 @@ class CounterfactualCasesRecord:
             )
         ).rename(columns={"country": "iso_code"})
 
+        if summary:
+            simulate_records_on_date(
+                df_casesrecord,
+                df_knotdateset,
+                df_modeldaterange,
+                df_possibledateset,
+                knot_dates,
+            )
         return simulate_records(
             df_casesrecord,
             df_knotdateset,
             df_modeldaterange,
             df_possibledateset,
             knot_dates,
-            summary,
         )
 
     def __str__(self):
