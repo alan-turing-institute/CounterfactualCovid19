@@ -157,6 +157,8 @@ def simulate_dataframes(
         iso_code                                           string
         n_days_first_restrictions                           int64
         n_days_lockdown                                     int64
+    knot_dates: (datetime.date, datetime.date)
+        Dates of first lockdown and first restrictions (if any)
 
     Returns
     -------
