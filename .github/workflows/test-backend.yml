@@ -1,4 +1,4 @@
-name: test-django
+name: test-backend
 on: [pull_request]
 
 jobs:
