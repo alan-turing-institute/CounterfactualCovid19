@@ -1,17 +1,20 @@
+"""Tests for the counterfactual module"""
 from datetime import date
 import unittest
 import pandas as pd
 from counterfactual import simulate_records
 
 
-def to_integer(record):
-    for key in record.keys():
-        if isinstance(record[key], float):
-            record[key] = int(record[key])
-    return record
+def to_integer(dict_):
+    """Convert all float fields in a dictionary to integers"""
+    for key in dict_.keys():
+        if isinstance(dict_[key], float):
+            dict_[key] = int(dict_[key])
+    return dict_
 
 
 def select(iso_code, date_, records):
+    """Select the first matching record from a list of records"""
     for record in records:
         if record["iso_code"] == iso_code and record["date"] == date_:
             return record
@@ -19,7 +22,10 @@ def select(iso_code, date_, records):
 
 
 class SimulationTestCase(unittest.TestCase):
+    """Class for testing counterfactual simulations"""
+
     def setUp(self):
+        """Initialise the object with some test data"""
         self.df_casesrecord = pd.DataFrame(
             {
                 "date": [
@@ -101,6 +107,7 @@ class SimulationTestCase(unittest.TestCase):
         )
 
     def test_shift_nothing(self):
+        """Test simulation with no shift"""
         records = map(
             to_integer,
             simulate_records(
@@ -135,6 +142,7 @@ class SimulationTestCase(unittest.TestCase):
         )
 
     def test_shift_lockdown_fra(self):
+        """Test simulation after shifting the French lockdown"""
         records = map(
             to_integer,
             simulate_records(
@@ -158,6 +166,7 @@ class SimulationTestCase(unittest.TestCase):
         )
 
     def test_shift_restrictions_gbr(self):
+        """Test simulation after shifting the UK restrictions"""
         records = map(
             to_integer,
             simulate_records(
