@@ -256,7 +256,9 @@ def simulate_dataframes(
 
         # Add cumulative cases that occurred before the simulation start date
         df_counterfactuals.append(
-            add_cumulative_sum(df_counterfactual_country, initial_cum_cases, simulation_start_date)
+            add_cumulative_sum(
+                df_counterfactual_country, initial_cum_cases, simulation_start_date
+            )
         )
 
     return df_counterfactuals
@@ -411,10 +413,11 @@ def add_cumulative_sum(df_casesrecord, initial_cum_cases, initial_simulation_dat
     df_out = df_casesrecord.copy().sort_values(by=["date"])
     # Add an offset number of cases to the first entry
 
-    df_out.loc[df_out["date"] == initial_simulation_date, ["weekly_avg_cases"]] += initial_cum_cases
+    df_out.loc[
+        df_out["date"] == initial_simulation_date, ["weekly_avg_cases"]
+    ] += initial_cum_cases
 
-
-    #df_out.at[0, "weekly_avg_cases"] += initial_cum_cases
+    # df_out.at[0, "weekly_avg_cases"] += initial_cum_cases
     # Calculate the cumulative sum
     df_out["summed_avg_cases"] = df_out["weekly_avg_cases"].cumsum()
     return df_out
