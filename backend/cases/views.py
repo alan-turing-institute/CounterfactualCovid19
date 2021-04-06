@@ -26,7 +26,7 @@ class CasesCounterfactualViewMixin(ABC):
 
     @abstractmethod
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        """simulate must be implemented by children"""
+        """Simulate counterfactual records"""
         return NotImplementedError
 
     def list(self, request):
@@ -54,9 +54,7 @@ class CasesCounterfactualDailyAbsoluteView(
     serializer_class = CasesCounterfactualDailyAbsoluteSerializer
 
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, boundary_dates, knot_dates
-        )
+        return NotImplementedError
 
 
 class CasesCounterfactualDailyNormalisedView(
@@ -67,8 +65,8 @@ class CasesCounterfactualDailyNormalisedView(
     serializer_class = CasesCounterfactualDailyNormalisedSerializer
 
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate_counterfactual_records(
-            iso_codes, boundary_dates, knot_dates
+        return CounterfactualCasesRecord.simulate(
+            iso_codes, boundary_dates, knot_dates, summary=False
         )
 
 
@@ -78,7 +76,7 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
     serializer_class = CasesCounterfactualIntegratedSerializer
 
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate_counterfactual_records(
+        return CounterfactualCasesRecord.simulate(
             iso_codes, boundary_dates, knot_dates, summary=True
         )
 
