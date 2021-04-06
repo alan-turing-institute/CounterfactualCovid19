@@ -54,7 +54,11 @@ class CasesCounterfactualDailyAbsoluteView(
     serializer_class = CasesCounterfactualDailyAbsoluteSerializer
 
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return NotImplementedError
+        return CounterfactualCasesRecord.simulate(
+            iso_codes, boundary_dates, knot_dates, summary=False
+        )
+
+        #return NotImplementedError
 
 
 class CasesCounterfactualDailyNormalisedView(
