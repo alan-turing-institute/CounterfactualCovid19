@@ -58,7 +58,7 @@ class CasesCounterfactualDailyAbsoluteView(
             iso_codes, boundary_dates, knot_dates, summary=False
         )
 
-        #return NotImplementedError
+        # return NotImplementedError
 
 
 class CasesCounterfactualDailyNormalisedView(
