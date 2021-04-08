@@ -16,15 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="CasesRecord",
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("date", models.DateField()),
                 ("weekly_avg_cases", models.FloatField()),
                 (

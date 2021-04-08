@@ -16,15 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="PossibleDateSet",
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("n_days_first_restrictions", models.IntegerField(null=True)),
                 ("n_days_lockdown", models.IntegerField(null=True)),
                 (
@@ -41,19 +33,20 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "unique_together": {
+                    (
+                        "country",
+                        "dates_counterfactual_first_restrictions",
+                        "dates_counterfactual_lockdown",
+                    )
+                },
+            },
         ),
         migrations.CreateModel(
             name="ModelDateRange",
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("initial_date", models.DateField()),
                 ("maximum_date", models.DateField()),
                 ("first_restrictions_date", models.DateField(null=True)),
@@ -67,19 +60,16 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "unique_together": {
+                    ("country", "first_restrictions_date", "lockdown_date")
+                },
+            },
         ),
         migrations.CreateModel(
             name="KnotDateSet",
             fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("knot_date_1", models.DateField(null=True)),
                 ("knot_date_2", models.DateField(null=True)),
                 ("n_knots", models.IntegerField()),
@@ -96,5 +86,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "unique_together": {("country", "knot_date_1", "knot_date_2")},
+            },
         ),
     ]
