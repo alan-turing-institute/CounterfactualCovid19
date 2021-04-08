@@ -3,6 +3,7 @@ from django.apps import AppConfig
 
 
 class CountriesConfig(AppConfig):
-    """Django app config for Ccountries"""
+    """Django app config for countries"""
 
-    name = "Countries"
+    name = "countries"
+    verbose_name = "countries"

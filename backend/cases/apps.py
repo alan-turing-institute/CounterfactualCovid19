@@ -3,6 +3,7 @@ from django.apps import AppConfig
 
 
 class CasesConfig(AppConfig):
-    """Django app config for Cases"""
+    """Django app config for cases"""
 
-    name = "Cases"
+    name = "cases"
+    verbose_name = "cases"
