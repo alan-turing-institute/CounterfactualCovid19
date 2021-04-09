@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Histogram from "./Histogram";
+import MyDatesPicker from "./MyDatesPicker"
 
 export default class InfoPanel extends React.Component {
   render() {
@@ -38,18 +39,7 @@ export default class InfoPanel extends React.Component {
                 />
               </Col>
               <Col xs={4} md={3} lg={2}>
-                <Card
-                  style={{
-                    marginTop: "10%",
-                    marginBottom: "10%",
-                  }}
-                  bg={"light"}
-                >
-                  <Card.Text>
-                    Any other cases_real/information we might want to add in
-                    here.
-                  </Card.Text>
-                </Card>
+                <MyDatesPicker/>
               </Col>
             </Row>
           </Container>
