@@ -3,7 +3,8 @@ import axios from "axios";
 class LoadRestrictionsDatesTask {
   #getRestrictionDates = async (iso_code) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/modeldaterange/?iso_code=${iso_code}`,
+      const res = await axios.get(
+        `http://localhost:8000/api/modeldaterange/?iso_code=${iso_code}`,
         {}
       );
       return res.data;
@@ -17,8 +18,6 @@ class LoadRestrictionsDatesTask {
     const data = await this.#getRestrictionDates(iso_code);
     return data;
   };
-
-
 }
 
 export default LoadRestrictionsDatesTask;

@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Histogram from "./Histogram";
-import MyDatesPicker from "./MyDatesPicker"
+import MyDatesPicker from "./MyDatesPicker";
 
 export default class InfoPanel extends React.Component {
   render() {
@@ -39,7 +39,7 @@ export default class InfoPanel extends React.Component {
                 />
               </Col>
               <Col xs={4} md={3} lg={2}>
-                <MyDatesPicker/>
+                <MyDatesPicker />
               </Col>
             </Row>
           </Container>
