@@ -12,6 +12,7 @@ class CasesRecord(models.Model):
         # As Django does not support compount keys we explicitly require uniqueness
         unique_together = (("country", "date"),)
 
+    id = models.AutoField(primary_key=True)
     country = models.ForeignKey(
         Country, related_name="cases_records", on_delete=models.CASCADE
     )

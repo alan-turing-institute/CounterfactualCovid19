@@ -2,19 +2,8 @@
 from django.apps import AppConfig
 
 
-class KnotDateSetConfig(AppConfig):
-    """Django app config for KnotDateSet"""
+class DatesConfig(AppConfig):
+    """Django app config for dates"""
 
-    name = "KnotDateSet"
-
-
-class ModelDateRangeConfig(AppConfig):
-    """Django app config for ModelDateRange"""
-
-    name = "ModelDateRange"
-
-
-class PossibleDateSetConfig(AppConfig):
-    """Django app config for PossibleDateSet"""
-
-    name = "PossibleDateSet"
+    name = "dates"
+    verbose_name = "dates"

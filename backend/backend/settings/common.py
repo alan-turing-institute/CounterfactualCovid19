@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_gis",
     "corsheaders",
-    "countries",
-    "cases",
-    "dates",
+    "countries.apps.CountriesConfig",
+    "cases.apps.CasesConfig",
+    "dates.apps.DatesConfig",
 ]
 
 MIDDLEWARE = [
