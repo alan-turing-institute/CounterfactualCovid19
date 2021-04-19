@@ -9,9 +9,11 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ReferenceLine,
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
+import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -20,6 +22,9 @@ export default class Histogram extends React.Component {
     // Add component-level state
     this.state = {
       casesData: [],
+      first_restrictions_date: null,
+      lockdown_date: null,
+
     };
   }
 
@@ -47,17 +52,42 @@ export default class Histogram extends React.Component {
     this.setState({ casesData: casesData });
   }
 
-  async componentDidMount() {
+   async loadRestrictionData() {
+   // Retrieve Restriction data
+   const task = new LoadRestrictionsDatesTask();
+   let [restrictionsDates] = await Promise.all([task.getCountryRestrictionDates(this.props.isoCode)])
+
+   console.log('Loading restriction dates')
+   console.log(restrictionsDates[0])
+   console.log(restrictionsDates[0].first_restrictions_date)
+
+    // Set the component state to trigger a re-render
+   this.setState({ first_restrictions_date: restrictionsDates[0].first_restrictions_date });
+   this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
+
+  }
+
+                  
+
+
+ async componentDidMount() {
     await this.loadCasesData();
+    await this.loadRestrictionData();
+
   }
 
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
+      await this.loadRestrictionData();
+
     }
   }
 
   render() {
+    console.log('Printing state first restrictions')
+    console.log(this.state.first_restrictions_date)
+    console.log(this.state.lockdown_date)
     return (
       <div
         style={{
@@ -73,7 +103,7 @@ export default class Histogram extends React.Component {
           <ResponsiveContainer height="95%">
             <ComposedChart data={this.state.casesData}>
               <CartesianGrid stroke="#f5f5f5" />
-              <XAxis dataKey="date" />
+              <XAxis dataKey="date"  />
               <YAxis />
               <Tooltip />
               <Legend />
@@ -83,6 +113,10 @@ export default class Histogram extends React.Component {
                 dataKey="weekly_avg_counterfactual"
                 stroke="#ff7300"
               />
+              <ReferenceLine x={this.state.first_restrictions_date}
+              label={{position: "left", value: "First Restrictions", fontSize: 12}} strokeDasharray="5 5"/>
+              <ReferenceLine x={this.state.lockdown_date}
+              label={{position: "right", value: "Lockdown", fontSize: 12}} strokeDasharray="5 5"/>
             </ComposedChart>
           </ResponsiveContainer>
         )}
@@ -90,3 +124,6 @@ export default class Histogram extends React.Component {
     );
   }
 }
+
+
+
