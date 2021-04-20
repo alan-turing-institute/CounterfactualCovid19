@@ -91,7 +91,7 @@ export default class Histogram extends React.Component {
         {this.state.casesData.length === 0 ? (
           <Loading />
         ) : (
-          <ResponsiveContainer height="95%">
+          <ResponsiveContainer height="90%">
             <ComposedChart data={this.state.casesData}>
               <CartesianGrid stroke="#f5f5f5" />
               <XAxis dataKey="date" />
