@@ -56,8 +56,6 @@ export default class Histogram extends React.Component {
    const task = new LoadRestrictionsDatesTask();
    let [restrictionsDates] = await Promise.all([task.getCountryRestrictionDates(this.props.isoCode)])
 
-   console.log('restriction dates')
-   console.log(restrictionsDates)
    if (restrictionsDates.length!=0){
     // Set the component state with the restriction data
    this.setState({ first_restrictions_date: restrictionsDates[0].first_restrictions_date });
