@@ -56,11 +56,10 @@ export default class Histogram extends React.Component {
    const task = new LoadRestrictionsDatesTask();
    let [restrictionsDates] = await Promise.all([task.getCountryRestrictionDates(this.props.isoCode)])
 
-   console.log('Loading restriction dates')
-   console.log(restrictionsDates[0])
-   console.log(restrictionsDates[0].first_restrictions_date)
-
-    // Set the component state to trigger a re-render
+   console.log('restriction dates')
+   console.log(restrictionsDates)
+   if (restrictionsDates.length!=0){
+    // Set the component state with the restriction data
    this.setState({ first_restrictions_date: restrictionsDates[0].first_restrictions_date });
    this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
     }
@@ -79,9 +78,7 @@ export default class Histogram extends React.Component {
   }
 
   render() {
-    console.log('Printing state first restrictions')
-    console.log(this.state.first_restrictions_date)
-    console.log(this.state.lockdown_date)
+
     return (
       <div
         style={{
