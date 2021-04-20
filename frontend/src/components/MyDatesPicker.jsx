@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import DatePicker from "react-date-picker";
+import DatePicker from 'react-date-picker';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import {ResponsiveContainer} from "recharts";
+
 
 export default class MyDatesPicker extends React.Component {
   state = {
@@ -15,9 +20,26 @@ export default class MyDatesPicker extends React.Component {
     const { date, dateTwo } = this.state;
 
     return (
-      <div>
-        <DatePicker onChange={this.onChange} value={date} />
-        <DatePicker onChange={this.onChangeTwo} value={dateTwo} />
+      <div
+      style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+     <Row>
+      <Col>
+        <DatePicker
+          onChange={this.onChange}
+          value={date}
+        />
+       </Col>
+      <Col>
+        <DatePicker
+          onChange={this.onChangeTwo}
+          value={dateTwo}
+        />
+        </Col>
+        </Row>
       </div>
     );
   }
