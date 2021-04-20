@@ -51,15 +51,19 @@ export default class Histogram extends React.Component {
     this.setState({ casesData: casesData });
   }
 
-   async loadRestrictionData() {
-   // Retrieve Restriction data
-   const task = new LoadRestrictionsDatesTask();
-   let [restrictionsDates] = await Promise.all([task.getCountryRestrictionDates(this.props.isoCode)])
+  async loadRestrictionData() {
+    // Retrieve Restriction data
+    const task = new LoadRestrictionsDatesTask();
+    let [restrictionsDates] = await Promise.all([
+      task.getCountryRestrictionDates(this.props.isoCode),
+    ]);
 
-   if (restrictionsDates.length!=0){
-    // Set the component state with the restriction data
-   this.setState({ first_restrictions_date: restrictionsDates[0].first_restrictions_date });
-   this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
+    if (restrictionsDates.length != 0) {
+      // Set the component state with the restriction data
+      this.setState({
+        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
+      });
+      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
     }
   }
 
@@ -76,7 +80,6 @@ export default class Histogram extends React.Component {
   }
 
   render() {
-
     return (
       <div
         style={{
@@ -102,12 +105,25 @@ export default class Histogram extends React.Component {
                 dataKey="weekly_avg_counterfactual"
                 stroke="#ff7300"
               />
-              if (this.state.first_restrictions_date != null) {
-              <ReferenceLine x={this.state.first_restrictions_date}
-              label={{position: "left", value: "First Restrictions", fontSize: 12}} strokeDasharray="5 5"/>}
-              if (this.state.first_restrictions_date != null) {
-              <ReferenceLine x={this.state.lockdown_date}
-              label={{position: "right", value: "Lockdown", fontSize: 12}} strokeDasharray="5 5"/>
+              if (this.state.first_restrictions_date != null){" "}
+              {
+                <ReferenceLine
+                  x={this.state.first_restrictions_date}
+                  label={{
+                    position: "left",
+                    value: "First Restrictions",
+                    fontSize: 12,
+                  }}
+                  strokeDasharray="5 5"
+                />
+              }
+              if (this.state.first_restrictions_date != null){" "}
+              {
+                <ReferenceLine
+                  x={this.state.lockdown_date}
+                  label={{ position: "right", value: "Lockdown", fontSize: 12 }}
+                  strokeDasharray="5 5"
+                />
               }
             </ComposedChart>
           </ResponsiveContainer>
