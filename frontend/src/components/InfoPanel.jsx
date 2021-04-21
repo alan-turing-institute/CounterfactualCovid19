@@ -10,31 +10,25 @@ import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import DatePicker from "react-date-picker";
 
 export default class InfoPanel extends React.Component {
-
- constructor(props) {
+  constructor(props) {
     super(props);
 
-  this.state = {
-    first_restrictions_date: null,
-    lockdown_date: null,
-    initial_date: null,
-    maximum_date: null,
-  };
-
-
-
+    this.state = {
+      first_restrictions_date: null,
+      lockdown_date: null,
+      initial_date: null,
+      maximum_date: null,
+    };
   }
 
-
-   async loadRestrictionData() {
+  async loadRestrictionData() {
     // Retrieve Restriction data
     const task = new LoadRestrictionsDatesTask();
     let [restrictionsDates] = await Promise.all([
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-    if (restrictionsDates.length != 0 & this.props.isoCode!=null) {
-
+    if ((restrictionsDates.length != 0) & (this.props.isoCode != null)) {
       // Set the component state with the restriction data
       this.setState({
         first_restrictions_date: restrictionsDates[0].first_restrictions_date,
@@ -55,18 +49,14 @@ export default class InfoPanel extends React.Component {
     }
   }
 
-  onChange = (first_restrictions_date) => this.setState({ first_restrictions_date });
+  onChange = (first_restrictions_date) =>
+    this.setState({ first_restrictions_date });
   onChangeTwo = (lockdown_date) => this.setState({ lockdown_date });
 
-
-
-
-
   render() {
-
-    console.log(" This state infopanel")
-    console.log(this.state.first_restrictions_date)
-    console.log(this.state.lockdown_date)
+    console.log(" This state infopanel");
+    console.log(this.state.first_restrictions_date);
+    console.log(this.state.lockdown_date);
 
     return (
       <div>
@@ -86,7 +76,8 @@ export default class InfoPanel extends React.Component {
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
                         The first wave for {`${this.props.countryName}`}{" "}
-                        happened between {`${this.state.initial_date}`} and {`${this.state.maximum_date}`} date.
+                        happened between {`${this.state.initial_date}`} and{" "}
+                        {`${this.state.maximum_date}`} date.
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -113,19 +104,26 @@ export default class InfoPanel extends React.Component {
               </Col>
               <Col xs={6} md={6} lg={6}>
                 <Row xs={1} md={1} lg={1}>
-                <Row
-                style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            }}>
-                <Col>
-            <DatePicker onChange={this.onChange} value={this.state.first_restrictions_date} />
-            </Col>
-            <Col>
-            <DatePicker onChange={this.onChangeTwo} value={this.state.lockdown_date} />
-                </Col>
-                </Row>
+                  <Row
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col>
+                      <DatePicker
+                        onChange={this.onChange}
+                        value={this.state.first_restrictions_date}
+                      />
+                    </Col>
+                    <Col>
+                      <DatePicker
+                        onChange={this.onChangeTwo}
+                        value={this.state.lockdown_date}
+                      />
+                    </Col>
+                  </Row>
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Histogram
