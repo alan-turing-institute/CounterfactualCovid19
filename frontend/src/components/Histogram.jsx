@@ -27,22 +27,29 @@ export default class Histogram extends React.Component {
   }
 
   async loadCasesData() {
+    console.log("Fetching data");
+    console.log(this.props);
 
-    console.log('Fetching data')
-    console.log(this.props)
-
-    const initial_date = this.props.initial_date != null ? this.props.initial_date : "2020-02-20";
-    const maximum_date = this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
+    const initial_date =
+      this.props.initial_date != null ? this.props.initial_date : "2020-02-20";
+    const maximum_date =
+      this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
 
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
     let [casesReal, casesCounterfactual] = await Promise.all([
-      task.getCounterfactualCovidCases(this.props.isoCode, initial_date, maximum_date,this.props.first_restrictions_date, this.props.lockdown_date),
+      task.getCounterfactualCovidCases(
+        this.props.isoCode,
+        initial_date,
+        maximum_date,
+        this.props.first_restrictions_date,
+        this.props.lockdown_date
+      ),
       task.getRealCovidCases(this.props.isoCode, initial_date, maximum_date),
     ]);
 
-    console.log(casesReal.length)
-    console.log(casesCounterfactual.length)
+    console.log(casesReal.length);
+    console.log(casesCounterfactual.length);
 
     // Combine the two datasets into a single data array
     let casesData = [];
@@ -60,7 +67,6 @@ export default class Histogram extends React.Component {
     // Set the component state to trigger a re-render
     this.setState({ casesData: casesData });
   }
-
 
   async componentDidMount() {
     await this.loadCasesData();
