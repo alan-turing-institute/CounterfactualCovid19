@@ -86,19 +86,19 @@ export default class MainGrid extends React.Component {
               </Col>
             </Row>
             {this.state.isoCode == null ? (
-             <Loading />
+              <Loading />
             ) : (
-            <Row style={{ height: this.state.sizeHistogramComponent }}>
-              <Col xs={12} style={{ padding: "0px" }}>
-                <InfoPanel
-                  isoCode={this.state.isoCode}
-                  countryName={this.state.countryName}
-                  summedAvgCases={this.state.summedAvgCases}
-                  height={this.state.sizeHistogramComponent}
-                />
-              </Col>
-            </Row>
-           )}
+              <Row style={{ height: this.state.sizeHistogramComponent }}>
+                <Col xs={12} style={{ padding: "0px" }}>
+                  <InfoPanel
+                    isoCode={this.state.isoCode}
+                    countryName={this.state.countryName}
+                    summedAvgCases={this.state.summedAvgCases}
+                    height={this.state.sizeHistogramComponent}
+                  />
+                </Col>
+              </Row>
+            )}
           </Container>
         )}
       </div>
