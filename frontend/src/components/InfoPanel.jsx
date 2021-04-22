@@ -9,6 +9,7 @@ import Histogram from "./Histogram";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import DatePicker from "react-date-picker";
 import Loading from "./Loading";
+import "./InfoPanel.css";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export default class InfoPanel extends React.Component {
     this.state = {
       first_restrictions_date: null,
       lockdown_date: null,
+      counterfactual_first_restrictions_date: null,
+      counterfactual_lockdown_date: null,
       initial_date: null,
       maximum_date: null,
     };
@@ -37,6 +40,12 @@ export default class InfoPanel extends React.Component {
       this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
       this.setState({ initial_date: restrictionsDates[0].initial_date });
       this.setState({ maximum_date: restrictionsDates[0].maximum_date });
+      this.setState({
+        counterfactual_first_restrictions_date: new Date(restrictionsDates[0].first_restrictions_date)
+      });
+      this.setState({ counterfactual_lockdown_date: new Date(restrictionsDates[0].lockdown_date) });
+
+
     }
   }
 
@@ -45,6 +54,10 @@ export default class InfoPanel extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
+
+    console.log(this.props)
+    console.log(this.state)
+
     if (this.props.isoCode !== prevProps.isoCode) {
       this.setState({ first_restrictions_date: null });
       this.setState({ lockdown_date: null });
@@ -53,11 +66,12 @@ export default class InfoPanel extends React.Component {
 
       await this.loadRestrictionData();
     }
+
   }
 
-  onChange = (first_restrictions_date) =>
-    this.setState({ first_restrictions_date });
-  onChangeTwo = (lockdown_date) => this.setState({ lockdown_date });
+  onChange = (counterfactual_first_restrictions_date) =>
+    this.setState({ counterfactual_first_restrictions_date });
+  onChangeTwo = (counterfactual_lockdown_date) => this.setState({ counterfactual_lockdown_date });
 
   render() {
     console.log(" This state infopanel");
@@ -120,13 +134,13 @@ export default class InfoPanel extends React.Component {
                     <Col>
                       <DatePicker
                         onChange={this.onChange}
-                        value={this.state.first_restrictions_date}
+                        value={this.state.counterfactual_first_restrictions_date}
                       />
                     </Col>
                     <Col>
                       <DatePicker
                         onChange={this.onChangeTwo}
-                        value={this.state.lockdown_date}
+                        value={this.state.counterfactual_lockdown_date}
                       />
                     </Col>
                   </Row>
