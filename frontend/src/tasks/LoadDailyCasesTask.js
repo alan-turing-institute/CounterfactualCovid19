@@ -1,26 +1,66 @@
 import axios from "axios";
 
 class LoadDailyCasesTask {
-  #getDailyCovidCases = async (datatype, iso_code) => {
+  #getDailyCovidCases = async (datatype, iso_code, start_date=null, end_date=null) => {
     try {
-      const res = await axios.get(
-        `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&end_date=2020-06-23&start_date=2020-02-20`,
+
+
+      console.log(`http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`)
+      const res_dates = await axios.get(
+        `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`,
         {}
       );
-      return res.data;
+      return res_dates.data;
+
+
     } catch (error) {
       console.log(error);
       return [];
     }
   };
 
-  getCounterfactualCovidCases = async (iso_code) => {
-    const data = await this.#getDailyCovidCases("counterfactual", iso_code);
+    #getDailyCounterfactualCovidCases = async (datatype, iso_code, start_date=null, end_date=null, first_restrictions_date = null, lockdown_date = null) => {
+    try {
+
+      if (lockdown_date != null & first_restrictions_date != null){
+      console.log(`http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restrictions_date=${first_restrictions_date}&lockdown_date=${lockdown_date}`)
+      const res_counterfactual_dates = await axios.get(
+        `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restrictions_date=${first_restrictions_date}&lockdown_date=${lockdown_date}`,
+        {}
+      );
+      return res_counterfactual_dates.data;
+
+      }
+      else{
+
+      if (first_restrictions_date != null){
+      const res_counterfactual = await axios.get(`http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restrictions_date=${first_restrictions_date}`
+      ,{});
+      return res_counterfactual.data;
+      }
+      else{
+      const res_counterfactual_default = await axios.get(`http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`,{});
+      return res_counterfactual_default.data;
+
+      }
+
+
+
+      }
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+
+  getCounterfactualCovidCases = async (iso_code, start_date, end_date, first_restrictions, lockdown_date) => {
+    const data = await this.#getDailyCounterfactualCovidCases("counterfactual", iso_code, start_date, end_date,first_restrictions,lockdown_date);
     return data;
   };
 
-  getRealCovidCases = async (iso_code) => {
-    const data = await this.#getDailyCovidCases("real", iso_code);
+  getRealCovidCases = async (iso_code, start_date, end_date) => {
+    const data = await this.#getDailyCovidCases("real", iso_code, start_date, end_date);
     return data;
   };
 }
