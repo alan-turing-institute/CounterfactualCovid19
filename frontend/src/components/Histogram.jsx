@@ -13,7 +13,6 @@ import {
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
-import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -22,18 +21,29 @@ export default class Histogram extends React.Component {
     // Add component-level state
     this.state = {
       casesData: [],
-      first_restrictions_date: null,
-      lockdown_date: null,
+      first_restrictions_date: this.props.first_restrictions_date,
+      lockdown_date: this.props.lockdown_date,
     };
   }
 
   async loadCasesData() {
+
+    console.log('Fetching data')
+    console.log(this.props)
+
+    const initial_date = this.props.initial_date != null ? this.props.initial_date : "2020-02-20";
+    const maximum_date = this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
+
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
     let [casesReal, casesCounterfactual] = await Promise.all([
-      task.getRealCovidCases(this.props.isoCode),
-      task.getCounterfactualCovidCases(this.props.isoCode),
+      task.getCounterfactualCovidCases(this.props.isoCode, initial_date, maximum_date,this.props.first_restrictions_date, this.props.lockdown_date),
+      task.getRealCovidCases(this.props.isoCode, initial_date, maximum_date),
     ]);
+
+    console.log(casesReal.length)
+    console.log(casesCounterfactual.length)
+
     // Combine the two datasets into a single data array
     let casesData = [];
     for (let i = 0; i < casesReal.length; i++) {
@@ -51,31 +61,14 @@ export default class Histogram extends React.Component {
     this.setState({ casesData: casesData });
   }
 
-  async loadRestrictionData() {
-    // Retrieve Restriction data
-    const task = new LoadRestrictionsDatesTask();
-    let [restrictionsDates] = await Promise.all([
-      task.getCountryRestrictionDates(this.props.isoCode),
-    ]);
-
-    if (restrictionsDates.length != 0) {
-      // Set the component state with the restriction data
-      this.setState({
-        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
-      });
-      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
-    }
-  }
 
   async componentDidMount() {
     await this.loadCasesData();
-    await this.loadRestrictionData();
   }
 
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
-      await this.loadRestrictionData();
     }
   }
 
