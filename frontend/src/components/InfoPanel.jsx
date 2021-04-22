@@ -41,11 +41,15 @@ export default class InfoPanel extends React.Component {
       this.setState({ initial_date: restrictionsDates[0].initial_date });
       this.setState({ maximum_date: restrictionsDates[0].maximum_date });
       this.setState({
-        counterfactual_first_restrictions_date: new Date(restrictionsDates[0].first_restrictions_date)
+        counterfactual_first_restrictions_date: new Date(
+          restrictionsDates[0].first_restrictions_date
+        ),
       });
-      this.setState({ counterfactual_lockdown_date: new Date(restrictionsDates[0].lockdown_date) });
-
-
+      this.setState({
+        counterfactual_lockdown_date: new Date(
+          restrictionsDates[0].lockdown_date
+        ),
+      });
     }
   }
 
@@ -54,9 +58,8 @@ export default class InfoPanel extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-
-    console.log(this.props)
-    console.log(this.state)
+    console.log(this.props);
+    console.log(this.state);
 
     if (this.props.isoCode !== prevProps.isoCode) {
       this.setState({ first_restrictions_date: null });
@@ -66,12 +69,12 @@ export default class InfoPanel extends React.Component {
 
       await this.loadRestrictionData();
     }
-
   }
 
   onChange = (counterfactual_first_restrictions_date) =>
     this.setState({ counterfactual_first_restrictions_date });
-  onChangeTwo = (counterfactual_lockdown_date) => this.setState({ counterfactual_lockdown_date });
+  onChangeTwo = (counterfactual_lockdown_date) =>
+    this.setState({ counterfactual_lockdown_date });
 
   render() {
     console.log(" This state infopanel");
@@ -134,7 +137,9 @@ export default class InfoPanel extends React.Component {
                     <Col>
                       <DatePicker
                         onChange={this.onChange}
-                        value={this.state.counterfactual_first_restrictions_date}
+                        value={
+                          this.state.counterfactual_first_restrictions_date
+                        }
                       />
                     </Col>
                     <Col>
