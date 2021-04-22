@@ -8,6 +8,7 @@ import Histogram from "./Histogram";
 //import MyDatesPicker from "./MyDatesPicker";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import DatePicker from "react-date-picker";
+import Loading from "./Loading";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class InfoPanel extends React.Component {
     if ((restrictionsDates.length != 0) & (this.props.isoCode != null)) {
       // Set the component state with the restriction data
       this.setState({
-        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
+        first_restrictions_date: restrictionsDates[0].first_restrictions_date
       });
       this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
       this.setState({ initial_date: restrictionsDates[0].initial_date });
@@ -45,6 +46,12 @@ export default class InfoPanel extends React.Component {
 
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
+
+      this.setState({first_restrictions_date: null});
+      this.setState({ lockdown_date: null});
+      this.setState({ initial_date: null });
+      this.setState({ maximum_date: null });
+
       await this.loadRestrictionData();
     }
   }
@@ -125,12 +132,21 @@ export default class InfoPanel extends React.Component {
                     </Col>
                   </Row>
                 </Row>
+                {this.state.maximum_date === null ? (
+                <Loading />
+                ) : (
                 <Row xs={1} md={1} lg={1}>
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
+                    initial_date={this.state.initial_date}
+                    maximum_date={this.state.maximum_date}
+                    first_restrictions_date={this.state.first_restrictions_date}
+                    lockdown_date={this.state.lockdown_date}
+
                   />
                 </Row>
+              )}
               </Col>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>

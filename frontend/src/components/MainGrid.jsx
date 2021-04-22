@@ -85,6 +85,9 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
+            {this.state.isoCode == null ? (
+             <Loading />
+            ) : (
             <Row style={{ height: this.state.sizeHistogramComponent }}>
               <Col xs={12} style={{ padding: "0px" }}>
                 <InfoPanel
@@ -95,6 +98,7 @@ export default class MainGrid extends React.Component {
                 />
               </Col>
             </Row>
+           )}
           </Container>
         )}
       </div>
