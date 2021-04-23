@@ -22,10 +22,16 @@ export default class InfoPanel extends React.Component {
       counterfactual_lockdown_date: null,
       initial_date: null,
       maximum_date: null,
+      updateHistogram: false,
+
     };
+
+     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
+     this.onLockdownChange = this.onLockdownChange.bind(this);
+
   }
 
-  async loadRestrictionData() {
+  async loadRestrictionData(updateCounterfactual) {
     // Retrieve Restriction data
     const task = new LoadRestrictionsDatesTask();
     let [restrictionsDates] = await Promise.all([
@@ -40,48 +46,61 @@ export default class InfoPanel extends React.Component {
       this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
       this.setState({ initial_date: restrictionsDates[0].initial_date });
       this.setState({ maximum_date: restrictionsDates[0].maximum_date });
-      this.setState({
-        counterfactual_first_restrictions_date: new Date(
-          restrictionsDates[0].first_restrictions_date
-        ),
+
+      if (updateCounterfactual){
+        this.setState({
+        counterfactual_first_restrictions_date: new Date(this.state.first_restrictions_date),
       });
-      this.setState({
-        counterfactual_lockdown_date: new Date(
-          restrictionsDates[0].lockdown_date
-        ),
-      });
+      this.setState({ counterfactual_lockdown_date: new Date(this.state.lockdown_date)});
+      }
+
+      this.setState({updateHistogram: true})
+
     }
   }
 
   async componentDidMount() {
-    await this.loadRestrictionData();
+    await this.loadRestrictionData(true);
   }
 
   async componentDidUpdate(prevProps) {
-    console.log(this.props);
-    console.log(this.state);
+
+    console.log('Updated something')
+    console.log(this.props)
+    console.log(this.state)
 
     if (this.props.isoCode !== prevProps.isoCode) {
       this.setState({ first_restrictions_date: null });
       this.setState({ lockdown_date: null });
       this.setState({ initial_date: null });
       this.setState({ maximum_date: null });
+      this.setState({updateHistogram: false})
 
-      await this.loadRestrictionData();
+
+      await this.loadRestrictionData(true);
+
     }
+
   }
 
-  onChange = (counterfactual_first_restrictions_date) =>
-    this.setState({ counterfactual_first_restrictions_date });
-  onChangeTwo = (counterfactual_lockdown_date) =>
-    this.setState({ counterfactual_lockdown_date });
+
+
+    onFirstRestrictionsChange(new_date){
+        this.setState({updateHistogram: false})
+        this.setState({ counterfactual_first_restrictions_date: new_date});
+        this.setState({updateHistogram: true})
+
+    }
+    onLockdownChange(new_date){
+        this.setState({updateHistogram: false})
+        this.setState({ counterfactual_lockdown_date: new_date});
+        this.setState({updateHistogram: true})
+
+        console.log(new_date)
+    }
 
   render() {
-    console.log(" This state infopanel");
-    console.log(this.state.first_restrictions_date);
-    console.log(this.state.lockdown_date);
-
-    return (
+      return (
       <div>
         {!this.props.isoCode ? null : (
           <Container fluid>
@@ -136,21 +155,19 @@ export default class InfoPanel extends React.Component {
                   >
                     <Col>
                       <DatePicker
-                        onChange={this.onChange}
-                        value={
-                          this.state.counterfactual_first_restrictions_date
-                        }
+                        onChange={this.onFirstRestrictionsChange}
+                        value={this.state.counterfactual_first_restrictions_date}
                       />
                     </Col>
                     <Col>
                       <DatePicker
-                        onChange={this.onChangeTwo}
+                        onChange={this.onLockdownChange}
                         value={this.state.counterfactual_lockdown_date}
                       />
                     </Col>
                   </Row>
                 </Row>
-                {this.state.maximum_date === null ? (
+                {this.state.updateHistogram === false ? (
                   <Loading />
                 ) : (
                   <Row xs={1} md={1} lg={1}>
@@ -159,10 +176,11 @@ export default class InfoPanel extends React.Component {
                       height={this.props.height}
                       initial_date={this.state.initial_date}
                       maximum_date={this.state.maximum_date}
-                      first_restrictions_date={
-                        this.state.first_restrictions_date
-                      }
+                      first_restrictions_date={this.state.first_restrictions_date}
                       lockdown_date={this.state.lockdown_date}
+                      counterfactual_first_restrictions_date={this.state.counterfactual_first_restrictions_date}
+                      counterfactual_lockdown_date={this.state.counterfactual_lockdown_date}
+
                     />
                   </Row>
                 )}
