@@ -34,15 +34,15 @@ export default class Histogram extends React.Component {
     const maximum_date =
       this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
 
-    const counterfactual_first_restrictions_date = convert(this.props.counterfactual_first_restrictions_date)
-    const counterfactual_lockdown_date = convert(this.props.counterfactual_lockdown_date)
+    const counterfactual_first_restrictions_date = this.props.counterfactual_first_restrictions_date != null ? convert(this.props.counterfactual_first_restrictions_date): this.props.first_restrictions_date
+    const counterfactual_lockdown_date = this.props.counterfactual_lockdown_date != null ? convert(this.props.counterfactual_lockdown_date) : this.props.lockdown_date
 
 
 
 
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
-    let [casesReal, casesCounterfactual] = await Promise.all([
+    let [casesCounterfactual, casesReal] = await Promise.all([
       task.getCounterfactualCovidCases(
         this.props.isoCode,
         initial_date,
@@ -82,6 +82,9 @@ export default class Histogram extends React.Component {
       await this.loadCasesData();
     }
     if (this.props.counterfactual_first_restrictions_date !== prevProps.counterfactual_first_restrictions_date) {
+      await this.loadCasesData();
+    }
+       if (this.props.counterfactual_lockdown_date !== prevProps.counterfactual_lockdown_date) {
       await this.loadCasesData();
     }
   }
