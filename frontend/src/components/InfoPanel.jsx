@@ -119,7 +119,7 @@ export default class InfoPanel extends React.Component {
                       <Card.Text>
                         The first wave for {`${this.props.countryName}`}{" "}
                         happened between {`${this.state.initial_date}`} and{" "}
-                        {`${this.state.maximum_date}`} date.
+                        {`${this.state.maximum_date}`}.
                       </Card.Text>
                     </Card.Body>
                   </Card>
