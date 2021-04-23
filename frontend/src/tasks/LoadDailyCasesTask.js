@@ -27,23 +27,23 @@ class LoadDailyCasesTask {
     iso_code,
     start_date = null,
     end_date = null,
-    first_restrictions_date = null,
+    first_restriction_date = null,
     lockdown_date = null
   ) => {
     try {
-      if ((lockdown_date != null) & (first_restrictions_date != null)) {
+      if ((lockdown_date != null) & (first_restriction_date != null)) {
         console.log(
-          `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restrictions_date=${first_restrictions_date}&lockdown_date=${lockdown_date}`
+          `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restriction_date=${first_restriction_date}&lockdown_date=${lockdown_date}`
         );
         const res_counterfactual_dates = await axios.get(
-          `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restrictions_date=${first_restrictions_date}&lockdown_date=${lockdown_date}`,
+          `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restriction_date=${first_restriction_date}&lockdown_date=${lockdown_date}`,
           {}
         );
         return res_counterfactual_dates.data;
       } else {
-        if (first_restrictions_date != null) {
+        if (first_restriction_date != null) {
           const res_counterfactual = await axios.get(
-            `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restrictions_date=${first_restrictions_date}`,
+            `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restriction_date=${first_restriction_date}`,
             {}
           );
           return res_counterfactual.data;
@@ -65,7 +65,7 @@ class LoadDailyCasesTask {
     iso_code,
     start_date,
     end_date,
-    first_restrictions,
+    first_restriction,
     lockdown_date
   ) => {
     const data = await this.#getDailyCounterfactualCovidCases(
@@ -73,7 +73,7 @@ class LoadDailyCasesTask {
       iso_code,
       start_date,
       end_date,
-      first_restrictions,
+      first_restriction,
       lockdown_date
     );
     return data;
