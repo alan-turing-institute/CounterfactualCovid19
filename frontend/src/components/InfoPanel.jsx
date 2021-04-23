@@ -48,10 +48,22 @@ export default class InfoPanel extends React.Component {
       this.setState({ maximum_date: restrictionsDates[0].maximum_date });
 
       if (updateCounterfactual){
+        if (this.state.first_restrictions_date!= null){
         this.setState({
         counterfactual_first_restrictions_date: new Date(this.state.first_restrictions_date),
       });
+      }
+      else{
+         this.setState({
+        counterfactual_first_restrictions_date: null,
+      });
+      }
+      if (this.state.lockdown_date!= null){
       this.setState({ counterfactual_lockdown_date: new Date(this.state.lockdown_date)});
+      }
+      else{
+      this.setState({ counterfactual_lockdown_date: null});
+      }
       }
 
       this.setState({updateHistogram: true})
