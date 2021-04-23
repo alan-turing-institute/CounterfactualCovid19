@@ -9,9 +9,11 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ReferenceLine,
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
+import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -20,6 +22,8 @@ export default class Histogram extends React.Component {
     // Add component-level state
     this.state = {
       casesData: [],
+      first_restrictions_date: null,
+      lockdown_date: null,
     };
   }
 
@@ -47,13 +51,31 @@ export default class Histogram extends React.Component {
     this.setState({ casesData: casesData });
   }
 
+  async loadRestrictionData() {
+    // Retrieve Restriction data
+    const task = new LoadRestrictionsDatesTask();
+    let [restrictionsDates] = await Promise.all([
+      task.getCountryRestrictionDates(this.props.isoCode),
+    ]);
+
+    if (restrictionsDates.length != 0) {
+      // Set the component state with the restriction data
+      this.setState({
+        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
+      });
+      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
+    }
+  }
+
   async componentDidMount() {
     await this.loadCasesData();
+    await this.loadRestrictionData();
   }
 
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
+      await this.loadRestrictionData();
     }
   }
 
@@ -70,7 +92,7 @@ export default class Histogram extends React.Component {
         {this.state.casesData.length === 0 ? (
           <Loading />
         ) : (
-          <ResponsiveContainer height="95%">
+          <ResponsiveContainer height="90%">
             <ComposedChart data={this.state.casesData}>
               <CartesianGrid stroke="#f5f5f5" />
               <XAxis dataKey="date" />
@@ -83,6 +105,26 @@ export default class Histogram extends React.Component {
                 dataKey="weekly_avg_counterfactual"
                 stroke="#ff7300"
               />
+              if (this.state.first_restrictions_date != null){" "}
+              {
+                <ReferenceLine
+                  x={this.state.first_restrictions_date}
+                  label={{
+                    position: "left",
+                    value: "First Restrictions",
+                    fontSize: 12,
+                  }}
+                  strokeDasharray="5 5"
+                />
+              }
+              if (this.state.first_restrictions_date != null){" "}
+              {
+                <ReferenceLine
+                  x={this.state.lockdown_date}
+                  label={{ position: "right", value: "Lockdown", fontSize: 12 }}
+                  strokeDasharray="5 5"
+                />
+              }
             </ComposedChart>
           </ResponsiveContainer>
         )}

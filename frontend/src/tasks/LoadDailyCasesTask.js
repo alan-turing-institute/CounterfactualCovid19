@@ -4,7 +4,7 @@ class LoadDailyCasesTask {
   #getDailyCovidCases = async (datatype, iso_code) => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&end_date=2020-06-23`,
+        `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&end_date=2020-06-23&start_date=2020-02-20`,
         {}
       );
       return res.data;
