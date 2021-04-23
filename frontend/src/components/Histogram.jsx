@@ -24,7 +24,6 @@ export default class Histogram extends React.Component {
     };
   }
 
-
   async loadCasesData() {
     console.log("Fetching data");
     console.log(this.props);
@@ -34,11 +33,14 @@ export default class Histogram extends React.Component {
     const maximum_date =
       this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
 
-    const counterfactual_first_restrictions_date = this.props.counterfactual_first_restrictions_date != null ? convert(this.props.counterfactual_first_restrictions_date): this.props.first_restrictions_date
-    const counterfactual_lockdown_date = this.props.counterfactual_lockdown_date != null ? convert(this.props.counterfactual_lockdown_date) : this.props.lockdown_date
-
-
-
+    const counterfactual_first_restrictions_date =
+      this.props.counterfactual_first_restrictions_date != null
+        ? convert(this.props.counterfactual_first_restrictions_date)
+        : this.props.first_restrictions_date;
+    const counterfactual_lockdown_date =
+      this.props.counterfactual_lockdown_date != null
+        ? convert(this.props.counterfactual_lockdown_date)
+        : this.props.lockdown_date;
 
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
@@ -59,21 +61,20 @@ export default class Histogram extends React.Component {
     // Combine the two datasets into a single data array
     let casesData = [];
 
-    if (casesCounterfactual.length!=0){
-
-    for (let i = 0; i < casesReal.length; i++) {
-      const counterfactual = casesCounterfactual.find(
-        (counterfactual) => counterfactual.date === casesReal[i].date
-      );
-      let record = {
-        date: casesReal[i].date,
-        weekly_avg_real: casesReal[i].summed_avg_cases_per_million,
-        weekly_avg_counterfactual: counterfactual.summed_avg_cases_per_million,
-      };
-      casesData.push(record);
-    }
-    this.setState({ casesData: casesData });
-
+    if (casesCounterfactual.length != 0) {
+      for (let i = 0; i < casesReal.length; i++) {
+        const counterfactual = casesCounterfactual.find(
+          (counterfactual) => counterfactual.date === casesReal[i].date
+        );
+        let record = {
+          date: casesReal[i].date,
+          weekly_avg_real: casesReal[i].summed_avg_cases_per_million,
+          weekly_avg_counterfactual:
+            counterfactual.summed_avg_cases_per_million,
+        };
+        casesData.push(record);
+      }
+      this.setState({ casesData: casesData });
     }
     // Set the component state to trigger a re-render
   }
@@ -86,10 +87,16 @@ export default class Histogram extends React.Component {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
     }
-    if (this.props.counterfactual_first_restrictions_date !== prevProps.counterfactual_first_restrictions_date) {
+    if (
+      this.props.counterfactual_first_restrictions_date !==
+      prevProps.counterfactual_first_restrictions_date
+    ) {
       await this.loadCasesData();
     }
-       if (this.props.counterfactual_lockdown_date !== prevProps.counterfactual_lockdown_date) {
+    if (
+      this.props.counterfactual_lockdown_date !==
+      prevProps.counterfactual_lockdown_date
+    ) {
       await this.loadCasesData();
     }
   }
@@ -148,9 +155,9 @@ export default class Histogram extends React.Component {
   }
 }
 
-  function convert(date) {
-    var date = date,
+function convert(date) {
+  var date = date,
     mnth = ("0" + (date.getMonth() + 1)).slice(-2),
     day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
+  return [date.getFullYear(), mnth, day].join("-");
 }
