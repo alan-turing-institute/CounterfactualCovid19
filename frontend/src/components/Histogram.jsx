@@ -36,6 +36,9 @@ export default class Histogram extends React.Component {
     ]);
     // Combine the two datasets into a single data array
     let casesData = [];
+
+    if (casesCounterfactual.length!=0){
+
     for (let i = 0; i < casesReal.length; i++) {
       const counterfactual = casesCounterfactual.find(
         (counterfactual) => counterfactual.date === casesReal[i].date
@@ -47,8 +50,10 @@ export default class Histogram extends React.Component {
       };
       casesData.push(record);
     }
-    // Set the component state to trigger a re-render
     this.setState({ casesData: casesData });
+
+    }
+    // Set the component state to trigger a re-render
   }
 
   async loadRestrictionData() {
