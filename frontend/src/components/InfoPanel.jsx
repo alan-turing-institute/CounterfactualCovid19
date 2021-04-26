@@ -1,11 +1,9 @@
-// import Histogram from "./Histogram";
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Histogram from "./Histogram";
-//import MyDatesPicker from "./MyDatesPicker";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import DatePicker from "react-date-picker";
 import Loading from "./Loading";
@@ -25,6 +23,7 @@ export default class InfoPanel extends React.Component {
       updateHistogram: false,
     };
 
+    // Bind the datepicker change functions to allow it to be used by other objects
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
@@ -45,62 +44,71 @@ export default class InfoPanel extends React.Component {
       this.setState({ initial_date: restrictionsDates[0].initial_date });
       this.setState({ maximum_date: restrictionsDates[0].maximum_date });
 
+      // we only update counterfactual if we change countries
+      // set them to their actual restriction dates
       if (updateCounterfactual) {
         if (this.state.first_restrictions_date != null) {
+          // for the datepicker to work this needs to be a Date object.
           this.setState({
             counterfactual_first_restrictions_date: new Date(
               this.state.first_restrictions_date
             ),
           });
-        } else {
-          this.setState({
-            counterfactual_first_restrictions_date: null,
-          });
         }
         if (this.state.lockdown_date != null) {
+          // for the datepicker to work this needs to be a Date object.
           this.setState({
             counterfactual_lockdown_date: new Date(this.state.lockdown_date),
           });
-        } else {
-          this.setState({ counterfactual_lockdown_date: null });
         }
       }
 
+      // set flag updateHistogram to true in order to render the histogram
       this.setState({ updateHistogram: true });
     }
   }
 
+  // this runs when the info panel is first mounted
   async componentDidMount() {
     await this.loadRestrictionData(true);
   }
 
+  // this runs when we click in a new country, reload all date information
   async componentDidUpdate(prevProps) {
-    console.log("Updated something");
-    console.log(this.props);
-    console.log(this.state);
-
     if (this.props.isoCode !== prevProps.isoCode) {
       this.setState({ first_restrictions_date: null });
       this.setState({ lockdown_date: null });
       this.setState({ initial_date: null });
       this.setState({ maximum_date: null });
+      this.setState({ counterfactual_first_restrictions_date: null});
+      this.setState({ counterfactual_lockdown_date: null});
       this.setState({ updateHistogram: false });
 
       await this.loadRestrictionData(true);
     }
   }
 
+  // this runs when we change the first restrictions counterfactual date
   onFirstRestrictionsChange(new_date) {
+
+    // set updateHistogram to false to clean the histogram component
     this.setState({ updateHistogram: false });
     this.setState({ counterfactual_first_restrictions_date: new_date });
+
+    // set updateHistogram to true to render the new histogram component
+    // (comment from Camila: this is a bit hacky and could be improved?)
     this.setState({ updateHistogram: true });
   }
+
+  // this runs when we change the lockdown counterfactual date
   onLockdownChange(new_date) {
+    // set updateHistogram to false to clean the histogram component
     this.setState({ updateHistogram: false });
     this.setState({ counterfactual_lockdown_date: new_date });
+
+    // set updateHistogram to true to render the new histogram component
     this.setState({ updateHistogram: true });
 
-    console.log(new_date);
   }
 
   render() {
