@@ -1,13 +1,114 @@
-// import Histogram from "./Histogram";
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Histogram from "./Histogram";
-import MyDatesPicker from "./MyDatesPicker";
+import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
+import DatePicker from "react-date-picker";
+import Loading from "./Loading";
+import "./InfoPanel.css";
 
 export default class InfoPanel extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      first_restrictions_date: null,
+      lockdown_date: null,
+      counterfactual_first_restrictions_date: null,
+      counterfactual_lockdown_date: null,
+      initial_date: null,
+      maximum_date: null,
+      updateHistogram: false,
+    };
+
+    // Bind the datepicker change functions to allow it to be used by other objects
+    this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
+    this.onLockdownChange = this.onLockdownChange.bind(this);
+  }
+
+  async loadRestrictionData(updateCounterfactual) {
+    // Retrieve Restriction data
+    const task = new LoadRestrictionsDatesTask();
+    let [restrictionsDates] = await Promise.all([
+      task.getCountryRestrictionDates(this.props.isoCode),
+    ]);
+
+    if ((restrictionsDates.length != 0) & (this.props.isoCode != null)) {
+      // Set the component state with the restriction data
+      this.setState({
+        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
+      });
+      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
+      this.setState({ initial_date: restrictionsDates[0].initial_date });
+      this.setState({ maximum_date: restrictionsDates[0].maximum_date });
+
+      // we only update counterfactual if we change countries
+      // set them to their actual restriction dates
+      if (updateCounterfactual) {
+        if (this.state.first_restrictions_date != null) {
+          // for the datepicker to work this needs to be a Date object.
+          this.setState({
+            counterfactual_first_restrictions_date: new Date(
+              this.state.first_restrictions_date
+            ),
+          });
+        }
+        if (this.state.lockdown_date != null) {
+          // for the datepicker to work this needs to be a Date object.
+          this.setState({
+            counterfactual_lockdown_date: new Date(this.state.lockdown_date),
+          });
+        }
+      }
+
+      // set flag updateHistogram to true in order to render the histogram
+      this.setState({ updateHistogram: true });
+    }
+  }
+
+  // this runs when the info panel is first mounted
+  async componentDidMount() {
+    await this.loadRestrictionData(true);
+  }
+
+  // this runs when we click in a new country, reload all date information
+  async componentDidUpdate(prevProps) {
+    if (this.props.isoCode !== prevProps.isoCode) {
+      this.setState({ first_restrictions_date: null });
+      this.setState({ lockdown_date: null });
+      this.setState({ initial_date: null });
+      this.setState({ maximum_date: null });
+      this.setState({ counterfactual_first_restrictions_date: null });
+      this.setState({ counterfactual_lockdown_date: null });
+      this.setState({ updateHistogram: false });
+
+      await this.loadRestrictionData(true);
+    }
+  }
+
+  // this runs when we change the first restrictions counterfactual date
+  onFirstRestrictionsChange(new_date) {
+    // set updateHistogram to false to clean the histogram component
+    this.setState({ updateHistogram: false });
+    this.setState({ counterfactual_first_restrictions_date: new_date });
+
+    // set updateHistogram to true to render the new histogram component
+    // (comment from Camila: this is a bit hacky and could be improved?)
+    this.setState({ updateHistogram: true });
+  }
+
+  // this runs when we change the lockdown counterfactual date
+  onLockdownChange(new_date) {
+    // set updateHistogram to false to clean the histogram component
+    this.setState({ updateHistogram: false });
+    this.setState({ counterfactual_lockdown_date: new_date });
+
+    // set updateHistogram to true to render the new histogram component
+    this.setState({ updateHistogram: true });
+  }
+
   render() {
     return (
       <div>
@@ -27,7 +128,8 @@ export default class InfoPanel extends React.Component {
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
                         The first wave for {`${this.props.countryName}`}{" "}
-                        happened between X and X date.
+                        happened between {`${this.state.initial_date}`} and{" "}
+                        {`${this.state.maximum_date}`}.
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -54,14 +156,51 @@ export default class InfoPanel extends React.Component {
               </Col>
               <Col xs={6} md={6} lg={6}>
                 <Row xs={1} md={1} lg={1}>
-                  <MyDatesPicker />
+                  <Row
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Col>
+                      <DatePicker
+                        onChange={this.onFirstRestrictionsChange}
+                        value={
+                          this.state.counterfactual_first_restrictions_date
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <DatePicker
+                        onChange={this.onLockdownChange}
+                        value={this.state.counterfactual_lockdown_date}
+                      />
+                    </Col>
+                  </Row>
                 </Row>
-                <Row xs={1} md={1} lg={1}>
-                  <Histogram
-                    isoCode={this.props.isoCode}
-                    height={this.props.height}
-                  />
-                </Row>
+                {this.state.updateHistogram === false ? (
+                  <Loading />
+                ) : (
+                  <Row xs={1} md={1} lg={1}>
+                    <Histogram
+                      isoCode={this.props.isoCode}
+                      height={this.props.height}
+                      initial_date={this.state.initial_date}
+                      maximum_date={this.state.maximum_date}
+                      first_restrictions_date={
+                        this.state.first_restrictions_date
+                      }
+                      lockdown_date={this.state.lockdown_date}
+                      counterfactual_first_restrictions_date={
+                        this.state.counterfactual_first_restrictions_date
+                      }
+                      counterfactual_lockdown_date={
+                        this.state.counterfactual_lockdown_date
+                      }
+                    />
+                  </Row>
+                )}
               </Col>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>

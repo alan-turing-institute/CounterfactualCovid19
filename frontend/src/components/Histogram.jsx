@@ -13,7 +13,6 @@ import {
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
-import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -22,60 +21,86 @@ export default class Histogram extends React.Component {
     // Add component-level state
     this.state = {
       casesData: [],
-      first_restrictions_date: null,
-      lockdown_date: null,
     };
   }
 
   async loadCasesData() {
+    console.log("Fetching case data");
+
+    // if there is not an available start or end date in the data use this default ones
+    const initial_date =
+      this.props.initial_date != null ? this.props.initial_date : "2020-02-20";
+    const maximum_date =
+      this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
+
+    // converting DateFields that come from the DatePicker to string. If there is no
+    // counterfactual date use the default historical one
+    const counterfactual_first_restrictions_date =
+      this.props.counterfactual_first_restrictions_date != null
+        ? convert(this.props.counterfactual_first_restrictions_date)
+        : this.props.first_restrictions_date;
+    const counterfactual_lockdown_date =
+      this.props.counterfactual_lockdown_date != null
+        ? convert(this.props.counterfactual_lockdown_date)
+        : this.props.lockdown_date;
+
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
-    let [casesReal, casesCounterfactual] = await Promise.all([
-      task.getRealCovidCases(this.props.isoCode),
-      task.getCounterfactualCovidCases(this.props.isoCode),
+    let [casesCounterfactual, casesReal] = await Promise.all([
+      task.getCounterfactualCovidCases(
+        this.props.isoCode,
+        initial_date,
+        maximum_date,
+        counterfactual_first_restrictions_date,
+        counterfactual_lockdown_date
+      ),
+      task.getRealCovidCases(this.props.isoCode, initial_date, maximum_date),
     ]);
+
     // Combine the two datasets into a single data array
     let casesData = [];
-    for (let i = 0; i < casesReal.length; i++) {
-      const counterfactual = casesCounterfactual.find(
-        (counterfactual) => counterfactual.date === casesReal[i].date
-      );
-      let record = {
-        date: casesReal[i].date,
-        weekly_avg_real: casesReal[i].summed_avg_cases_per_million,
-        weekly_avg_counterfactual: counterfactual.summed_avg_cases_per_million,
-      };
-      casesData.push(record);
+
+    if (casesCounterfactual.length != 0) {
+      for (let i = 0; i < casesReal.length; i++) {
+        const counterfactual = casesCounterfactual.find(
+          (counterfactual) => counterfactual.date === casesReal[i].date
+        );
+        let record = {
+          date: casesReal[i].date,
+          weekly_avg_real: casesReal[i].summed_avg_cases_per_million,
+          weekly_avg_counterfactual:
+            counterfactual.summed_avg_cases_per_million,
+        };
+        casesData.push(record);
+      }
+      this.setState({ casesData: casesData });
     }
     // Set the component state to trigger a re-render
-    this.setState({ casesData: casesData });
-  }
-
-  async loadRestrictionData() {
-    // Retrieve Restriction data
-    const task = new LoadRestrictionsDatesTask();
-    let [restrictionsDates] = await Promise.all([
-      task.getCountryRestrictionDates(this.props.isoCode),
-    ]);
-
-    if (restrictionsDates.length != 0) {
-      // Set the component state with the restriction data
-      this.setState({
-        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
-      });
-      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
-    }
   }
 
   async componentDidMount() {
     await this.loadCasesData();
-    await this.loadRestrictionData();
   }
 
   async componentDidUpdate(prevProps) {
+    // if click in new country reload case data
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
-      await this.loadRestrictionData();
+    }
+
+    // if counterfactual first restriction date is changed reload case data
+    if (
+      this.props.counterfactual_first_restrictions_date !==
+      prevProps.counterfactual_first_restrictions_date
+    ) {
+      await this.loadCasesData();
+    }
+    // if counterfactual lockdown date is changed reload case data
+    if (
+      this.props.counterfactual_lockdown_date !==
+      prevProps.counterfactual_lockdown_date
+    ) {
+      await this.loadCasesData();
     }
   }
 
@@ -105,10 +130,9 @@ export default class Histogram extends React.Component {
                 dataKey="weekly_avg_counterfactual"
                 stroke="#ff7300"
               />
-              if (this.state.first_restrictions_date != null){" "}
-              {
+              {this.props.first_restrictions_date != null && (
                 <ReferenceLine
-                  x={this.state.first_restrictions_date}
+                  x={this.props.first_restrictions_date}
                   label={{
                     position: "left",
                     value: "First Restrictions",
@@ -116,19 +140,25 @@ export default class Histogram extends React.Component {
                   }}
                   strokeDasharray="5 5"
                 />
-              }
-              if (this.state.first_restrictions_date != null){" "}
-              {
+              )}
+              {this.props.lockdown_date != null && (
                 <ReferenceLine
-                  x={this.state.lockdown_date}
+                  x={this.props.lockdown_date}
                   label={{ position: "right", value: "Lockdown", fontSize: 12 }}
                   strokeDasharray="5 5"
                 />
-              }
+              )}
             </ComposedChart>
           </ResponsiveContainer>
         )}
       </div>
     );
   }
+}
+
+function convert(date) {
+  var date = date,
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
 }
