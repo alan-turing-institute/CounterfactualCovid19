@@ -1,14 +1,8 @@
 import axios from "axios";
 
 class LoadDailyCasesTask {
-
-// function to get real cases for a period of time,
-  #getDailyCovidCases = async (
-    datatype,
-    iso_code,
-    start_date,
-    end_date
-  ) => {
+  // function to get real cases for a period of time,
+  #getDailyCovidCases = async (datatype, iso_code, start_date, end_date) => {
     try {
       // useful for debugging in the console, will keep it for now.
       console.log(
@@ -35,7 +29,6 @@ class LoadDailyCasesTask {
     lockdown_date
   ) => {
     try {
-
       // in case there is both restriction and lockdown dates
       if ((lockdown_date != null) & (first_restriction_date != null)) {
         console.log(
@@ -47,7 +40,6 @@ class LoadDailyCasesTask {
         );
         return res_counterfactual_dates.data;
       } else {
-
         // some cases there is only first_restriction_date
         if (first_restriction_date != null) {
           const res_counterfactual = await axios.get(

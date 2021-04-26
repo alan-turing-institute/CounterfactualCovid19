@@ -83,7 +83,6 @@ export default class Histogram extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-
     // if click in new country reload case data
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
@@ -131,7 +130,7 @@ export default class Histogram extends React.Component {
                 dataKey="weekly_avg_counterfactual"
                 stroke="#ff7300"
               />
-              {this.props.first_restrictions_date != null &&
+              {this.props.first_restrictions_date != null && (
                 <ReferenceLine
                   x={this.props.first_restrictions_date}
                   label={{
@@ -141,14 +140,14 @@ export default class Histogram extends React.Component {
                   }}
                   strokeDasharray="5 5"
                 />
-              }
-              {this.props.lockdown_date != null &&
+              )}
+              {this.props.lockdown_date != null && (
                 <ReferenceLine
                   x={this.props.lockdown_date}
                   label={{ position: "right", value: "Lockdown", fontSize: 12 }}
                   strokeDasharray="5 5"
                 />
-              }
+              )}
             </ComposedChart>
           </ResponsiveContainer>
         )}

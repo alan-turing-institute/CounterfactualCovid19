@@ -80,8 +80,8 @@ export default class InfoPanel extends React.Component {
       this.setState({ lockdown_date: null });
       this.setState({ initial_date: null });
       this.setState({ maximum_date: null });
-      this.setState({ counterfactual_first_restrictions_date: null});
-      this.setState({ counterfactual_lockdown_date: null});
+      this.setState({ counterfactual_first_restrictions_date: null });
+      this.setState({ counterfactual_lockdown_date: null });
       this.setState({ updateHistogram: false });
 
       await this.loadRestrictionData(true);
@@ -90,7 +90,6 @@ export default class InfoPanel extends React.Component {
 
   // this runs when we change the first restrictions counterfactual date
   onFirstRestrictionsChange(new_date) {
-
     // set updateHistogram to false to clean the histogram component
     this.setState({ updateHistogram: false });
     this.setState({ counterfactual_first_restrictions_date: new_date });
@@ -108,7 +107,6 @@ export default class InfoPanel extends React.Component {
 
     // set updateHistogram to true to render the new histogram component
     this.setState({ updateHistogram: true });
-
   }
 
   render() {
