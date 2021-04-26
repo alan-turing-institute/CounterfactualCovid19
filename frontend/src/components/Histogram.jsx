@@ -25,14 +25,16 @@ export default class Histogram extends React.Component {
   }
 
   async loadCasesData() {
-    console.log("Fetching data");
-    console.log(this.props);
+    console.log("Fetching case data");
 
+    // if there is not an available start or end date in the data use this default ones
     const initial_date =
       this.props.initial_date != null ? this.props.initial_date : "2020-02-20";
     const maximum_date =
       this.props.maximum_date != null ? this.props.maximum_date : "2020-06-23";
 
+    // converting DateFields that come from the DatePicker to string. If there is no
+    // counterfactual date use the default historical one
     const counterfactual_first_restrictions_date =
       this.props.counterfactual_first_restrictions_date != null
         ? convert(this.props.counterfactual_first_restrictions_date)
@@ -54,9 +56,6 @@ export default class Histogram extends React.Component {
       ),
       task.getRealCovidCases(this.props.isoCode, initial_date, maximum_date),
     ]);
-
-    console.log(casesReal.length);
-    console.log(casesCounterfactual.length);
 
     // Combine the two datasets into a single data array
     let casesData = [];
@@ -84,15 +83,20 @@ export default class Histogram extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
+
+    // if click in new country reload case data
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.loadCasesData();
     }
+
+    // if counterfactual first restriction date is changed reload case data
     if (
       this.props.counterfactual_first_restrictions_date !==
       prevProps.counterfactual_first_restrictions_date
     ) {
       await this.loadCasesData();
     }
+    // if counterfactual lockdown date is changed reload case data
     if (
       this.props.counterfactual_lockdown_date !==
       prevProps.counterfactual_lockdown_date
@@ -127,8 +131,7 @@ export default class Histogram extends React.Component {
                 dataKey="weekly_avg_counterfactual"
                 stroke="#ff7300"
               />
-              if (this.props.first_restrictions_date != null){" "}
-              {
+              {this.props.first_restrictions_date != null &&
                 <ReferenceLine
                   x={this.props.first_restrictions_date}
                   label={{
@@ -139,8 +142,7 @@ export default class Histogram extends React.Component {
                   strokeDasharray="5 5"
                 />
               }
-              if (this.props.first_restrictions_date != null){" "}
-              {
+              {this.props.lockdown_date != null &&
                 <ReferenceLine
                   x={this.props.lockdown_date}
                   label={{ position: "right", value: "Lockdown", fontSize: 12 }}
