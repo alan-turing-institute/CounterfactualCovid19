@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
+import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -75,7 +76,6 @@ export default class Histogram extends React.Component {
       }
       this.setState({ casesData: casesData });
     }
-    // Set the component state to trigger a re-render
   }
 
   async componentDidMount() {
