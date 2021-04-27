@@ -38,7 +38,9 @@ router.register("countries", CountryView, basename="countries")
 router.register("knotpoints", KnotDateSetView, basename="knotpoints")
 router.register("modeldaterange", ModelDateRangeView, basename="modeldaterange")
 router.register("lockdowndates", PossibleLockdownDateSetView, basename="lockdowndates")
-router.register("restrictionsdates", PossibleRestrictionsDateSetView, basename="restrictiondates")
+router.register(
+    "restrictionsdates", PossibleRestrictionsDateSetView, basename="restrictiondates"
+)
 router.register(
     "cases/counterfactual/daily/absolute",
     CasesCounterfactualDailyAbsoluteView,

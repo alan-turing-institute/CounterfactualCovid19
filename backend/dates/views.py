@@ -57,6 +57,7 @@ class PossibleLockdownDateSetView(viewsets.ReadOnlyModelViewSet):
             lockdown_dates=ArrayAgg("dates_counterfactual_lockdown")
         )
 
+
 class PossibleRestrictionsDateSetView(viewsets.ReadOnlyModelViewSet):
     """View of PossibleDateSet which gives the possible first-restrictions dates for a given lockdown date"""
 
@@ -72,10 +73,7 @@ class PossibleRestrictionsDateSetView(viewsets.ReadOnlyModelViewSet):
         if iso_code:
             queryset = queryset.filter(country__iso_code=iso_code)
         if lockdown_date:
-            queryset = queryset.filter(
-                dates_counterfactual_lockdown=lockdown_date
-            )
+            queryset = queryset.filter(dates_counterfactual_lockdown=lockdown_date)
         return queryset.values("country__iso_code").annotate(
             restrictions_dates=ArrayAgg("dates_counterfactual_first_restrictions")
         )
-
