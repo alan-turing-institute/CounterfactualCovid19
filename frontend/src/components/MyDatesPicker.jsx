@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import DatePicker from "react-date-picker";
-import DatePicker from "react-date-picker";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { ResponsiveContainer } from "recharts";

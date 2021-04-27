@@ -4,7 +4,7 @@ from .models import ModelDateRange, KnotDateSet, PossibleDateSet
 
 
 class KnotDateSetSerializer(serializers.ModelSerializer):
-    """Serializer for KnotDateSet"""
+    """Serializer for KnotDateSetView"""
 
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
@@ -24,8 +24,32 @@ class KnotDateSetSerializer(serializers.ModelSerializer):
         )
 
 
+class LockdownDateSetSerializer(serializers.ModelSerializer):
+    """Serializer for LockdownDateSetView"""
+
+    iso_code = serializers.SerializerMethodField()
+    possible_lockdown_dates = serializers.SerializerMethodField()
+
+    class Meta:
+        """Metaclass for output fields"""
+
+        model = PossibleDateSet
+        fields = (
+            "iso_code",
+            "possible_lockdown_dates",
+        )
+
+    def get_iso_code(self, datadict):  # pylint: disable=no-self-use
+        """Getter for iso_code field"""
+        return datadict["country__iso_code"]
+
+    def get_possible_lockdown_dates(self, datadict):  # pylint: disable=no-self-use
+        """Getter for possible_lockdown_dates field"""
+        return datadict["lockdown_dates"]
+
+
 class ModelDateRangeSerializer(serializers.ModelSerializer):
-    """Serializer for ModelDateRange"""
+    """Serializer for ModelDateRangeView"""
 
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
@@ -43,7 +67,7 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
 
 
 class PossibleDateSetSerializer(serializers.ModelSerializer):
-    """Serializer for PossibleDateSet"""
+    """Serializer for PossibleDateSetView"""
 
     iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
 
