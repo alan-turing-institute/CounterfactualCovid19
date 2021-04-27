@@ -21,7 +21,8 @@ from dates.views import (
     KnotDateSetView,
     ModelDateRangeView,
     PossibleDateSetView,
-    LockdownDateSetView,
+    PossibleLockdownDateSetView,
+    PossibleRestrictionsDateSetView,
 )
 
 from cases.views import (
@@ -38,7 +39,8 @@ router.register("countries", CountryView, basename="countries")
 router.register("knotpoints", KnotDateSetView, basename="knotpoints")
 router.register("modeldaterange", ModelDateRangeView, basename="modeldaterange")
 router.register("possibledates", PossibleDateSetView, basename="possibledates")
-router.register("lockdowndates", LockdownDateSetView, basename="lockdowndates")
+router.register("lockdowndates", PossibleLockdownDateSetView, basename="lockdowndates")
+router.register("restrictionsdates", PossibleRestrictionsDateSetView, basename="restrictiondates")
 router.register(
     "cases/counterfactual/daily/absolute",
     CasesCounterfactualDailyAbsoluteView,
