@@ -3,11 +3,11 @@ import axios from "axios";
 class LoadRestrictionsDatesTask {
   #getRestrictionDates = async (iso_code) => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `http://localhost:8000/api/modeldaterange/?iso_code=${iso_code}`,
         {}
       );
-      return res.data;
+      return response.data[0];
     } catch (error) {
       console.log(error);
       return [];
