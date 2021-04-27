@@ -62,7 +62,7 @@ export default class Histogram extends React.Component {
       // Set the component state with the restriction data
       this.setState({
         first_restrictions_date: restrictionsDates[0].first_restrictions_date,
-        lockdown_date: restrictionsDates[0].lockdown_date
+        lockdown_date: restrictionsDates[0].lockdown_date,
       });
     }
   }
