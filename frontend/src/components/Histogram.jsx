@@ -58,12 +58,12 @@ export default class Histogram extends React.Component {
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-    if (restrictionsDates.length != 0) {
+    if (restrictionsDates.length !== 0) {
       // Set the component state with the restriction data
       this.setState({
         first_restrictions_date: restrictionsDates[0].first_restrictions_date,
+        lockdown_date: restrictionsDates[0].lockdown_date
       });
-      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
     }
   }
 

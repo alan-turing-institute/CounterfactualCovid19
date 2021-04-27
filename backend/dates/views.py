@@ -4,7 +4,6 @@ from django.contrib.postgres.aggregates import ArrayAgg
 from .serializers import (
     KnotDateSetSerializer,
     ModelDateRangeSerializer,
-    PossibleDateSetSerializer,
     PossibleLockdownDateSetSerializer,
     PossibleRestrictionsDateSetSerializer,
 )
@@ -29,22 +28,6 @@ class ModelDateRangeView(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         """Construct a default queryset with filters"""
         queryset = ModelDateRange.objects.all()  # pylint: disable=no-member
-        # Apply filter on ISO code
-        iso_code = self.request.query_params.get("iso_code", None)
-        if iso_code:
-            queryset = queryset.filter(country__iso_code=iso_code)
-        return queryset
-
-
-class PossibleDateSetView(viewsets.ReadOnlyModelViewSet):
-    """View for PossibleDateSet"""
-
-    serializer_class = PossibleDateSetSerializer
-    http_method_names = ["get", "list"]
-
-    def get_queryset(self):
-        """Construct a default queryset with filters"""
-        queryset = PossibleDateSet.objects.all()  # pylint: disable=no-member
         # Apply filter on ISO code
         iso_code = self.request.query_params.get("iso_code", None)
         if iso_code:

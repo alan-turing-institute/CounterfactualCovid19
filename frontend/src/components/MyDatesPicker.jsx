@@ -1,9 +1,7 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import React from "react";
 import DatePicker from "react-date-picker";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { ResponsiveContainer } from "recharts";
 
 export default class MyDatesPicker extends React.Component {
   state = {

@@ -42,23 +42,6 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
         )
 
 
-class PossibleDateSetSerializer(serializers.ModelSerializer):
-    """Serializer for PossibleDateSetView"""
-
-    iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
-
-    class Meta:
-        """Metaclass for output fields"""
-
-        model = PossibleDateSet
-        fields = (
-            "iso_code",
-            "n_days_first_restrictions",
-            "n_days_lockdown",
-            "dates_counterfactual_first_restrictions",
-            "dates_counterfactual_lockdown",
-        )
-
 class PossibleLockdownDateSetSerializer(serializers.ModelSerializer):
     """Serializer for PossibleLockdownDateSetView"""
 
