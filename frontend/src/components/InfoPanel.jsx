@@ -38,11 +38,11 @@ export default class InfoPanel extends React.Component {
     if ((restrictionsDates.length != 0) & (this.props.isoCode != null)) {
       // Set the component state with the restriction data
       this.setState({
-        first_restrictions_date: restrictionsDates.first_restrictions_date,
+        first_restrictions_date: restrictionsDates[0].first_restrictions_date,
       });
-      this.setState({ lockdown_date: restrictionsDates.lockdown_date });
-      this.setState({ initial_date: restrictionsDates.initial_date });
-      this.setState({ maximum_date: restrictionsDates.maximum_date });
+      this.setState({ lockdown_date: restrictionsDates[0].lockdown_date });
+      this.setState({ initial_date: restrictionsDates[0].initial_date });
+      this.setState({ maximum_date: restrictionsDates[0].maximum_date });
 
       // we only update counterfactual if we change countries
       // set them to their actual restriction dates
