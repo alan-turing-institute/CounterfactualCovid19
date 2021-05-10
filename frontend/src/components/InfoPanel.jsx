@@ -127,8 +127,8 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
-                        The first wave for {`${this.props.countryName}`}{" "}
-                        ended in
+                        The first wave for {`${this.props.countryName}`} ended
+                        in
                         {` ${this.state.maximum_date}`}.
                       </Card.Text>
                     </Card.Body>
@@ -214,10 +214,13 @@ export default class InfoPanel extends React.Component {
                   >
                     <Card.Body>
                       <Card.Title>Counterfactual story</Card.Title>
-                      <Card.Text>The counterfactual growth is simulated between {`${this.state.initial_date}`} and{" "}
-                        {`${this.state.maximum_date}`}. </Card.Text>
-                       <Card.Text> Shift first restrictions: XXX </Card.Text>
-                       <Card.Text> Shift lockdown: XXX </Card.Text>
+                      <Card.Text>
+                        The counterfactual growth is simulated between{" "}
+                        {`${this.state.initial_date}`} and{" "}
+                        {`${this.state.maximum_date}`}.{" "}
+                      </Card.Text>
+                      <Card.Text> Shift first restrictions: XXX </Card.Text>
+                      <Card.Text> Shift lockdown: XXX </Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
@@ -230,11 +233,11 @@ export default class InfoPanel extends React.Component {
                     bg={"light"}
                   >
                     <Card.Body>
-                       <Card.Title>Counterfactual Statistics</Card.Title>
+                      <Card.Title>Counterfactual Statistics</Card.Title>
                       <Card.Text>
-                        {`Total Covid-19 Cases per Million:XXX`}</Card.Text>
-                       <Card.Text>
-                        {`% reduction in total cases`}</Card.Text>
+                        {`Total Covid-19 Cases per Million:XXX`}
+                      </Card.Text>
+                      <Card.Text>{`% reduction in total cases`}</Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
