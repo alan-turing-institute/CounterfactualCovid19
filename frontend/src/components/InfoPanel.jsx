@@ -119,8 +119,8 @@ export default class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
@@ -128,8 +128,8 @@ export default class InfoPanel extends React.Component {
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
                         The first wave for {`${this.props.countryName}`}{" "}
-                        happened between {`${this.state.initial_date}`} and{" "}
-                        {`${this.state.maximum_date}`}.
+                        ended in
+                        {` ${this.state.maximum_date}`}.
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -137,19 +137,20 @@ export default class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>Covid-19 Statistics:</Card.Title>
+                      <Card.Title>Statistics</Card.Title>
                       <Card.Text>
-                        {`Total Cases per Million: ${this.props.summedAvgCases
+                        {`Total Covid-19 Cases per Million: ${this.props.summedAvgCases
                           .toFixed(2)
                           .toString()} \n `}
                       </Card.Text>
-                      <Card.Text>{`Total Deaths per Million: XXX`}</Card.Text>
+                      <Card.Text>{`Total Covid-19Deaths per Million: XXX`}</Card.Text>
+                      <Card.Text>{`Population density: XXX`}</Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
@@ -206,28 +207,34 @@ export default class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>Population Density</Card.Title>
-                      <Card.Text>XXX Density</Card.Text>
+                      <Card.Title>Counterfactual story</Card.Title>
+                      <Card.Text>The counterfactual growth is simulated between {`${this.state.initial_date}`} and{" "}
+                        {`${this.state.maximum_date}`}. </Card.Text>
+                       <Card.Text> Shift first restrictions: XXX </Card.Text>
+                       <Card.Text> Shift lockdown: XXX </Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>XXX</Card.Title>
-                      <Card.Text>XXX</Card.Text>
+                       <Card.Title>Counterfactual Statistics</Card.Title>
+                      <Card.Text>
+                        {`Total Covid-19 Cases per Million:XXX`}</Card.Text>
+                       <Card.Text>
+                        {`% reduction in total cases`}</Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
