@@ -35,7 +35,8 @@ export default class InfoPanel extends React.Component {
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-    if ((restrictionsDates.length != 0) & (this.props.isoCode != null)) {
+
+    if ((restrictionsDates != null) & (this.props.isoCode != null)) {
       // Set the component state with the restriction data
       this.setState({
         first_restrictions_date: restrictionsDates.first_restrictions_date,
@@ -127,6 +128,15 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
+                        First social distance restrictions occured on {`${this.state.first_restrictions_date}`}.
+                       </Card.Text>
+
+                        {!this.state.lockdown_date ? null :(
+                        <Card.Text>
+                        A national lockdown happened on {` ${this.state.lockdown_date}`}.
+                        </Card.Text>
+                        )}
+                        <Card.Text>
                         The first wave for {`${this.props.countryName}`} ended
                         in
                         {` ${this.state.maximum_date}`}.
@@ -170,12 +180,21 @@ export default class InfoPanel extends React.Component {
                         value={
                           this.state.counterfactual_first_restrictions_date
                         }
+                        format="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        className="form-control"
+                        monthsShown={1}
+                        popperPlacement="bottom"
                       />
                     </Col>
                     <Col>
                       <DatePicker
                         onChange={this.onLockdownChange}
                         value={this.state.counterfactual_lockdown_date}
+                        format="dd/MM/yyyy"
+                        className="form-control"
+                        monthsShown={1}
+                        popperPlacement="bottom"
                       />
                     </Col>
                   </Row>
