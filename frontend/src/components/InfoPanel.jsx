@@ -37,18 +37,18 @@ export default class InfoPanel extends React.Component {
 
     if ((restrictionsDates != null) & (this.props.isoCode != null)) {
       try {
-      // Set the component state with the restriction data
-      this.setState({
-        first_restrictions_date: restrictionsDates.first_restrictions_date,
-      });
-      this.setState({ lockdown_date: restrictionsDates.lockdown_date });
-      this.setState({ initial_date: restrictionsDates.initial_date });
-      this.setState({ maximum_date: restrictionsDates.maximum_date });
+        // Set the component state with the restriction data
+        this.setState({
+          first_restrictions_date: restrictionsDates.first_restrictions_date,
+        });
+        this.setState({ lockdown_date: restrictionsDates.lockdown_date });
+        this.setState({ initial_date: restrictionsDates.initial_date });
+        this.setState({ maximum_date: restrictionsDates.maximum_date });
 
-      // we only update counterfactual if we change countries
-      // set them to their actual restriction dates
+        // we only update counterfactual if we change countries
+        // set them to their actual restriction dates
 
-     if (this.state.first_restrictions_date != null) {
+        if (this.state.first_restrictions_date != null) {
           // for the datepicker to work this needs to be a Date object.
           this.setState({
             counterfactual_first_restrictions_date: new Date(
@@ -63,11 +63,10 @@ export default class InfoPanel extends React.Component {
           });
         }
 
-      // set flag updateHistogram to true in order to render the histogram
-      this.setState({ updateHistogram: true });
-      }
-      catch (error) {
-      console.log(error);
+        // set flag updateHistogram to true in order to render the histogram
+        this.setState({ updateHistogram: true });
+      } catch (error) {
+        console.log(error);
       }
     }
   }
