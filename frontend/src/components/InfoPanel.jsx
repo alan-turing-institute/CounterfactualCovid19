@@ -127,20 +127,21 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
-                        First cased confimed on XXXX and first social distance
-                        restrictions occured on{" "}
+                        First case confimed: XXXX
+                      </Card.Text>
+                      <Card.Text> First social distance
+                        restrictions: {" "}
                         {`${this.state.first_restrictions_date}`}.
                       </Card.Text>
 
                       {!this.state.lockdown_date ? null : (
                         <Card.Text>
-                          A national lockdown happened on{" "}
+                          National lockdown: {" "}
                           {` ${this.state.lockdown_date}`}.
                         </Card.Text>
                       )}
                       <Card.Text>
-                        The first wave for {`${this.props.countryName}`} ended
-                        in
+                        The first wave ended:
                         {` ${this.state.maximum_date}`}.
                       </Card.Text>
                     </Card.Body>
@@ -158,7 +159,7 @@ export default class InfoPanel extends React.Component {
                       <Card.Title>Statistics</Card.Title>
                       <Card.Text>
                         {`Total Covid-19 Cases per Million: ${this.props.summedAvgCases
-                          .toFixed(2)
+                          .toFixed(0)
                           .toString()} \n `}
                       </Card.Text>
                       <Card.Text>{`Total Covid-19Deaths per Million: XXX`}</Card.Text>
