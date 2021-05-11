@@ -234,15 +234,16 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>Counterfactual story</Card.Title>
                       <Card.Text>
-                        The counterfactual growth is simulated between{" "}
-                        {`${this.state.initial_date}`} and{" "}
-                        {`${this.state.maximum_date}`}.{" "}
-
-                        Use the calendar to select counterfactual dates for social distance restrictions and/or
-                        lockdonws.
+                        Use the calendars to select counterfactual dates for first social distance restrictions (left) and/or
+                        lockdown (right).
                       </Card.Text>
                       <Card.Text> Shift first restrictions: XXX </Card.Text>
                       <Card.Text> Shift lockdown: XXX </Card.Text>
+                       <Card.Text>
+                        The counterfactual growth is simulated between{" "}
+                        {`${this.state.initial_date}`} and{" "}
+                        {`${this.state.maximum_date}`}.{" "}
+                      </Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
