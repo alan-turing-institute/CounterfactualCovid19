@@ -126,18 +126,16 @@ export default class InfoPanel extends React.Component {
                   >
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
+                      <Card.Text>First case confimed: XXXX</Card.Text>
                       <Card.Text>
-                        First case confimed: XXXX
-                      </Card.Text>
-                      <Card.Text> First social distance
-                        restrictions: {" "}
+                        {" "}
+                        First social distance restrictions:{" "}
                         {`${this.state.first_restrictions_date}`}.
                       </Card.Text>
 
                       {!this.state.lockdown_date ? null : (
                         <Card.Text>
-                          National lockdown: {" "}
-                          {` ${this.state.lockdown_date}`}.
+                          National lockdown: {` ${this.state.lockdown_date}`}.
                         </Card.Text>
                       )}
                       <Card.Text>
