@@ -127,7 +127,8 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
-                        First cased confimed on XXXX and first social distance restrictions occured on{" "}
+                        First cased confimed on XXXX and first social distance
+                        restrictions occured on{" "}
                         {`${this.state.first_restrictions_date}`}.
                       </Card.Text>
 
