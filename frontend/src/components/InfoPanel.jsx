@@ -183,7 +183,6 @@ export default class InfoPanel extends React.Component {
                         }
                         format="dd/MM/yyyy"
                         popperPlacement="bottom-end"
-                        className="form-control"
                         monthsShown={1}
                         popperPlacement="bottom"
                       />
@@ -193,7 +192,6 @@ export default class InfoPanel extends React.Component {
                         onChange={this.onLockdownChange}
                         value={this.state.counterfactual_lockdown_date}
                         format="dd/MM/yyyy"
-                        className="form-control"
                         monthsShown={1}
                         popperPlacement="bottom"
                       />
