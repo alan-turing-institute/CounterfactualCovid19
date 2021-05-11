@@ -1,6 +1,14 @@
-.DatePicker__calendarContainer {
+.react-date-picker {
+  display: inline-flex;
+  position: center;
+}
+
+.react-date-picker__calendar {
+  height: 250px;
+  width: 350px;
+  max-width: 100vw;
   position: absolute;
-  top: calc(100% + 2em);
-  /* left: 50%;                           Comment these out
-  transform: translateX(-50%); */ /*Comment these out*/
+  top: 100%;
+  left: 0;
+  z-index: 1;
 }

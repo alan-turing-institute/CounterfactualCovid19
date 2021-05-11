@@ -23,9 +23,9 @@ const HeaderPanel = (props) => {
                 </Card.Title>
                 <Card.Text>
                   {" "}
-                  This dashboard contains data and simulations of the growth of
-                  Covid19 cases in Europe between X and X.Select a country to
-                  start.
+                  This dashboard contains data and counterfactual simulations of
+                  the growth of COVID-19 cases during Europe's first wave. Click
+                  on a country to start.
                 </Card.Text>
               </Card.Body>
             </Card>

@@ -28,25 +28,26 @@ export default class InfoPanel extends React.Component {
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
 
-  async loadRestrictionData(updateCounterfactual) {
+  async loadRestrictionData() {
     // Retrieve Restriction data
     const task = new LoadRestrictionsDatesTask();
     let [restrictionsDates] = await Promise.all([
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-    if ((restrictionsDates.length != 0) & (this.props.isoCode != null)) {
-      // Set the component state with the restriction data
-      this.setState({
-        first_restrictions_date: restrictionsDates.first_restrictions_date,
-      });
-      this.setState({ lockdown_date: restrictionsDates.lockdown_date });
-      this.setState({ initial_date: restrictionsDates.initial_date });
-      this.setState({ maximum_date: restrictionsDates.maximum_date });
+    if ((restrictionsDates != null) & (this.props.isoCode != null)) {
+      try {
+        // Set the component state with the restriction data
+        this.setState({
+          first_restrictions_date: restrictionsDates.first_restrictions_date,
+        });
+        this.setState({ lockdown_date: restrictionsDates.lockdown_date });
+        this.setState({ initial_date: restrictionsDates.initial_date });
+        this.setState({ maximum_date: restrictionsDates.maximum_date });
 
-      // we only update counterfactual if we change countries
-      // set them to their actual restriction dates
-      if (updateCounterfactual) {
+        // we only update counterfactual if we change countries
+        // set them to their actual restriction dates
+
         if (this.state.first_restrictions_date != null) {
           // for the datepicker to work this needs to be a Date object.
           this.setState({
@@ -61,16 +62,18 @@ export default class InfoPanel extends React.Component {
             counterfactual_lockdown_date: new Date(this.state.lockdown_date),
           });
         }
-      }
 
-      // set flag updateHistogram to true in order to render the histogram
-      this.setState({ updateHistogram: true });
+        // set flag updateHistogram to true in order to render the histogram
+        this.setState({ updateHistogram: true });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
   // this runs when the info panel is first mounted
   async componentDidMount() {
-    await this.loadRestrictionData(true);
+    await this.loadRestrictionData();
   }
 
   // this runs when we click in a new country, reload all date information
@@ -84,7 +87,7 @@ export default class InfoPanel extends React.Component {
       this.setState({ counterfactual_lockdown_date: null });
       this.setState({ updateHistogram: false });
 
-      await this.loadRestrictionData(true);
+      await this.loadRestrictionData();
     }
   }
 
@@ -119,17 +122,28 @@ export default class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
+                      <Card.Text>First case confimed: XXXX</Card.Text>
                       <Card.Text>
-                        The first wave for {`${this.props.countryName}`}{" "}
-                        happened between {`${this.state.initial_date}`} and{" "}
-                        {`${this.state.maximum_date}`}.
+                        {" "}
+                        First social distance restrictions:{" "}
+                        {`${this.state.first_restrictions_date}`}.
+                      </Card.Text>
+
+                      {!this.state.lockdown_date ? null : (
+                        <Card.Text>
+                          National lockdown: {` ${this.state.lockdown_date}`}.
+                        </Card.Text>
+                      )}
+                      <Card.Text>
+                        The first wave ended:
+                        {` ${this.state.maximum_date}`}.
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -137,19 +151,20 @@ export default class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>Covid-19 Statistics:</Card.Title>
+                      <Card.Title>Statistics</Card.Title>
                       <Card.Text>
-                        {`Total Cases per Million: ${this.props.summedAvgCases
-                          .toFixed(2)
+                        {`Total COVID-19 Cases per Million: ${this.props.summedAvgCases
+                          .toFixed(0)
                           .toString()} \n `}
                       </Card.Text>
-                      <Card.Text>{`Total Deaths per Million: XXX`}</Card.Text>
+                      <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
+                      <Card.Text>{`Population density: XXX`}</Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
@@ -169,12 +184,21 @@ export default class InfoPanel extends React.Component {
                         value={
                           this.state.counterfactual_first_restrictions_date
                         }
+                        format="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        className="form-control"
+                        monthsShown={1}
+                        popperPlacement="bottom"
                       />
                     </Col>
                     <Col>
                       <DatePicker
                         onChange={this.onLockdownChange}
                         value={this.state.counterfactual_lockdown_date}
+                        format="dd/MM/yyyy"
+                        className="form-control"
+                        monthsShown={1}
+                        popperPlacement="bottom"
                       />
                     </Col>
                   </Row>
@@ -206,28 +230,42 @@ export default class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>Population Density</Card.Title>
-                      <Card.Text>XXX Density</Card.Text>
+                      <Card.Title>Counterfactual story</Card.Title>
+                      <Card.Text>
+                        Use the calendars to select counterfactual dates for
+                        first social distance restrictions (left) and/or
+                        lockdown (right).
+                      </Card.Text>
+                      <Card.Text> Shift first restrictions: XXX </Card.Text>
+                      <Card.Text> Shift lockdown: XXX </Card.Text>
+                      <Card.Text>
+                        The counterfactual growth is simulated between{" "}
+                        {`${this.state.initial_date}`} and{" "}
+                        {`${this.state.maximum_date}`}.{" "}
+                      </Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Card
                     style={{
-                      marginTop: "5%",
-                      marginBottom: "5%",
+                      marginTop: "1%",
+                      marginBottom: "1%",
                     }}
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>XXX</Card.Title>
-                      <Card.Text>XXX</Card.Text>
+                      <Card.Title>Counterfactual Statistics</Card.Title>
+                      <Card.Text>
+                        {`Total COVID-19 Cases per Million:XXX`}
+                      </Card.Text>
+                      <Card.Text>{`% reduction in total cases`}</Card.Text>
                     </Card.Body>
                   </Card>
                 </Row>
