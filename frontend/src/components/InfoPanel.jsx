@@ -162,7 +162,7 @@ export default class InfoPanel extends React.Component {
                           .toFixed(0)
                           .toString()} \n `}
                       </Card.Text>
-                      <Card.Text>{`Total Covid-19Deaths per Million: XXX`}</Card.Text>
+                      <Card.Text>{`Total Covid-19 Deaths per Million: XXX`}</Card.Text>
                       <Card.Text>{`Population density: XXX`}</Card.Text>
                     </Card.Body>
                   </Card>
