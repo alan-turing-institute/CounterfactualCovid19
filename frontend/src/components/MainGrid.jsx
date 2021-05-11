@@ -57,8 +57,8 @@ export default class MainGrid extends React.Component {
         isoCode: iso_code,
         countryName: selectedCountry.properties.name,
         summedAvgCases: summed_avg_cases,
-        sizeMapComponent: "45vh",
-        sizeHistogramComponent: "43vh",
+        sizeMapComponent: "40vh",
+        sizeHistogramComponent: "48vh",
       });
     }
   }
