@@ -35,11 +35,8 @@ export default class InfoPanel extends React.Component {
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-    if (
-      (restrictionsDates != null) &
-      (this.props.isoCode != null) &
-      (restrictionsDates.length != 0)
-    ) {
+    if ((restrictionsDates != null) & (this.props.isoCode != null)) {
+      try {
       // Set the component state with the restriction data
       this.setState({
         first_restrictions_date: restrictionsDates.first_restrictions_date,
@@ -51,23 +48,27 @@ export default class InfoPanel extends React.Component {
       // we only update counterfactual if we change countries
       // set them to their actual restriction dates
 
-      if (this.state.first_restrictions_date != null) {
-        // for the datepicker to work this needs to be a Date object.
-        this.setState({
-          counterfactual_first_restrictions_date: new Date(
-            this.state.first_restrictions_date
-          ),
-        });
-      }
-      if (this.state.lockdown_date != null) {
-        // for the datepicker to work this needs to be a Date object.
-        this.setState({
-          counterfactual_lockdown_date: new Date(this.state.lockdown_date),
-        });
-      }
+     if (this.state.first_restrictions_date != null) {
+          // for the datepicker to work this needs to be a Date object.
+          this.setState({
+            counterfactual_first_restrictions_date: new Date(
+              this.state.first_restrictions_date
+            ),
+          });
+        }
+        if (this.state.lockdown_date != null) {
+          // for the datepicker to work this needs to be a Date object.
+          this.setState({
+            counterfactual_lockdown_date: new Date(this.state.lockdown_date),
+          });
+        }
 
       // set flag updateHistogram to true in order to render the histogram
       this.setState({ updateHistogram: true });
+      }
+      catch (error) {
+      console.log(error);
+      }
     }
   }
 
