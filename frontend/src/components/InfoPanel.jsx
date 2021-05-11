@@ -28,14 +28,14 @@ export default class InfoPanel extends React.Component {
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
 
-  async loadRestrictionData(updateCounterfactual) {
+  async loadRestrictionData() {
     // Retrieve Restriction data
     const task = new LoadRestrictionsDatesTask();
     let [restrictionsDates] = await Promise.all([
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-    if ((restrictionsDates != null) & (this.props.isoCode != null)) {
+    if ((restrictionsDates != null) & (this.props.isoCode != null) & (restrictionsDates.length != 0)) {
       // Set the component state with the restriction data
       this.setState({
         first_restrictions_date: restrictionsDates.first_restrictions_date,
@@ -46,8 +46,8 @@ export default class InfoPanel extends React.Component {
 
       // we only update counterfactual if we change countries
       // set them to their actual restriction dates
-      if (updateCounterfactual) {
-        if (this.state.first_restrictions_date != null) {
+
+     if (this.state.first_restrictions_date != null) {
           // for the datepicker to work this needs to be a Date object.
           this.setState({
             counterfactual_first_restrictions_date: new Date(
@@ -61,7 +61,6 @@ export default class InfoPanel extends React.Component {
             counterfactual_lockdown_date: new Date(this.state.lockdown_date),
           });
         }
-      }
 
       // set flag updateHistogram to true in order to render the histogram
       this.setState({ updateHistogram: true });
@@ -70,7 +69,7 @@ export default class InfoPanel extends React.Component {
 
   // this runs when the info panel is first mounted
   async componentDidMount() {
-    await this.loadRestrictionData(true);
+    await this.loadRestrictionData();
   }
 
   // this runs when we click in a new country, reload all date information
@@ -84,7 +83,7 @@ export default class InfoPanel extends React.Component {
       this.setState({ counterfactual_lockdown_date: null });
       this.setState({ updateHistogram: false });
 
-      await this.loadRestrictionData(true);
+      await this.loadRestrictionData();
     }
   }
 
