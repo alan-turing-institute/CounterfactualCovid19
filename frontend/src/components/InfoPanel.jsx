@@ -35,7 +35,6 @@ export default class InfoPanel extends React.Component {
       task.getCountryRestrictionDates(this.props.isoCode),
     ]);
 
-
     if ((restrictionsDates != null) & (this.props.isoCode != null)) {
       // Set the component state with the restriction data
       this.setState({
@@ -128,15 +127,17 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>{`${this.props.countryName}`}</Card.Title>
                       <Card.Text>
-                        First social distance restrictions occured on {`${this.state.first_restrictions_date}`}.
-                       </Card.Text>
+                        First social distance restrictions occured on{" "}
+                        {`${this.state.first_restrictions_date}`}.
+                      </Card.Text>
 
-                        {!this.state.lockdown_date ? null :(
+                      {!this.state.lockdown_date ? null : (
                         <Card.Text>
-                        A national lockdown happened on {` ${this.state.lockdown_date}`}.
+                          A national lockdown happened on{" "}
+                          {` ${this.state.lockdown_date}`}.
                         </Card.Text>
-                        )}
-                        <Card.Text>
+                      )}
+                      <Card.Text>
                         The first wave for {`${this.props.countryName}`} ended
                         in
                         {` ${this.state.maximum_date}`}.
