@@ -155,11 +155,11 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>Statistics</Card.Title>
                       <Card.Text>
-                        {`Total Covid-19 Cases per Million: ${this.props.summedAvgCases
+                        {`Total COVID-19 Cases per Million: ${this.props.summedAvgCases
                           .toFixed(0)
                           .toString()} \n `}
                       </Card.Text>
-                      <Card.Text>{`Total Covid-19 Deaths per Million: XXX`}</Card.Text>
+                      <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
                       <Card.Text>{`Population density: XXX`}</Card.Text>
                     </Card.Body>
                   </Card>
@@ -237,6 +237,9 @@ export default class InfoPanel extends React.Component {
                         The counterfactual growth is simulated between{" "}
                         {`${this.state.initial_date}`} and{" "}
                         {`${this.state.maximum_date}`}.{" "}
+
+                        Use the calendar to select counterfactual dates for social distance restrictions and/or
+                        lockdonws.
                       </Card.Text>
                       <Card.Text> Shift first restrictions: XXX </Card.Text>
                       <Card.Text> Shift lockdown: XXX </Card.Text>
@@ -254,7 +257,7 @@ export default class InfoPanel extends React.Component {
                     <Card.Body>
                       <Card.Title>Counterfactual Statistics</Card.Title>
                       <Card.Text>
-                        {`Total Covid-19 Cases per Million:XXX`}
+                        {`Total COVID-19 Cases per Million:XXX`}
                       </Card.Text>
                       <Card.Text>{`% reduction in total cases`}</Card.Text>
                     </Card.Body>

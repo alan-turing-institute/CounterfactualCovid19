@@ -24,7 +24,7 @@ const HeaderPanel = (props) => {
                 <Card.Text>
                   {" "}
                   This dashboard contains data and counterfactual simulations of
-                  the growth of Covid19 cases during Europe's first wave. Click
+                  the growth of COVID-19 cases during Europe's first wave. Click
                   on a country to start.
                 </Card.Text>
               </Card.Body>
