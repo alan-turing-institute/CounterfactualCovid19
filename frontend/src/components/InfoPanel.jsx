@@ -32,6 +32,61 @@ export default class InfoPanel extends React.Component {
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
 
+  async loadTotalCases(){
+     const task = new LoadTotalCasesTask();
+
+        // if there is not an available start or end date in the data use this default ones
+    const initial_date =
+      this.state.initial_date != null ? this.state.initial_date : "2020-02-20";
+    const maximum_date =
+      this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
+
+    // converting DateFields that come from the DatePicker to string. If there is no
+    // counterfactual date use the default historical one
+    const counterfactual_first_restrictions_date =
+      this.props.counterfactual_first_restrictions_date != null
+        ? convert(this.props.counterfactual_first_restrictions_date)
+        : this.props.first_restrictions_date;
+    const counterfactual_lockdown_date =
+      this.props.counterfactual_lockdown_date != null
+        ? convert(this.props.counterfactual_lockdown_date)
+        : this.props.lockdown_date;
+
+     let [conterfactualCases] = await Promise.all([
+      task.getIntegratedCounterfactualCountryData(
+        this.props.isoCode,
+        initial_date,
+        maximum_date,
+        counterfactual_first_restrictions_date,
+        counterfactual_lockdown_date
+       ),
+    ]);
+
+
+     let [realCases] = await Promise.all([
+      task.getIntegratedCasesCountryData(this.props.isoCode,maximum_date),
+    ]);
+
+
+        console.log(realCases)
+
+     if (( realCases != null) & ( conterfactualCases != null)) {
+          console.log(conterfactualCases)
+
+        try{
+        this.setState({
+          total_real_cases: realCases.summed_avg_cases_per_million,
+        });
+        this.setState({ total_counterfactual_cases: conterfactualCases.summed_avg_cases_per_million });
+
+     }
+     catch (error) {
+      console.log(error);
+    }
+     }
+
+  }
+
   async loadRestrictionData() {
     // Retrieve Restriction data
     const task = new LoadRestrictionsDatesTask();
@@ -289,4 +344,11 @@ export default class InfoPanel extends React.Component {
       </div>
     );
   }
+}
+
+function convert(date) {
+  var date = date,
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
 }
