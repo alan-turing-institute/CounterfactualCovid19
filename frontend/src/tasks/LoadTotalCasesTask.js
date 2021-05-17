@@ -4,7 +4,9 @@ import legendItems from "../entities/LegendItems";
 class LoadTotalCasesTask {
   decorateCountries = async (countryGeoms) => {
     try {
-      const integratedCasesData = await this.#getIntegratedCasesData("2020-07-06");
+      const integratedCasesData = await this.#getIntegratedCasesData(
+        "2020-07-06"
+      );
       return this.#processCovidData(countryGeoms, integratedCasesData);
     } catch (error) {
       console.log(error);
@@ -25,9 +27,11 @@ class LoadTotalCasesTask {
     }
   };
 
-  getIntegratedCasesCountryData = async (iso_code,end_date) => {
+  getIntegratedCasesCountryData = async (iso_code, end_date) => {
     try {
-      console.log(`http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`)
+      console.log(
+        `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`
+      );
       const res = await axios.get(
         `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`,
         {}
@@ -39,7 +43,7 @@ class LoadTotalCasesTask {
     }
   };
 
-   getIntegratedCounterfactualCountryData  = async (
+  getIntegratedCounterfactualCountryData = async (
     iso_code,
     start_date,
     end_date,
@@ -53,7 +57,7 @@ class LoadTotalCasesTask {
           `http://localhost:8000/api/cases/counterfactual/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restriction_date=${first_restriction_date}&lockdown_date=${lockdown_date}`,
           {}
         );
-        const size = (res_counterfactual_dates.data).length
+        const size = res_counterfactual_dates.data.length;
         // return the last date on the model
         return res_counterfactual_dates.data.last();
       } else {
@@ -71,8 +75,8 @@ class LoadTotalCasesTask {
             {}
           );
 
-          const size = (res_counterfactual_default.data).length
-         // return the last date on the model
+          const size = res_counterfactual_default.data.length;
+          // return the last date on the model
           return res_counterfactual_default.data.last();
         }
       }
@@ -81,9 +85,6 @@ class LoadTotalCasesTask {
       return [];
     }
   };
-
-
-
 
   #processCovidData = (countryGeoms, integratedCasesData) => {
     for (let i = 0; i < countryGeoms.length; i++) {
