@@ -7,6 +7,7 @@ import Histogram from "./Histogram";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import DatePicker from "react-date-picker";
 import Loading from "./Loading";
+import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
 
 export default class InfoPanel extends React.Component {
@@ -21,6 +22,9 @@ export default class InfoPanel extends React.Component {
       initial_date: null,
       maximum_date: null,
       updateHistogram: false,
+      total_real_cases: null,
+      total_counterfactual_cases: null
+
     };
 
     // Bind the datepicker change functions to allow it to be used by other objects
@@ -74,6 +78,7 @@ export default class InfoPanel extends React.Component {
   // this runs when the info panel is first mounted
   async componentDidMount() {
     await this.loadRestrictionData();
+    await this.loadTotalCases();
   }
 
   // this runs when we click in a new country, reload all date information
@@ -88,6 +93,8 @@ export default class InfoPanel extends React.Component {
       this.setState({ updateHistogram: false });
 
       await this.loadRestrictionData();
+      await this.loadTotalCases();
+
     }
   }
 
@@ -158,11 +165,13 @@ export default class InfoPanel extends React.Component {
                   >
                     <Card.Body>
                       <Card.Title>Statistics</Card.Title>
+                       {!this.state.total_real_cases ? null : (
                       <Card.Text>
-                        {`Total COVID-19 Cases per Million: ${this.props.summedAvgCases
+                        {`Total COVID-19 Cases per Million: ${this.state.total_real_cases
                           .toFixed(0)
                           .toString()} \n `}
                       </Card.Text>
+                       )}
                       <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
                       <Card.Text>{`Population density: XXX`}</Card.Text>
                     </Card.Body>
@@ -262,9 +271,13 @@ export default class InfoPanel extends React.Component {
                   >
                     <Card.Body>
                       <Card.Title>Counterfactual Statistics</Card.Title>
+                      {!this.state.total_counterfactual_cases ? null : (
                       <Card.Text>
-                        {`Total COVID-19 Cases per Million:XXX`}
+                        {`Total COVID-19 Cases per Million: ${this.state.total_counterfactual_cases
+                          .toFixed(0)
+                         .toString()} \n `}
                       </Card.Text>
+                        )}
                       <Card.Text>{`% reduction in total cases`}</Card.Text>
                     </Card.Body>
                   </Card>
