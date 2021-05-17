@@ -4,7 +4,7 @@ import legendItems from "../entities/LegendItems";
 class LoadTotalCasesTask {
   decorateCountries = async (countryGeoms) => {
     try {
-      const integratedCasesData = await this.#getIntegratedCasesData();
+      const integratedCasesData = await this.#getIntegratedCasesData("2020-07-06");
       return this.#processCovidData(countryGeoms, integratedCasesData);
     } catch (error) {
       console.log(error);
@@ -12,10 +12,10 @@ class LoadTotalCasesTask {
     }
   };
 
-  #getIntegratedCasesData = async () => {
+  #getIntegratedCasesData = async (end_date) => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/cases/real/integrated/?end_date=2020-07-06",
+        `http://localhost:8000/api/cases/real/integrated/?end_date=${end_date}`,
         {}
       );
       return res.data;
