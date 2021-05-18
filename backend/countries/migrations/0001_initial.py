@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                     "iso_code",
                     models.CharField(max_length=3, primary_key=True, serialize=False),
                 ),
+                ("area", models.PositiveIntegerField()),
                 ("name", models.CharField(max_length=255)),
                 ("population", models.PositiveIntegerField(null=True)),
                 (
