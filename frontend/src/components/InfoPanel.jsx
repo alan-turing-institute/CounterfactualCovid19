@@ -45,7 +45,7 @@ export default class InfoPanel extends React.Component {
     const maximum_date =
       this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
 
-    // reload total real cases only if necesary
+    // reload total real cases only if necessary (when we are loading the general page)
     if (do_real_cases == true) {
       let [realCases] = await Promise.all([
         task.getIntegratedCasesCountryData(this.props.isoCode, maximum_date),
@@ -62,9 +62,7 @@ export default class InfoPanel extends React.Component {
       }
     }
 
-    // converting DateFields that come from the DatePicker to string. If there is no
-    // counterfactual date use the default historical one
-
+    // converting DateFields that come from the DatePicker to string.
     let counterfactual_first_restrictions_date;
 
     if (first_restrictions_date == null) {
@@ -185,10 +183,14 @@ export default class InfoPanel extends React.Component {
     // (comment from Camila: this is a bit hacky and could be improved?)
     this.setState({ updateHistogram: true });
 
+  // make sure that the input date for the load total cases is never null
+    const counterfactual_first_restrictions_date = new_date != null ? new_date : new Date(this.state.first_restrictions_date);
+    const counterfactual_lockdown_date = this.state.counterfactual_lockdown_date != null ? this.state.counterfactual_lockdown_date : new Date(this.state.lockdown_date);
+
     await this.loadTotalCases(
       false,
-      new_date,
-      this.state.counterfactual_lockdown_date
+      counterfactual_first_restrictions_date,
+      counterfactual_lockdown_date
     );
 
     this.setState({ dates_changed: true });
@@ -202,10 +204,14 @@ export default class InfoPanel extends React.Component {
     // set updateHistogram to true to render the new histogram component
     this.setState({ updateHistogram: true });
 
+  // make sure that the input date for the load total cases is never null
+    const counterfactual_first_restrictions_date = this.state.counterfactual_first_restrictions_date != null ? this.state.counterfactual_first_restrictions_date : new Date(this.state.first_restrictions_date);
+    const counterfactual_lockdown_date = new_date != null ? new_date : new Date(this.state.lockdown_date);
+
     await this.loadTotalCases(
       false,
-      this.state.counterfactual_first_restrictions_date,
-      new_date
+      counterfactual_first_restrictions_date,
+      counterfactual_lockdown_date
     );
 
     this.setState({ dates_changed: true });
