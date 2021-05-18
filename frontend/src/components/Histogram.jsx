@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
-import convert from "./Utils.js"
+import convert from "./Utils.js";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -156,4 +156,3 @@ export default class Histogram extends React.Component {
     );
   }
 }
-

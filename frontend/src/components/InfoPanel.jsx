@@ -9,7 +9,7 @@ import DatePicker from "react-date-picker";
 import Loading from "./Loading";
 import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
-import convert from "./Utils.js"
+import convert from "./Utils.js";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -183,9 +183,15 @@ export default class InfoPanel extends React.Component {
     // (comment from Camila: this is a bit hacky and could be improved?)
     this.setState({ updateHistogram: true });
 
-  // make sure that the input date for the load total cases is never null
-    const counterfactual_first_restrictions_date = new_date != null ? new_date : new Date(this.state.first_restrictions_date);
-    const counterfactual_lockdown_date = this.state.counterfactual_lockdown_date != null ? this.state.counterfactual_lockdown_date : new Date(this.state.lockdown_date);
+    // make sure that the input date for the load total cases is never null
+    const counterfactual_first_restrictions_date =
+      new_date != null
+        ? new_date
+        : new Date(this.state.first_restrictions_date);
+    const counterfactual_lockdown_date =
+      this.state.counterfactual_lockdown_date != null
+        ? this.state.counterfactual_lockdown_date
+        : new Date(this.state.lockdown_date);
 
     await this.loadTotalCases(
       false,
@@ -204,9 +210,13 @@ export default class InfoPanel extends React.Component {
     // set updateHistogram to true to render the new histogram component
     this.setState({ updateHistogram: true });
 
-  // make sure that the input date for the load total cases is never null
-    const counterfactual_first_restrictions_date = this.state.counterfactual_first_restrictions_date != null ? this.state.counterfactual_first_restrictions_date : new Date(this.state.first_restrictions_date);
-    const counterfactual_lockdown_date = new_date != null ? new_date : new Date(this.state.lockdown_date);
+    // make sure that the input date for the load total cases is never null
+    const counterfactual_first_restrictions_date =
+      this.state.counterfactual_first_restrictions_date != null
+        ? this.state.counterfactual_first_restrictions_date
+        : new Date(this.state.first_restrictions_date);
+    const counterfactual_lockdown_date =
+      new_date != null ? new_date : new Date(this.state.lockdown_date);
 
     await this.loadTotalCases(
       false,
@@ -399,4 +409,3 @@ export default class InfoPanel extends React.Component {
     );
   }
 }
-
