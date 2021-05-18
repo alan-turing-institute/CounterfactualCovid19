@@ -16,14 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
-from countries.views import CountryView
-from dates.views import (
-    KnotDateSetView,
-    ModelDateRangeView,
-    PossibleLockdownDateSetView,
-    PossibleRestrictionsDateSetView,
-)
-
 from cases.views import (
     CasesCounterfactualDailyAbsoluteView,
     CasesCounterfactualDailyNormalisedView,
@@ -32,15 +24,17 @@ from cases.views import (
     CasesRealDailyNormalisedView,
     CasesRealIntegratedView,
 )
+from countries.views import CountryGeometryView, CountryDemographicView
+from dates.views import (
+    KnotDateSetView,
+    ModelDateRangeView,
+    PossibleLockdownDateSetView,
+    PossibleRestrictionsDateSetView,
+)
 
 router = routers.DefaultRouter()
-router.register("countries", CountryView, basename="countries")
-router.register("knotpoints", KnotDateSetView, basename="knotpoints")
-router.register("modeldaterange", ModelDateRangeView, basename="modeldaterange")
-router.register("lockdowndates", PossibleLockdownDateSetView, basename="lockdowndates")
-router.register(
-    "restrictionsdates", PossibleRestrictionsDateSetView, basename="restrictiondates"
-)
+
+# Cases
 router.register(
     "cases/counterfactual/daily/absolute",
     CasesCounterfactualDailyAbsoluteView,
@@ -71,6 +65,17 @@ router.register(
     CasesRealIntegratedView,
     basename="real_integrated",
 )
+# Countries
+router.register("country/geometry", CountryGeometryView, basename="country_geometry")
+router.register("country/demographic", CountryDemographicView, basename="country_demographic")
+# Dates
+router.register("knotpoints", KnotDateSetView, basename="knotpoints")
+router.register("modeldaterange", ModelDateRangeView, basename="modeldaterange")
+router.register("lockdowndates", PossibleLockdownDateSetView, basename="lockdowndates")
+router.register(
+    "restrictionsdates", PossibleRestrictionsDateSetView, basename="restrictiondates"
+)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
