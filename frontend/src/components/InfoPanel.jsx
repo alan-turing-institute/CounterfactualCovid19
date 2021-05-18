@@ -9,6 +9,7 @@ import DatePicker from "react-date-picker";
 import Loading from "./Loading";
 import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
+import convert from "./Utils.js"
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -393,9 +394,3 @@ export default class InfoPanel extends React.Component {
   }
 }
 
-function convert(inputdate) {
-  var date = inputdate,
-    mnth = ("0" + (inputdate.getMonth() + 1)).slice(-2),
-    day = ("0" + inputdate.getDate()).slice(-2);
-  return [date.getFullYear(), mnth, day].join("-");
-}

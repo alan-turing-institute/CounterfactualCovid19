@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import Loading from "./Loading";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
+import convert from "./Utils.js"
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -156,9 +157,3 @@ export default class Histogram extends React.Component {
   }
 }
 
-function convert(date) {
-  var date = date,
-    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-    day = ("0" + date.getDate()).slice(-2);
-  return [date.getFullYear(), mnth, day].join("-");
-}
