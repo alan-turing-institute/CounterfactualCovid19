@@ -3,10 +3,9 @@ import legendItems from "../entities/LegendItems";
 
 class LoadTotalCasesTask {
   decorateCountries = async (countryGeoms) => {
+    console.log("Loading cases data from Django backend...");
     try {
-      const integratedCasesData = await this.#getIntegratedCasesData(
-        "2020-07-06"
-      );
+      const integratedCasesData = await this.#getIntegratedCasesData("2020-07-06");
       return this.#processCovidData(countryGeoms, integratedCasesData);
     } catch (error) {
       console.log(error);
@@ -16,11 +15,10 @@ class LoadTotalCasesTask {
 
   #getIntegratedCasesData = async (end_date) => {
     try {
-      const res = await axios.get(
-        `http://localhost:8000/api/cases/real/integrated/?end_date=${end_date}`,
-        {}
-      );
-      return res.data;
+      const target = `http://localhost:8000/api/cases/real/integrated/?end_date=${end_date}`;
+      console.debug(`Backend ${target}`);
+      const response = await axios.get(target, {});
+      return response.data;
     } catch (error) {
       console.log(error);
       return [];
@@ -29,11 +27,10 @@ class LoadTotalCasesTask {
 
   getIntegratedCasesCountryData = async (iso_code, end_date) => {
     try {
-      const res = await axios.get(
-        `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`,
-        {}
-      );
-      return res.data[0];
+      const target = `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`;
+      console.debug(`Backend ${target}`);
+      const response = await axios.get(target, {});
+      return response.data[0];
     } catch (error) {
       console.log(error);
       return [];
@@ -48,41 +45,12 @@ class LoadTotalCasesTask {
     lockdown_date
   ) => {
     try {
-      // in case there is both restriction and lockdown dates
-      if ((lockdown_date != null) & (first_restriction_date != null)) {
-        const res_counterfactual_dates = await axios.get(
-          `http://localhost:8000/api/cases/counterfactual/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restriction_date=${first_restriction_date}&lockdown_date=${lockdown_date}`,
-          {}
-        );
-
-        // return the last date on the model
-        return res_counterfactual_dates.data[
-          res_counterfactual_dates.data.length - 1
-        ];
-      } else {
-        // some cases there is only first_restriction_date
-        if (first_restriction_date != null) {
-          const res_counterfactual = await axios.get(
-            `http://localhost:8000/api/cases/counterfactual/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}&first_restriction_date=${first_restriction_date}`,
-            {}
-          );
-
-          // return the last date on the model
-          return res_counterfactual.data[res_counterfactual.data.length - 1];
-          // return the last date on the model
-        } else {
-          const res_counterfactual_default = await axios.get(
-            `http://localhost:8000/api/cases/counterfactual/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`,
-
-            {}
-          );
-
-          // return the last date on the model
-          return res_counterfactual_default.data[
-            res_counterfactual_default.data.length - 1
-          ];
-        }
-      }
+      var target = `http://localhost:8000/api/cases/counterfactual/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`;
+      if (first_restriction_date != null) { target = `${target}&first_restriction_date=${first_restriction_date}`; }
+      if (lockdown_date != null) { target = `${target}&lockdown_date=${lockdown_date}`; }
+      console.debug(`Backend ${target}`);
+      const response = await axios.get(target, {});
+      return response.data[response.data.length - 1];
     } catch (error) {
       console.log(error);
       return [];
@@ -90,6 +58,7 @@ class LoadTotalCasesTask {
   };
 
   #processCovidData = (countryGeoms, integratedCasesData) => {
+    console.log(`Determining colour scheme for ${countryGeoms.length} geometries...`);
     for (let i = 0; i < countryGeoms.length; i++) {
       // Find matching country
       const countryGeom = countryGeoms[i];

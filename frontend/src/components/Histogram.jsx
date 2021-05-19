@@ -26,7 +26,7 @@ export default class Histogram extends React.Component {
   }
 
   async loadCasesData() {
-    console.log("Fetching case data");
+    console.log("Updating histogram data");
 
     // if there is not an available start or end date in the data use this default ones
     const initial_date =
