@@ -10,13 +10,13 @@ const Loading = () => {
   return (
     <div style={loadingStyle}>
       <Spinner animation="grow" variant="success" role="status">
-        <span className="sr-only">Loading...</span>
+        <span className="sr-only"></span>
       </Spinner>
       <Spinner animation="grow" variant="danger" role="status">
-        <span className="sr-only">Loading...</span>
+        <span className="sr-only"></span>
       </Spinner>
       <Spinner animation="grow" variant="info" role="status">
-        <span className="sr-only">Loading...</span>
+        <span className="sr-only"></span>
       </Spinner>
     </div>
   );
