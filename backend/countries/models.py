@@ -12,5 +12,13 @@ class Country(models.Model):
     population = models.PositiveIntegerField(null=True)
     geometry = MultiPolygonField()
 
+    @property
+    def population_density(self):
+        if not self.population:
+            return 0
+        if self.area and self.area != 0:
+            return self.population / self.area
+        return None
+
     def __str__(self):
-        return f"{self.name} ({self.iso_code}): {self.geometry}"
+        return f"{self.name} ({self.iso_code}): {self.area} {self.population} {self.geometry}"

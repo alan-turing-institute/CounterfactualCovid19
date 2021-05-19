@@ -18,6 +18,7 @@ export default class InfoPanel extends React.Component {
 
     this.state = {
       country_name: null,
+      country_population_density: null,
       first_restrictions_date: null,
       lockdown_date: null,
       counterfactual_first_restrictions_date: null,
@@ -112,7 +113,10 @@ export default class InfoPanel extends React.Component {
     // Retrieve demographic data
     const task = new LoadCountryDemographicTask();
     let demographics = await task.retrieve(this.props.isoCode);
-    this.setState({ country_name: demographics.name });
+    this.setState({
+      country_name: demographics.name,
+      country_population_density: demographics.population_density,
+    });
   }
 
   async loadRestrictionData() {
@@ -284,7 +288,13 @@ export default class InfoPanel extends React.Component {
                         </Card.Text>
                       )}
                       <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
-                      <Card.Text>{`Population density: XXX`}</Card.Text>
+                      {!this.state.country_population_density ? null : (
+                        <Card.Text>
+                          {`Population density (per square km): ${this.state.country_population_density
+                            .toFixed(2)
+                            .toString()}`}
+                        </Card.Text>
+                      )}
                     </Card.Body>
                   </Card>
                 </Row>

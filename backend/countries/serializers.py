@@ -22,4 +22,4 @@ class CountryDemographicSerializer(ModelSerializer):
         """Metaclass for output fields"""
 
         model = Country
-        fields = ("iso_code", "name", "area", "population")
+        fields = ("iso_code", "name", "area", "population", "population_density")
