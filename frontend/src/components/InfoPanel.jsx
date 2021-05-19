@@ -7,7 +7,9 @@ import Histogram from "./Histogram";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import DatePicker from "react-date-picker";
 import Loading from "./Loading";
+import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
+import convert from "./Utils.js";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -21,11 +23,86 @@ export default class InfoPanel extends React.Component {
       initial_date: null,
       maximum_date: null,
       updateHistogram: false,
+      total_real_cases: null,
+      total_counterfactual_cases: null,
+      dates_changed: false,
     };
 
     // Bind the datepicker change functions to allow it to be used by other objects
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
+  }
+
+  async loadTotalCases(
+    do_real_cases,
+    first_restrictions_date = null,
+    lockdown_date = null
+  ) {
+    const task = new LoadTotalCasesTask();
+    // if there is not an available start or end date in the data use this default ones
+    const initial_date =
+      this.state.initial_date != null ? this.state.initial_date : "2020-02-20";
+    const maximum_date =
+      this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
+
+    // reload total real cases only if necessary (when we are loading the general page)
+    if (do_real_cases == true) {
+      let [realCases] = await Promise.all([
+        task.getIntegratedCasesCountryData(this.props.isoCode, maximum_date),
+      ]);
+
+      if (realCases != null) {
+        try {
+          this.setState({
+            total_real_cases: realCases.summed_avg_cases_per_million,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+
+    // converting DateFields that come from the DatePicker to string.
+    let counterfactual_first_restrictions_date;
+
+    if (first_restrictions_date == null) {
+      counterfactual_first_restrictions_date = convert(
+        this.state.counterfactual_first_restrictions_date
+      );
+    } else {
+      counterfactual_first_restrictions_date = convert(first_restrictions_date);
+    }
+
+    let counterfactual_lockdown_date;
+
+    if (lockdown_date == null) {
+      counterfactual_lockdown_date = convert(
+        this.state.counterfactual_lockdown_date
+      );
+    } else {
+      counterfactual_lockdown_date = convert(lockdown_date);
+    }
+
+    let [conterfactualCases] = await Promise.all([
+      task.getIntegratedCounterfactualCountryData(
+        this.props.isoCode,
+        initial_date,
+        maximum_date,
+        counterfactual_first_restrictions_date,
+        counterfactual_lockdown_date
+      ),
+    ]);
+
+    if (conterfactualCases != null) {
+      try {
+        this.setState({
+          total_counterfactual_cases:
+            conterfactualCases.summed_avg_cases_per_million,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   async loadRestrictionData() {
@@ -74,6 +151,7 @@ export default class InfoPanel extends React.Component {
   // this runs when the info panel is first mounted
   async componentDidMount() {
     await this.loadRestrictionData();
+    await this.loadTotalCases(true);
   }
 
   // this runs when we click in a new country, reload all date information
@@ -86,13 +164,17 @@ export default class InfoPanel extends React.Component {
       this.setState({ counterfactual_first_restrictions_date: null });
       this.setState({ counterfactual_lockdown_date: null });
       this.setState({ updateHistogram: false });
+      this.setState({ total_real_cases: false });
+      this.setState({ total_counterfactual_cases: false });
+      this.setState({ dates_changed: false });
 
       await this.loadRestrictionData();
+      await this.loadTotalCases(true);
     }
   }
 
   // this runs when we change the first restrictions counterfactual date
-  onFirstRestrictionsChange(new_date) {
+  async onFirstRestrictionsChange(new_date) {
     // set updateHistogram to false to clean the histogram component
     this.setState({ updateHistogram: false });
     this.setState({ counterfactual_first_restrictions_date: new_date });
@@ -100,16 +182,49 @@ export default class InfoPanel extends React.Component {
     // set updateHistogram to true to render the new histogram component
     // (comment from Camila: this is a bit hacky and could be improved?)
     this.setState({ updateHistogram: true });
+
+    // make sure that the input date for the load total cases is never null
+    const counterfactual_first_restrictions_date =
+      new_date != null
+        ? new_date
+        : new Date(this.state.first_restrictions_date);
+    const counterfactual_lockdown_date =
+      this.state.counterfactual_lockdown_date != null
+        ? this.state.counterfactual_lockdown_date
+        : new Date(this.state.lockdown_date);
+
+    await this.loadTotalCases(
+      false,
+      counterfactual_first_restrictions_date,
+      counterfactual_lockdown_date
+    );
+
+    this.setState({ dates_changed: true });
   }
 
   // this runs when we change the lockdown counterfactual date
-  onLockdownChange(new_date) {
+  async onLockdownChange(new_date) {
     // set updateHistogram to false to clean the histogram component
     this.setState({ updateHistogram: false });
     this.setState({ counterfactual_lockdown_date: new_date });
-
     // set updateHistogram to true to render the new histogram component
     this.setState({ updateHistogram: true });
+
+    // make sure that the input date for the load total cases is never null
+    const counterfactual_first_restrictions_date =
+      this.state.counterfactual_first_restrictions_date != null
+        ? this.state.counterfactual_first_restrictions_date
+        : new Date(this.state.first_restrictions_date);
+    const counterfactual_lockdown_date =
+      new_date != null ? new_date : new Date(this.state.lockdown_date);
+
+    await this.loadTotalCases(
+      false,
+      counterfactual_first_restrictions_date,
+      counterfactual_lockdown_date
+    );
+
+    this.setState({ dates_changed: true });
   }
 
   render() {
@@ -158,11 +273,13 @@ export default class InfoPanel extends React.Component {
                   >
                     <Card.Body>
                       <Card.Title>Statistics</Card.Title>
-                      <Card.Text>
-                        {`Total COVID-19 Cases per Million: ${this.props.summedAvgCases
-                          .toFixed(0)
-                          .toString()} \n `}
-                      </Card.Text>
+                      {!this.state.total_real_cases ? null : (
+                        <Card.Text>
+                          {`Total COVID-19 Cases per Million: ${this.state.total_real_cases
+                            .toFixed(0)
+                            .toString()} \n `}
+                        </Card.Text>
+                      )}
                       <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
                       <Card.Text>{`Population density: XXX`}</Card.Text>
                     </Card.Body>
@@ -262,10 +379,25 @@ export default class InfoPanel extends React.Component {
                   >
                     <Card.Body>
                       <Card.Title>Counterfactual Statistics</Card.Title>
-                      <Card.Text>
-                        {`Total COVID-19 Cases per Million:XXX`}
-                      </Card.Text>
-                      <Card.Text>{`% reduction in total cases`}</Card.Text>
+                      {!this.state.total_counterfactual_cases ? null : (
+                        <Card.Text>
+                          {`Total COVID-19 Cases per Million: ${this.state.total_counterfactual_cases
+                            .toFixed(0)
+                            .toString()} \n `}
+                        </Card.Text>
+                      )}
+                      {this.state.dates_changed == false ? null : (
+                        <Card.Text>
+                          {`Reduction in total cases: ${(
+                            (1 -
+                              this.state.total_counterfactual_cases /
+                                this.state.total_real_cases) *
+                            100
+                          )
+                            .toFixed(1)
+                            .toString()} %\n `}
+                        </Card.Text>
+                      )}
                     </Card.Body>
                   </Card>
                 </Row>
