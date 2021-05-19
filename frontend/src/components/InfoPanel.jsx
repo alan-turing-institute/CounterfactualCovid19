@@ -44,7 +44,7 @@ export default class InfoPanel extends React.Component {
     const maximum_date = this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
 
     // reload total real cases only if necessary (when we are loading the general page)
-    if (do_real_cases == true) {
+    if (do_real_cases === true) {
       let [realCases] = await Promise.all([
         task.getIntegratedCasesCountryData(this.props.isoCode, maximum_date),
       ]);
@@ -295,7 +295,6 @@ export default class InfoPanel extends React.Component {
                           this.state.counterfactual_first_restrictions_date
                         }
                         format="dd/MM/yyyy"
-                        popperPlacement="bottom-end"
                         className="form-control"
                         monthsShown={1}
                         popperPlacement="bottom"
@@ -379,7 +378,7 @@ export default class InfoPanel extends React.Component {
                             .toString()} \n `}
                         </Card.Text>
                       )}
-                      {this.state.dates_changed == false ? null : (
+                      {this.state.dates_changed === false ? null : (
                         <Card.Text>
                           {`Reduction in total cases: ${(
                             (1 -

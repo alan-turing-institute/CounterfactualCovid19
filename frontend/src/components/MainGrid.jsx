@@ -48,9 +48,6 @@ export default class MainGrid extends React.Component {
       });
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
-      const selectedCountry = this.state.countries.find(
-        (country) => country.id === iso_code
-      );
       this.setState({
         isoCode: iso_code,
         summedAvgCases: summed_avg_cases,
