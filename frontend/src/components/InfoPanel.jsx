@@ -38,9 +38,9 @@ export default class InfoPanel extends React.Component {
   }
 
   async loadTotalCases(
-      loadRealCases,
-      firstRestrictions = null,
-      lockdown = null
+    loadRealCases,
+    firstRestrictions = null,
+    lockdown = null
   ) {
     const task = new LoadTotalCasesTask();
     // if there is not an available start or end date in the data use this default ones
@@ -80,9 +80,7 @@ export default class InfoPanel extends React.Component {
     let counterfactualDateLockdown;
 
     if (lockdown == null) {
-      counterfactualDateLockdown = convert(
-        this.state.counterfactualLockdownDate
-      );
+      counterfactualLockdown = convert(this.state.counterfactualLockdownDate);
     } else {
       counterfactualDateLockdown = convert(lockdown);
     }
@@ -194,9 +192,7 @@ export default class InfoPanel extends React.Component {
 
     // make sure that the input date for the load total cases is never null
     const counterfactualFirstRestrictions =
-      newDate != null
-        ? newDate
-        : new Date(this.state.firstRestrictionsDate);
+      newDate != null ? newDate : new Date(this.state.firstRestrictionsDate);
     const counterfactualLockdownDate =
       this.state.counterfactualLockdownDate != null
         ? this.state.counterfactualLockdownDate
@@ -310,9 +306,7 @@ export default class InfoPanel extends React.Component {
                     <Col>
                       <DatePicker
                         onChange={this.onFirstRestrictionsChange}
-                        value={
-                          this.state.counterfactualFirstRestrictionsDate
-                        }
+                        value={this.state.counterfactualFirstRestrictionsDate}
                         format="dd/MM/yyyy"
                         className="form-control"
                         monthsShown={1}
@@ -340,9 +334,7 @@ export default class InfoPanel extends React.Component {
                       height={this.props.height}
                       initialDate={this.state.initialDate}
                       maximumDate={this.state.maximumDate}
-                      firstRestrictionsDate={
-                        this.state.firstRestrictionsDate
-                      }
+                      firstRestrictionsDate={this.state.firstRestrictionsDate}
                       lockdownDate={this.state.lockdownDate}
                       counterfactualFirstRestrictionsDate={
                         this.state.counterfactualFirstRestrictionsDate

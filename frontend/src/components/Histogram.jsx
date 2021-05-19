@@ -69,8 +69,7 @@ export default class Histogram extends React.Component {
         let record = {
           date: casesReal[i].date,
           casesReal: casesReal[i].summed_avg_cases_per_million,
-          casesCounterfactual:
-            counterfactual.summed_avg_cases_per_million,
+          casesCounterfactual: counterfactual.summed_avg_cases_per_million,
         };
         casesData.push(record);
       }
