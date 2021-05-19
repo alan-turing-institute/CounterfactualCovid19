@@ -67,7 +67,9 @@ router.register(
 )
 # Countries
 router.register("country/geometry", CountryGeometryView, basename="country_geometry")
-router.register("country/demographic", CountryDemographicView, basename="country_demographic")
+router.register(
+    "country/demographic", CountryDemographicView, basename="country_demographic"
+)
 # Dates
 router.register("knotpoints", KnotDateSetView, basename="knotpoints")
 router.register("modeldaterange", ModelDateRangeView, basename="modeldaterange")

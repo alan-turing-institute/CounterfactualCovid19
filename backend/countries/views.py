@@ -16,5 +16,12 @@ class CountryDemographicView(viewsets.ModelViewSet):
     """View for Country demographics"""
 
     serializer_class = CountryDemographicSerializer
-    queryset = Country.objects.all()  # pylint: disable=no-member
     http_method_names = ["get", "list"]
+
+    def get_queryset(self):
+        """Construct a default queryset with filters"""
+        queryset = Country.objects.all()  # pylint: disable=no-member
+        iso_code = self.request.query_params.get("iso_code", None)
+        if iso_code:
+            queryset = queryset.filter(iso_code=iso_code)
+        return queryset

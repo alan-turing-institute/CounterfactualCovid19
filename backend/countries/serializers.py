@@ -12,7 +12,7 @@ class CountryGeometrySerializer(GeoFeatureModelSerializer):
 
         model = Country
         geo_field = "geometry"
-        fields = ("iso_code", )
+        fields = ("iso_code",)
 
 
 class CountryDemographicSerializer(ModelSerializer):
