@@ -5,17 +5,20 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Histogram from "./Histogram";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
+import LoadCountryDemographicTask from "../tasks/LoadCountryDemographicTask.js";
 import DatePicker from "react-date-picker";
 import Loading from "./Loading";
 import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
 import convert from "./Utils.js";
 
+
 export default class InfoPanel extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      country_name: null,
       first_restrictions_date: null,
       lockdown_date: null,
       counterfactual_first_restrictions_date: null,
@@ -27,23 +30,18 @@ export default class InfoPanel extends React.Component {
       total_counterfactual_cases: null,
       dates_changed: false,
     };
+    this.initial_state = this.state
 
     // Bind the datepicker change functions to allow it to be used by other objects
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
 
-  async loadTotalCases(
-    do_real_cases,
-    first_restrictions_date = null,
-    lockdown_date = null
-  ) {
+  async loadTotalCases(do_real_cases, first_restrictions_date = null, lockdown_date = null) {
     const task = new LoadTotalCasesTask();
     // if there is not an available start or end date in the data use this default ones
-    const initial_date =
-      this.state.initial_date != null ? this.state.initial_date : "2020-02-20";
-    const maximum_date =
-      this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
+    const initial_date = this.state.initial_date != null ? this.state.initial_date : "2020-02-20";
+    const maximum_date = this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
 
     // reload total real cases only if necessary (when we are loading the general page)
     if (do_real_cases == true) {
@@ -65,7 +63,7 @@ export default class InfoPanel extends React.Component {
     // converting DateFields that come from the DatePicker to string.
     let counterfactual_first_restrictions_date;
 
-    if (first_restrictions_date == null) {
+    if (first_restrictions_date === null) {
       counterfactual_first_restrictions_date = convert(
         this.state.counterfactual_first_restrictions_date
       );
@@ -83,7 +81,7 @@ export default class InfoPanel extends React.Component {
       counterfactual_lockdown_date = convert(lockdown_date);
     }
 
-    let [conterfactualCases] = await Promise.all([
+    let [counterfactualCases] = await Promise.all([
       task.getIntegratedCounterfactualCountryData(
         this.props.isoCode,
         initial_date,
@@ -93,11 +91,11 @@ export default class InfoPanel extends React.Component {
       ),
     ]);
 
-    if (conterfactualCases != null) {
+    if (counterfactualCases != null) {
       try {
         this.setState({
           total_counterfactual_cases:
-            conterfactualCases.summed_avg_cases_per_million,
+            counterfactualCases.summed_avg_cases_per_million,
         });
       } catch (error) {
         console.log(error);
@@ -105,8 +103,15 @@ export default class InfoPanel extends React.Component {
     }
   }
 
+  async loadDemographicData() {
+    // Retrieve demographic data
+    const task = new LoadCountryDemographicTask();
+    let demographics = await task.retrieve(this.props.isoCode);
+    this.setState({ country_name: demographics.name });
+  }
+
   async loadRestrictionData() {
-    // Retrieve Restriction data
+    // Retrieve restriction data
     const task = new LoadRestrictionsDatesTask();
     let [restrictionsDates] = await Promise.all([
       task.getCountryRestrictionDates(this.props.isoCode),
@@ -115,9 +120,7 @@ export default class InfoPanel extends React.Component {
     if ((restrictionsDates != null) & (this.props.isoCode != null)) {
       try {
         // Set the component state with the restriction data
-        this.setState({
-          first_restrictions_date: restrictionsDates.first_restrictions_date,
-        });
+        this.setState({ first_restrictions_date: restrictionsDates.first_restrictions_date });
         this.setState({ lockdown_date: restrictionsDates.lockdown_date });
         this.setState({ initial_date: restrictionsDates.initial_date });
         this.setState({ maximum_date: restrictionsDates.maximum_date });
@@ -128,9 +131,7 @@ export default class InfoPanel extends React.Component {
         if (this.state.first_restrictions_date != null) {
           // for the datepicker to work this needs to be a Date object.
           this.setState({
-            counterfactual_first_restrictions_date: new Date(
-              this.state.first_restrictions_date
-            ),
+            counterfactual_first_restrictions_date: new Date(this.state.first_restrictions_date),
           });
         }
         if (this.state.lockdown_date != null) {
@@ -148,28 +149,23 @@ export default class InfoPanel extends React.Component {
     }
   }
 
+  async reloadStateData() {
+    await Promise.all([
+      this.loadDemographicData(),
+      this.loadRestrictionData(),
+      this.loadTotalCases(true),
+    ]);
+  }
+
   // this runs when the info panel is first mounted
   async componentDidMount() {
-    await this.loadRestrictionData();
-    await this.loadTotalCases(true);
+    await this.reloadStateData();
   }
 
   // this runs when we click in a new country, reload all date information
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
-      this.setState({ first_restrictions_date: null });
-      this.setState({ lockdown_date: null });
-      this.setState({ initial_date: null });
-      this.setState({ maximum_date: null });
-      this.setState({ counterfactual_first_restrictions_date: null });
-      this.setState({ counterfactual_lockdown_date: null });
-      this.setState({ updateHistogram: false });
-      this.setState({ total_real_cases: false });
-      this.setState({ total_counterfactual_cases: false });
-      this.setState({ dates_changed: false });
-
-      await this.loadRestrictionData();
-      await this.loadTotalCases(true);
+      await this.reloadStateData();
     }
   }
 
@@ -243,22 +239,19 @@ export default class InfoPanel extends React.Component {
                     bg={"light"}
                   >
                     <Card.Body>
-                      <Card.Title>{`${this.props.countryName}`}</Card.Title>
+                      <Card.Title>{`${this.state.country_name}`}</Card.Title>
                       <Card.Text>First case confimed: XXXX</Card.Text>
                       <Card.Text>
-                        {" "}
-                        First social distance restrictions:{" "}
-                        {`${this.state.first_restrictions_date}`}.
+                        {`First social distance restrictions: ${this.state.first_restrictions_date}`}.
                       </Card.Text>
 
                       {!this.state.lockdown_date ? null : (
                         <Card.Text>
-                          National lockdown: {` ${this.state.lockdown_date}`}.
+                          {`National lockdown: ${this.state.lockdown_date}.`}
                         </Card.Text>
                       )}
                       <Card.Text>
-                        The first wave ended:
-                        {` ${this.state.maximum_date}`}.
+                          {` The first wave ended: ${this.state.maximum_date}.`}
                       </Card.Text>
                     </Card.Body>
                   </Card>
