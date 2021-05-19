@@ -44,15 +44,15 @@ export default class InfoPanel extends React.Component {
   ) {
     const task = new LoadTotalCasesTask();
     // if there is not an available start or end date in the data use this default ones
-    const initDate =
+    const dateInit =
       this.state.initialDate != null ? this.state.initialDate : "2020-02-20";
-    const maxDate =
+    const dateMaxim =
       this.state.maximumDate != null ? this.state.maximumDate : "2020-07-06";
 
     // reload total real cases only if necessary (when we are loading the general page)
     if (loadRealCases === true) {
       let [realCases] = await Promise.all([
-        task.getIntegratedCasesCountryData(this.props.isoCode, maxDate),
+        task.getIntegratedCasesCountryData(this.props.isoCode, dateMaxim),
       ]);
 
       if (realCases != null) {
@@ -67,33 +67,33 @@ export default class InfoPanel extends React.Component {
     }
 
     // converting DateFields that come from the DatePicker to string.
-    let counterfactualFirstRestrictions;
+    let counterfactualDateFirstRestrictions;
 
     if (firstRestrictions == null) {
-      counterfactualFirstRestrictions = convert(
+      counterfactualDateFirstRestrictions = convert(
         this.state.counterfactualFirstRestrictionsDate
       );
     } else {
-      counterfactualFirstRestrictions = convert(firstRestrictions);
+      counterfactualDateFirstRestrictions = convert(firstRestrictions);
     }
 
-    let counterfactualLockdown;
+    let counterfactualDateLockdown;
 
     if (lockdown == null) {
-      counterfactualLockdown = convert(
+      counterfactualDateLockdown = convert(
         this.state.counterfactualLockdownDate
       );
     } else {
-      counterfactualLockdown = convert(lockdown);
+      counterfactualDateLockdown = convert(lockdown);
     }
 
     let [counterfactualCases] = await Promise.all([
       task.getIntegratedCounterfactualCountryData(
         this.props.isoCode,
-        initDate,
-        maxDate,
-        counterfactualFirstRestrictions,
-        counterfactualLockdown
+        dateInit,
+        dateMaxim,
+        counterfactualDateFirstRestrictions,
+        counterfactualDateLockdown
       ),
     ]);
 

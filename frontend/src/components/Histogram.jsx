@@ -29,18 +29,18 @@ export default class Histogram extends React.Component {
     console.log("Updating histogram data");
 
     // if there is not an available start or end date in the data use this default ones
-    const initDate =
+    const dateInit =
       this.props.initialDate != null ? this.props.initialDate : "2020-02-20";
-    const maximDate =
+    const dateMaxim =
       this.props.maximumDate != null ? this.props.maximumDate : "2020-06-23";
 
     // converting DateFields that come from the DatePicker to string. If there is no
     // counterfactual date use the default historical one
-    const counterfactualFirstRestrictions =
+    const counterfactualDateFirstRestrictions =
       this.props.counterfactualFirstRestrictionsDate != null
         ? convert(this.props.counterfactualFirstRestrictionsDate)
         : this.props.firstRestrictionsDate;
-    const counterfactualLockdownDate =
+    const counterfactualDateLockdown =
       this.props.counterfactualLockdownDate != null
         ? convert(this.props.counterfactualLockdownDate)
         : this.props.lockdownDate;
@@ -50,12 +50,12 @@ export default class Histogram extends React.Component {
     let [casesCounterfactual, casesReal] = await Promise.all([
       task.getCounterfactualCovidCases(
         this.props.isoCode,
-        initDate,
-        maximDate,
-        counterfactualFirstRestrictions,
-        counterfactualLockdownDate
+        dateInit,
+        dateMaxim,
+        counterfactualDateFirstRestrictions,
+        counterfactualDateLockdown
       ),
-      task.getRealCovidCases(this.props.isoCode, initDate, maximDate),
+      task.getRealCovidCases(this.props.isoCode, dateInit, dateMaxim),
     ]);
 
     // Combine the two datasets into a single data array
