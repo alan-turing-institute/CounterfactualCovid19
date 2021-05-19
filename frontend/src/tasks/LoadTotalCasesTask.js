@@ -5,7 +5,9 @@ class LoadTotalCasesTask {
   decorateCountries = async (countryGeoms) => {
     console.log("Loading cases data from Django backend...");
     try {
-      const integratedCasesData = await this.#getIntegratedCasesData("2020-07-06");
+      const integratedCasesData = await this.#getIntegratedCasesData(
+        "2020-07-06"
+      );
       return this.#processCovidData(countryGeoms, integratedCasesData);
     } catch (error) {
       console.log(error);
@@ -46,8 +48,12 @@ class LoadTotalCasesTask {
   ) => {
     try {
       var target = `http://localhost:8000/api/cases/counterfactual/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`;
-      if (first_restriction_date != null) { target = `${target}&first_restriction_date=${first_restriction_date}`; }
-      if (lockdown_date != null) { target = `${target}&lockdown_date=${lockdown_date}`; }
+      if (first_restriction_date != null) {
+        target = `${target}&first_restriction_date=${first_restriction_date}`;
+      }
+      if (lockdown_date != null) {
+        target = `${target}&lockdown_date=${lockdown_date}`;
+      }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
       return response.data[response.data.length - 1];
@@ -58,7 +64,9 @@ class LoadTotalCasesTask {
   };
 
   #processCovidData = (countryGeoms, integratedCasesData) => {
-    console.log(`Determining colour scheme for ${countryGeoms.length} geometries...`);
+    console.log(
+      `Determining colour scheme for ${countryGeoms.length} geometries...`
+    );
     for (let i = 0; i < countryGeoms.length; i++) {
       // Find matching country
       const countryGeom = countryGeoms[i];

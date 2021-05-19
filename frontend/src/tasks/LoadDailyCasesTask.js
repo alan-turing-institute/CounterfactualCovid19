@@ -25,8 +25,12 @@ class LoadDailyCasesTask {
   ) => {
     try {
       var target = `http://localhost:8000/api/cases/${datatype}/daily/normalised/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`;
-      if (first_restriction_date != null) { target = `${target}&first_restriction_date=${first_restriction_date}`; }
-      if (lockdown_date != null) { target = `${target}&lockdown_date=${lockdown_date}`; }
+      if (first_restriction_date != null) {
+        target = `${target}&first_restriction_date=${first_restriction_date}`;
+      }
+      if (lockdown_date != null) {
+        target = `${target}&lockdown_date=${lockdown_date}`;
+      }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
       return response.data;

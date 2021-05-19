@@ -12,7 +12,6 @@ import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
 import convert from "./Utils.js";
 
-
 export default class InfoPanel extends React.Component {
   constructor(props) {
     super(props);
@@ -30,18 +29,24 @@ export default class InfoPanel extends React.Component {
       total_counterfactual_cases: null,
       dates_changed: false,
     };
-    this.initial_state = this.state
+    this.initial_state = this.state;
 
     // Bind the datepicker change functions to allow it to be used by other objects
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
 
-  async loadTotalCases(do_real_cases, first_restrictions_date = null, lockdown_date = null) {
+  async loadTotalCases(
+    do_real_cases,
+    first_restrictions_date = null,
+    lockdown_date = null
+  ) {
     const task = new LoadTotalCasesTask();
     // if there is not an available start or end date in the data use this default ones
-    const initial_date = this.state.initial_date != null ? this.state.initial_date : "2020-02-20";
-    const maximum_date = this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
+    const initial_date =
+      this.state.initial_date != null ? this.state.initial_date : "2020-02-20";
+    const maximum_date =
+      this.state.maximum_date != null ? this.state.maximum_date : "2020-07-06";
 
     // reload total real cases only if necessary (when we are loading the general page)
     if (do_real_cases === true) {
@@ -120,7 +125,9 @@ export default class InfoPanel extends React.Component {
     if ((restrictionsDates != null) & (this.props.isoCode != null)) {
       try {
         // Set the component state with the restriction data
-        this.setState({ first_restrictions_date: restrictionsDates.first_restrictions_date });
+        this.setState({
+          first_restrictions_date: restrictionsDates.first_restrictions_date,
+        });
         this.setState({ lockdown_date: restrictionsDates.lockdown_date });
         this.setState({ initial_date: restrictionsDates.initial_date });
         this.setState({ maximum_date: restrictionsDates.maximum_date });
@@ -131,7 +138,9 @@ export default class InfoPanel extends React.Component {
         if (this.state.first_restrictions_date != null) {
           // for the datepicker to work this needs to be a Date object.
           this.setState({
-            counterfactual_first_restrictions_date: new Date(this.state.first_restrictions_date),
+            counterfactual_first_restrictions_date: new Date(
+              this.state.first_restrictions_date
+            ),
           });
         }
         if (this.state.lockdown_date != null) {
@@ -242,7 +251,8 @@ export default class InfoPanel extends React.Component {
                       <Card.Title>{`${this.state.country_name}`}</Card.Title>
                       <Card.Text>First case confimed: XXXX</Card.Text>
                       <Card.Text>
-                        {`First social distance restrictions: ${this.state.first_restrictions_date}`}.
+                        {`First social distance restrictions: ${this.state.first_restrictions_date}`}
+                        .
                       </Card.Text>
 
                       {!this.state.lockdown_date ? null : (
@@ -251,7 +261,7 @@ export default class InfoPanel extends React.Component {
                         </Card.Text>
                       )}
                       <Card.Text>
-                          {` The first wave ended: ${this.state.maximum_date}.`}
+                        {` The first wave ended: ${this.state.maximum_date}.`}
                       </Card.Text>
                     </Card.Body>
                   </Card>
