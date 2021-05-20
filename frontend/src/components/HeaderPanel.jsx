@@ -1,10 +1,9 @@
-/* eslint react/no-multi-comp: 0, react/prop-types: 0 */
-import React, { useState } from "react";
 import { Button, Popover, PopoverHeader, PopoverBody } from "reactstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
+import React, { useState } from "react";
+import Row from "react-bootstrap/Row";
 
 const HeaderPanel = (props) => {
   const [popoverOpen, setPopoverOpen] = useState(false);

@@ -1,4 +1,6 @@
 import Card from "react-bootstrap/Card";
+import exact from "prop-types-exact";
+import PropTypes from "prop-types";
 
 const CounterfactualStatistics = (props) => {
   return (
@@ -18,7 +20,7 @@ const CounterfactualStatistics = (props) => {
               .toString()} \n `}
           </Card.Text>
         )}
-        {props.datesChanged === false ? null : (
+        {!(props.totalCasesCounterfactual & props.totalCasesReal) ? null : (
           <Card.Text>
             {`Reduction in total cases: ${(
               (1 - props.totalCasesCounterfactual / props.totalCasesReal) *
@@ -33,3 +35,8 @@ const CounterfactualStatistics = (props) => {
   );
 };
 export default CounterfactualStatistics;
+
+CounterfactualStatistics.propTypes = exact({
+  totalCasesCounterfactual: PropTypes.number,
+  totalCasesReal: PropTypes.number,
+});

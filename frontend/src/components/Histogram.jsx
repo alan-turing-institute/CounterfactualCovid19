@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Bar,
   CartesianGrid,
@@ -11,9 +10,12 @@ import {
   YAxis,
   ReferenceLine,
 } from "recharts";
-import Loading from "./Loading";
-import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 import convert from "./Utils.js";
+import exact from "prop-types-exact";
+import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
+import Loading from "./Loading";
+import PropTypes from "prop-types";
+import React from "react";
 
 export default class Histogram extends React.Component {
   constructor(props) {
@@ -24,6 +26,17 @@ export default class Histogram extends React.Component {
       casesData: [],
     };
   }
+
+  static propTypes = exact({
+    dateFinal: PropTypes.string,
+    dateFirstRestrictionsCounterfactual: PropTypes.instanceOf(Date),
+    dateFirstRestrictionsReal: PropTypes.string,
+    dateInitial: PropTypes.string,
+    dateLockdownCounterfactual: PropTypes.instanceOf(Date),
+    dateLockdownReal: PropTypes.string,
+    height: PropTypes.string.isRequired,
+    isoCode: PropTypes.string.isRequired,
+  });
 
   async loadCasesData() {
     console.log("Updating histogram data");

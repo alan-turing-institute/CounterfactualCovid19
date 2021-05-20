@@ -1,8 +1,8 @@
 import "../css/WorldMap.css";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, GeoJSON } from "react-leaflet";
+import exact from "prop-types-exact";
 import PropTypes from "prop-types";
-import exact from 'prop-types-exact';
 import React from "react";
 
 export default class WorldMap extends React.Component {
@@ -75,3 +75,8 @@ export default class WorldMap extends React.Component {
     );
   }
 }
+
+WorldMap.propTypes = exact({
+  onCountrySelect: PropTypes.func.isRequired,
+  countries: PropTypes.array.isRequired,
+});

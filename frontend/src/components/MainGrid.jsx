@@ -1,13 +1,13 @@
-import React from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
+import HeaderPanel from "./HeaderPanel";
 import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
 import Loading from "./Loading";
-import HeaderPanel from "./HeaderPanel";
-import WorldMap from "./WorldMap";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
+import React from "react";
+import Row from "react-bootstrap/Row";
+import WorldMap from "./WorldMap";
 
 export default class MainGrid extends React.Component {
   constructor(props) {

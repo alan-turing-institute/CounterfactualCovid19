@@ -7,13 +7,12 @@ import CounterfactualStory from "./CounterfactualStory";
 import CountryDates from "./CountryDates";
 import CountryStatistics from "./CountryStatistics";
 import DatePicker from "react-date-picker";
+import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import LoadCountryDemographicTask from "../tasks/LoadCountryDemographicTask.js";
-import Loading from "./Loading";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import PropTypes from "prop-types";
-import exact from "prop-types-exact";
 import React from "react";
 import Row from "react-bootstrap/Row";
 
@@ -354,3 +353,8 @@ export default class InfoPanel extends React.Component {
     );
   }
 }
+
+InfoPanel.propTypes = exact({
+  isoCode: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+});

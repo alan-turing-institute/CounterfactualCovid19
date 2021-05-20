@@ -1,4 +1,6 @@
 import Card from "react-bootstrap/Card";
+import exact from "prop-types-exact";
+import PropTypes from "prop-types";
 
 const CountryStatistics = (props) => {
   return (
@@ -31,3 +33,8 @@ const CountryStatistics = (props) => {
   );
 };
 export default CountryStatistics;
+
+CountryStatistics.propTypes = exact({
+  totalCases: PropTypes.number,
+  populationDensity: PropTypes.number,
+});
