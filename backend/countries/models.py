@@ -7,7 +7,7 @@ class Country(models.Model):
     """A single country with its geometry"""
 
     iso_code = models.CharField(max_length=3, primary_key=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     area = models.PositiveIntegerField(null=False)
     population = models.PositiveIntegerField(null=False)
     geometry = MultiPolygonField()

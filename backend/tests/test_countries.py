@@ -25,10 +25,12 @@ class CountryTestCase(TestCase):
 
     @property
     def fra(self):
+        """Get the 'France' country object"""
         return Country.objects.get(name="France")  # pylint: disable=no-member
 
     @property
     def gbr(self):
+        """Get the 'United Kingdom' country object"""
         return Country.objects.get(name="United Kingdom")  # pylint: disable=no-member
 
     def test_countries_are_loaded(self):

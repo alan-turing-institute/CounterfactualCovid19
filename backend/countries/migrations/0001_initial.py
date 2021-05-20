@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                     models.CharField(max_length=3, primary_key=True, serialize=False),
                 ),
                 ("area", models.PositiveIntegerField()),
-                ("name", models.CharField(max_length=255)),
+                ("name", models.CharField(max_length=255, unique=True)),
                 ("population", models.PositiveIntegerField()),
                 (
                     "geometry",

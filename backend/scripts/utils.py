@@ -1,3 +1,4 @@
+"""Utility functions for data-loading scripts"""
 import pycountry
 from django.core.exceptions import ObjectDoesNotExist
 from countries.models import Country
