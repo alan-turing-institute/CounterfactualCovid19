@@ -14,6 +14,7 @@ import convert from "./Utils.js";
 import CountryDates from "./CountryDates";
 import CountryStatistics from "./CountryStatistics";
 import CounterfactualStory from "./CounterfactualStory";
+import CounterfactualStatistics from "./CounterfactualStatistics";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -329,7 +330,7 @@ export default class InfoPanel extends React.Component {
               </Col>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
-                <CounterfactualStory
+                  <CounterfactualStory
                     shiftFirstRestrictions="XXXX"
                     shiftLockdown="XXXX"
                     dateCounterfactualStart={this.state.histogramDateInitial}
@@ -337,36 +338,13 @@ export default class InfoPanel extends React.Component {
                   />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
-                  <Card
-                    style={{
-                      marginTop: "1%",
-                      marginBottom: "1%",
-                    }}
-                    bg={"light"}
-                  >
-                    <Card.Body>
-                      <Card.Title>Counterfactual Statistics</Card.Title>
-                      {!this.state.totalCasesCounterfactual ? null : (
-                        <Card.Text>
-                          {`Total COVID-19 Cases per Million: ${this.state.totalCasesCounterfactual
-                            .toFixed(0)
-                            .toString()} \n `}
-                        </Card.Text>
-                      )}
-                      {this.state.datesChanged === false ? null : (
-                        <Card.Text>
-                          {`Reduction in total cases: ${(
-                            (1 -
-                              this.state.totalCasesCounterfactual /
-                                this.state.totalCasesReal) *
-                            100
-                          )
-                            .toFixed(1)
-                            .toString()} %\n `}
-                        </Card.Text>
-                      )}
-                    </Card.Body>
-                  </Card>
+                  <CounterfactualStatistics
+                    totalCasesCounterfactual={
+                      this.state.totalCasesCounterfactual
+                    }
+                    totalCasesReal={this.state.totalCasesReal}
+                    datesChanged={this.state.datesChanged}
+                  />
                 </Row>
               </Col>
             </Row>
