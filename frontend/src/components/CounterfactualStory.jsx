@@ -19,7 +19,9 @@ const CounterfactualStory = (props) => {
         </Card.Text>
         <Card.Text>{`Shift first restrictions: ${props.shiftFirstRestrictions}`}</Card.Text>
         <Card.Text>{`Shift lockdown: ${props.shiftLockdown}`}</Card.Text>
-        {!(props.dateCounterfactualStart & props.dateCounterfactualEnd) ? null : (
+        {!(
+          props.dateCounterfactualStart & props.dateCounterfactualEnd
+        ) ? null : (
           <Card.Text>
             {`The spread of COVID-19 was simulated between ${props.dateCounterfactualStart} and ${props.dateCounterfactualEnd}.`}
           </Card.Text>

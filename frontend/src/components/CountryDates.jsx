@@ -12,7 +12,9 @@ const CountryDates = (props) => {
       bg={"light"}
     >
       <Card.Body>
-        <Card.Title>{`${props.countryName ? props.countryName : 'Unknown'}`}</Card.Title>
+        <Card.Title>
+          {`${props.countryName ? props.countryName : "Unknown"}`}
+        </Card.Title>
         {!props.dateFirstWaveStart ? null : (
           <Card.Text>{`First case confirmed: ${props.dateFirstWaveStart}.`}</Card.Text>
         )}

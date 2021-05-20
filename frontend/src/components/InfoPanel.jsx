@@ -29,12 +29,10 @@ export default class InfoPanel extends React.Component {
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
-      datesChanged: false,
       histogramDateFinal: null,
       histogramDateInitial: null,
       totalCasesCounterfactual: null,
       totalCasesReal: null,
-      updateHistogram: false,
     };
     this.initial_state = this.state;
 
@@ -165,9 +163,6 @@ export default class InfoPanel extends React.Component {
             dateLockdownCounterfactual: new Date(this.state.dateLockdownReal),
           });
         }
-
-        // set flag updateHistogram to true in order to render the histogram
-        this.setState({ updateHistogram: true });
       } catch (error) {
         console.log(error);
       }
@@ -196,13 +191,7 @@ export default class InfoPanel extends React.Component {
 
   // this runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
-    // set updateHistogram to false to clean the histogram component
-    this.setState({ updateHistogram: false });
     this.setState({ dateFirstRestrictionsCounterfactual: newDate });
-
-    // set updateHistogram to true to render the new histogram component
-    // (comment from Camila: this is a bit hacky and could be improved?)
-    this.setState({ updateHistogram: true });
 
     // make sure that the input date for the load total cases is never null
     const counterfactualFirstRestrictions =
@@ -219,17 +208,11 @@ export default class InfoPanel extends React.Component {
       counterfactualFirstRestrictions,
       dateLockdownCounterfactual
     );
-
-    this.setState({ datesChanged: true });
   }
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
-    // set updateHistogram to false to clean the histogram component
-    this.setState({ updateHistogram: false });
     this.setState({ dateLockdownCounterfactual: newDate });
-    // set updateHistogram to true to render the new histogram component
-    this.setState({ updateHistogram: true });
 
     // make sure that the input date for the load total cases is never null
     const counterfactualFirstRestrictions =
@@ -244,8 +227,6 @@ export default class InfoPanel extends React.Component {
       counterfactualFirstRestrictions,
       counterfactualLockdown
     );
-
-    this.setState({ datesChanged: true });
   }
 
   render() {
@@ -304,28 +285,24 @@ export default class InfoPanel extends React.Component {
                     </Col>
                   </Row>
                 </Row>
-                {this.state.updateHistogram === false ? (
-                  <Loading />
-                ) : (
-                  <Row xs={1} md={1} lg={1}>
-                    <Histogram
-                      isoCode={this.props.isoCode}
-                      height={this.props.height}
-                      dateInitial={this.state.histogramDateInitial}
-                      dateFinal={this.state.histogramDateFinal}
-                      dateFirstRestrictionsReal={
-                        this.state.dateFirstRestrictionsReal
-                      }
-                      dateLockdownReal={this.state.dateLockdownReal}
-                      dateFirstRestrictionsCounterfactual={
-                        this.state.dateFirstRestrictionsCounterfactual
-                      }
-                      dateLockdownCounterfactual={
-                        this.state.dateLockdownCounterfactual
-                      }
-                    />
-                  </Row>
-                )}
+                <Row xs={1} md={1} lg={1}>
+                  <Histogram
+                    isoCode={this.props.isoCode}
+                    height={this.props.height}
+                    dateInitial={this.state.histogramDateInitial}
+                    dateFinal={this.state.histogramDateFinal}
+                    dateFirstRestrictionsReal={
+                      this.state.dateFirstRestrictionsReal
+                    }
+                    dateLockdownReal={this.state.dateLockdownReal}
+                    dateFirstRestrictionsCounterfactual={
+                      this.state.dateFirstRestrictionsCounterfactual
+                    }
+                    dateLockdownCounterfactual={
+                      this.state.dateLockdownCounterfactual
+                    }
+                  />
+                </Row>
               </Col>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
