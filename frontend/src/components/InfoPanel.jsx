@@ -13,6 +13,7 @@ import "./InfoPanel.css";
 import convert from "./Utils.js";
 import CountryDates from "./CountryDates";
 import CountryStatistics from "./CountryStatistics";
+import CounterfactualStory from "./CounterfactualStory";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -247,6 +248,7 @@ export default class InfoPanel extends React.Component {
   }
 
   render() {
+    console.log(`render: ${this.state}`);
     return (
       <div>
         {!this.props.isoCode ? null : (
@@ -282,7 +284,8 @@ export default class InfoPanel extends React.Component {
                       <DatePicker
                         onChange={this.onFirstRestrictionsChange}
                         value={this.state.dateFirstRestrictionsCounterfactual}
-                        format="dd/MM/yyyy"
+                        key="date-first-restrictions"
+                        format="yyyy-MM-dd"
                         className="form-control"
                         monthsShown={1}
                         popperPlacement="bottom"
@@ -292,7 +295,8 @@ export default class InfoPanel extends React.Component {
                       <DatePicker
                         onChange={this.onLockdownChange}
                         value={this.state.dateLockdownCounterfactual}
-                        format="dd/MM/yyyy"
+                        key="date-lockdown"
+                        format="yyyy-MM-dd"
                         className="form-control"
                         monthsShown={1}
                         popperPlacement="bottom"
@@ -325,29 +329,12 @@ export default class InfoPanel extends React.Component {
               </Col>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
-                  <Card
-                    style={{
-                      marginTop: "1%",
-                      marginBottom: "1%",
-                    }}
-                    bg={"light"}
-                  >
-                    <Card.Body>
-                      <Card.Title>Counterfactual story</Card.Title>
-                      <Card.Text>
-                        Use the calendars to select counterfactual dates for
-                        first social distance restrictions (left) and/or
-                        lockdown (right).
-                      </Card.Text>
-                      <Card.Text> Shift first restrictions: XXX </Card.Text>
-                      <Card.Text> Shift lockdown: XXX </Card.Text>
-                      <Card.Text>
-                        The counterfactual growth is simulated between{" "}
-                        {`${this.state.histogramDateInitial}`} and{" "}
-                        {`${this.state.histogramDateFinal}`}.{" "}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
+                <CounterfactualStory
+                    shiftFirstRestrictions="XXXX"
+                    shiftLockdown="XXXX"
+                    dateCounterfactualStart={this.state.histogramDateInitial}
+                    dateCounterfactualEnd={this.state.histogramDateFinal}
+                  />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Card
