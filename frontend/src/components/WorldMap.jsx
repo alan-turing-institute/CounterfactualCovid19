@@ -1,7 +1,9 @@
-import React from "react";
-import { MapContainer, GeoJSON } from "react-leaflet";
+import "../css/WorldMap.css";
 import "leaflet/dist/leaflet.css";
-import "./WorldMap.css";
+import { MapContainer, GeoJSON } from "react-leaflet";
+import PropTypes from "prop-types";
+import exact from 'prop-types-exact';
+import React from "react";
 
 export default class WorldMap extends React.Component {
   constructor(props) {

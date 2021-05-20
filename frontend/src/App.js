@@ -1,4 +1,4 @@
-import "./App.css";
+import "./css/App.css";
 import MainGrid from "./components/MainGrid";
 
 function App() {

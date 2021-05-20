@@ -1,20 +1,21 @@
-import React from "react";
-import Card from "react-bootstrap/Card";
+import "../css/InfoPanel.css";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Histogram from "./Histogram";
-import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
-import LoadCountryDemographicTask from "../tasks/LoadCountryDemographicTask.js";
-import DatePicker from "react-date-picker";
-import Loading from "./Loading";
-import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
-import "./InfoPanel.css";
 import convert from "./Utils.js";
+import CounterfactualStatistics from "./CounterfactualStatistics";
+import CounterfactualStory from "./CounterfactualStory";
 import CountryDates from "./CountryDates";
 import CountryStatistics from "./CountryStatistics";
-import CounterfactualStory from "./CounterfactualStory";
-import CounterfactualStatistics from "./CounterfactualStatistics";
+import DatePicker from "react-date-picker";
+import Histogram from "./Histogram";
+import LoadCountryDemographicTask from "../tasks/LoadCountryDemographicTask.js";
+import Loading from "./Loading";
+import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
+import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
+import PropTypes from "prop-types";
+import exact from "prop-types-exact";
+import React from "react";
+import Row from "react-bootstrap/Row";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -249,7 +250,6 @@ export default class InfoPanel extends React.Component {
   }
 
   render() {
-    console.log(`render: ${this.state}`);
     return (
       <div>
         {!this.props.isoCode ? null : (
