@@ -12,6 +12,7 @@ import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
 import convert from "./Utils.js";
 import CountryDates from "./CountryDates";
+import CountryStatistics from "./CountryStatistics";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -262,32 +263,10 @@ export default class InfoPanel extends React.Component {
                   />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
-                  <Card
-                    style={{
-                      marginTop: "1%",
-                      marginBottom: "1%",
-                    }}
-                    bg={"light"}
-                  >
-                    <Card.Body>
-                      <Card.Title>Statistics</Card.Title>
-                      {!this.state.totalCasesReal ? null : (
-                        <Card.Text>
-                          {`Total COVID-19 Cases per Million: ${this.state.totalCasesReal
-                            .toFixed(0)
-                            .toString()} \n `}
-                        </Card.Text>
-                      )}
-                      <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
-                      {!this.state.countryPopulationDensity ? null : (
-                        <Card.Text>
-                          {`Population density (per square km): ${this.state.countryPopulationDensity
-                            .toFixed(2)
-                            .toString()}`}
-                        </Card.Text>
-                      )}
-                    </Card.Body>
-                  </Card>
+                  <CountryStatistics
+                    totalCases={this.state.totalCasesReal}
+                    populationDensity={this.state.countryPopulationDensity}
+                  />
                 </Row>
               </Col>
               <Col xs={6} md={6} lg={6}>
