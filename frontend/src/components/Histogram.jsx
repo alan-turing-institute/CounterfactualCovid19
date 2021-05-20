@@ -30,19 +30,19 @@ export default class Histogram extends React.Component {
 
     // if there is not an available start or end date in the data use this default ones
     const dateInit =
-      this.props.initialDate != null ? this.props.initialDate : "2020-02-20";
+      this.props.dateInitial != null ? this.props.dateInitial : "2020-02-20";
     const dateMaxim =
-      this.props.maximumDate != null ? this.props.maximumDate : "2020-06-23";
+      this.props.dateFinal != null ? this.props.dateFinal : "2020-06-23";
 
     // converting DateFields that come from the DatePicker to string. If there is no
     // counterfactual date use the default historical one
-    const counterfactualDateFirstRestrictions =
-      this.props.counterfactualFirstRestrictionsDate != null
-        ? convert(this.props.counterfactualFirstRestrictionsDate)
-        : this.props.firstRestrictionsDate;
-    const counterfactualDateLockdown =
-      this.props.counterfactualLockdownDate != null
-        ? convert(this.props.counterfactualLockdownDate)
+    const dateFirstRestrictionsCounterfactual =
+      this.props.dateFirstRestrictionsCounterfactual != null
+        ? convert(this.props.dateFirstRestrictionsCounterfactual)
+        : this.props.dateFirstRestrictionsReal;
+    const dateLockdownCounterfactual =
+      this.props.dateLockdownCounterfactual != null
+        ? convert(this.props.dateLockdownCounterfactual)
         : this.props.lockdownDate;
 
     // Retrieve real and counterfactual data in parallel
@@ -52,8 +52,8 @@ export default class Histogram extends React.Component {
         this.props.isoCode,
         dateInit,
         dateMaxim,
-        counterfactualDateFirstRestrictions,
-        counterfactualDateLockdown
+        dateFirstRestrictionsCounterfactual,
+        dateLockdownCounterfactual
       ),
       task.getRealCovidCases(this.props.isoCode, dateInit, dateMaxim),
     ]);
@@ -90,15 +90,15 @@ export default class Histogram extends React.Component {
 
     // if counterfactual first restriction date is changed reload case data
     if (
-      this.props.counterfactualFirstRestrictionsDate !==
-      prevProps.counterfactualFirstRestrictionsDate
+      this.props.dateFirstRestrictionsCounterfactual !==
+      prevProps.dateFirstRestrictionsCounterfactual
     ) {
       await this.loadCasesData();
     }
     // if counterfactual lockdown date is changed reload case data
     if (
-      this.props.counterfactualLockdownDate !==
-      prevProps.counterfactualLockdownDate
+      this.props.dateLockdownCounterfactual !==
+      prevProps.dateLockdownCounterfactual
     ) {
       await this.loadCasesData();
     }
@@ -130,9 +130,9 @@ export default class Histogram extends React.Component {
                 dataKey="casesCounterfactual"
                 stroke="#ff7300"
               />
-              {this.props.firstRestrictionsDate != null && (
+              {this.props.dateFirstRestrictionsReal != null && (
                 <ReferenceLine
-                  x={this.props.firstRestrictionsDate}
+                  x={this.props.dateFirstRestrictionsReal}
                   label={{
                     position: "left",
                     value: "First Restrictions",
