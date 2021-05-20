@@ -14,6 +14,7 @@ class Country(models.Model):
 
     @property
     def population_density(self):
+        """Calculate population density from population and area"""
         if not self.population:
             return 0
         if self.area and self.area != 0:

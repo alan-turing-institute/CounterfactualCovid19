@@ -2,7 +2,7 @@
 from time import monotonic
 import pandas as pd
 from dates.models import ModelDateRange
-from utils import create_code_lookup, create_country_lookup
+from .utils import create_code_lookup, create_country_lookup
 
 
 def run():

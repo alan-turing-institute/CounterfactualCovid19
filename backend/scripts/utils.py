@@ -1,6 +1,6 @@
 import pycountry
-from countries.models import Country
 from django.core.exceptions import ObjectDoesNotExist
+from countries.models import Country
 
 
 def get_country_code(country_name):
