@@ -9,7 +9,7 @@ class Country(models.Model):
     iso_code = models.CharField(max_length=3, primary_key=True)
     name = models.CharField(max_length=255)
     area = models.PositiveIntegerField(null=False)
-    population = models.PositiveIntegerField(null=True)
+    population = models.PositiveIntegerField(null=False)
     geometry = MultiPolygonField()
 
     @property

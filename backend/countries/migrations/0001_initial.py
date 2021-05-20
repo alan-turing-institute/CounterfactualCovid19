@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ),
                 ("area", models.PositiveIntegerField()),
                 ("name", models.CharField(max_length=255)),
-                ("population", models.PositiveIntegerField(null=True)),
+                ("population", models.PositiveIntegerField()),
                 (
                     "geometry",
                     django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),
