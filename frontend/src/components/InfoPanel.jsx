@@ -29,8 +29,8 @@ export default class InfoPanel extends React.Component {
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
-      histogramDateFinal: null,
-      histogramDateInitial: null,
+      dateHistogramStart: "2020-02-20",
+      dateHistogramEnd: "2020-07-06",
       totalCasesCounterfactual: null,
       totalCasesReal: null,
     };
@@ -41,79 +41,46 @@ export default class InfoPanel extends React.Component {
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
 
-  async loadTotalCases(
-    loadRealCases,
-    firstRestrictions = null,
-    lockdown = null
-  ) {
+  async loadCasesReal() {
     const task = new LoadTotalCasesTask();
-    // if there is not an available start or end date in the data use this default ones
-    const dateInit =
-      this.state.histogramDateInitial != null
-        ? this.state.histogramDateInitial
-        : "2020-02-20";
-    const dateMaxim =
-      this.state.histogramDateFinal != null
-        ? this.state.histogramDateFinal
-        : "2020-07-06";
-
-    // reload total real cases only if necessary (when we are loading the general page)
-    if (loadRealCases === true) {
-      let [realCases] = await Promise.all([
-        task.getIntegratedCasesCountryData(this.props.isoCode, dateMaxim),
-      ]);
-
-      if (realCases != null) {
-        try {
-          this.setState({
-            totalCasesReal: realCases.summed_avg_cases_per_million,
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-
-    // converting DateFields that come from the DatePicker to string.
-    let dateFirstRestrictionsCounterfactual;
-
-    if (firstRestrictions == null) {
-      dateFirstRestrictionsCounterfactual = convert(
-        this.state.dateFirstRestrictionsCounterfactual
-      );
-    } else {
-      dateFirstRestrictionsCounterfactual = convert(firstRestrictions);
-    }
-
-    let dateLockdownCounterfactual;
-
-    if (lockdown == null) {
-      dateLockdownCounterfactual = convert(
-        this.state.dateLockdownCounterfactual
-      );
-    } else {
-      dateLockdownCounterfactual = convert(lockdown);
-    }
-
-    let [counterfactualCases] = await Promise.all([
-      task.getIntegratedCounterfactualCountryData(
+    try {
+      const realCases = await task.getIntegratedCasesCountryData(
         this.props.isoCode,
-        dateInit,
-        dateMaxim,
-        dateFirstRestrictionsCounterfactual,
-        dateLockdownCounterfactual
-      ),
-    ]);
+        this.state.dateHistogramEnd
+      );
+      this.setState({ totalCasesReal: realCases.summed_avg_cases_per_million });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-    if (counterfactualCases != null) {
-      try {
-        this.setState({
-          total_counterfactual_cases:
-            counterfactualCases.summed_avg_cases_per_million,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+  async loadCasesCounterfactual() {
+    // Convert DateFields that come from the DatePicker to string.
+    const dateFirstRestrictions =
+      this.state.dateFirstRestrictionsCounterfactual != null
+        ? convert(this.state.dateFirstRestrictionsCounterfactual)
+        : this.state.dateFirstRestrictionsReal;
+    const dateLockdown =
+      this.state.dateLockdownCounterfactual != null
+        ? convert(this.state.dateLockdownCounterfactual)
+        : this.state.dateLockdownReal;
+
+    const task = new LoadTotalCasesTask();
+    try {
+      const counterfactualCases =
+        await task.getIntegratedCounterfactualCountryData(
+          this.props.isoCode,
+          this.state.dateHistogramStart,
+          this.state.dateHistogramEnd,
+          dateFirstRestrictions,
+          dateLockdown
+        );
+      this.setState({
+        total_counterfactual_cases:
+          counterfactualCases.summed_avg_cases_per_million,
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -130,9 +97,9 @@ export default class InfoPanel extends React.Component {
   async loadRestrictionData() {
     // Retrieve restriction data
     const task = new LoadRestrictionsDatesTask();
-    let [restrictionsDates] = await Promise.all([
-      task.getCountryRestrictionDates(this.props.isoCode),
-    ]);
+    let restrictionsDates = await task.getCountryRestrictionDates(
+      this.props.isoCode
+    );
 
     if ((restrictionsDates != null) & (this.props.isoCode != null)) {
       try {
@@ -140,8 +107,8 @@ export default class InfoPanel extends React.Component {
         this.setState({
           dateFirstRestrictionsReal: restrictionsDates.first_restrictions_date,
           dateLockdownReal: restrictionsDates.lockdown_date,
-          histogramDateInitial: restrictionsDates.initial_date,
-          histogramDateFinal: restrictionsDates.maximum_date,
+          dateHistogramStart: restrictionsDates.initial_date,
+          dateHistogramEnd: restrictionsDates.maximum_date,
           dateFirstWaveStart: "XXXX",
           dateFirstWaveEnd: restrictionsDates.maximum_date,
         });
@@ -173,7 +140,8 @@ export default class InfoPanel extends React.Component {
     await Promise.all([
       this.loadDemographicData(),
       this.loadRestrictionData(),
-      this.loadTotalCases(true),
+      this.loadCasesReal(),
+      this.loadCasesCounterfactual(),
     ]);
   }
 
@@ -192,41 +160,13 @@ export default class InfoPanel extends React.Component {
   // this runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
     this.setState({ dateFirstRestrictionsCounterfactual: newDate });
-
-    // make sure that the input date for the load total cases is never null
-    const counterfactualFirstRestrictions =
-      newDate != null
-        ? newDate
-        : new Date(this.state.dateFirstRestrictionsReal);
-    const dateLockdownCounterfactual =
-      this.state.dateLockdownCounterfactual != null
-        ? this.state.dateLockdownCounterfactual
-        : new Date(this.state.dateLockdownReal);
-
-    await this.loadTotalCases(
-      false,
-      counterfactualFirstRestrictions,
-      dateLockdownCounterfactual
-    );
+    await this.loadCasesCounterfactual();
   }
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
     this.setState({ dateLockdownCounterfactual: newDate });
-
-    // make sure that the input date for the load total cases is never null
-    const counterfactualFirstRestrictions =
-      this.state.dateFirstRestrictionsCounterfactual != null
-        ? this.state.dateFirstRestrictionsCounterfactual
-        : new Date(this.state.dateFirstRestrictionsReal);
-    const counterfactualLockdown =
-      newDate != null ? newDate : new Date(this.state.dateLockdownReal);
-
-    await this.loadTotalCases(
-      false,
-      counterfactualFirstRestrictions,
-      counterfactualLockdown
-    );
+    await this.loadCasesCounterfactual();
   }
 
   render() {
@@ -289,8 +229,8 @@ export default class InfoPanel extends React.Component {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.histogramDateInitial}
-                    dateFinal={this.state.histogramDateFinal}
+                    dateInitial={this.state.dateHistogramStart}
+                    dateFinal={this.state.dateHistogramEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal
                     }
@@ -307,10 +247,10 @@ export default class InfoPanel extends React.Component {
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
                   <CounterfactualStory
+                    dateStart={this.state.dateHistogramStart}
+                    dateEnd={this.state.dateHistogramEnd}
                     shiftFirstRestrictions="XXXX"
                     shiftLockdown="XXXX"
-                    dateCounterfactualStart={this.state.histogramDateInitial}
-                    dateCounterfactualEnd={this.state.histogramDateFinal}
                   />
                 </Row>
                 <Row xs={1} md={1} lg={1}>

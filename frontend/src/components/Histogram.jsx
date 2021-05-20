@@ -168,4 +168,3 @@ export default class Histogram extends React.Component {
     );
   }
 }
-

@@ -19,11 +19,9 @@ const CounterfactualStory = (props) => {
         </Card.Text>
         <Card.Text>{`Shift first restrictions: ${props.shiftFirstRestrictions}`}</Card.Text>
         <Card.Text>{`Shift lockdown: ${props.shiftLockdown}`}</Card.Text>
-        {!(
-          props.dateCounterfactualStart & props.dateCounterfactualEnd
-        ) ? null : (
+        {!(props.dateStart & props.dateEnd) ? null : (
           <Card.Text>
-            {`The spread of COVID-19 was simulated between ${props.dateCounterfactualStart} and ${props.dateCounterfactualEnd}.`}
+            {`The spread of COVID-19 was simulated between ${props.dateStart} and ${props.dateEnd}.`}
           </Card.Text>
         )}
       </Card.Body>
@@ -33,8 +31,8 @@ const CounterfactualStory = (props) => {
 export default CounterfactualStory;
 
 CounterfactualStory.propTypes = exact({
-  dateCounterfactualEnd: PropTypes.string,
-  dateCounterfactualStart: PropTypes.string,
+  dateEnd: PropTypes.string,
+  dateStart: PropTypes.string,
   shiftFirstRestrictions: PropTypes.string.isRequired,
   shiftLockdown: PropTypes.string.isRequired,
 });
