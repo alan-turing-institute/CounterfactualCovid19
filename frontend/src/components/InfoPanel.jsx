@@ -11,6 +11,7 @@ import Loading from "./Loading";
 import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import "./InfoPanel.css";
 import convert from "./Utils.js";
+import CountryDates from "./CountryDates";
 
 export default class InfoPanel extends React.Component {
   constructor(props) {
@@ -19,6 +20,8 @@ export default class InfoPanel extends React.Component {
     this.state = {
       countryName: null,
       countryPopulationDensity: null,
+      dateFirstWaveStart: null,
+      dateFirstWaveEnd: null,
       dateFirstRestrictionsCounterfactual: null,
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
@@ -135,10 +138,12 @@ export default class InfoPanel extends React.Component {
         // Set the component state with the restriction data
         this.setState({
           dateFirstRestrictionsReal: restrictionsDates.first_restrictions_date,
+          dateLockdownReal: restrictionsDates.lockdown_date,
+          histogramDateInitial: restrictionsDates.initial_date,
+          histogramDateFinal: restrictionsDates.maximum_date,
+          dateFirstWaveStart: "XXXX",
+          dateFirstWaveEnd: restrictionsDates.maximum_date,
         });
-        this.setState({ dateLockdownReal: restrictionsDates.lockdown_date });
-        this.setState({ histogramDateInitial: restrictionsDates.initial_date });
-        this.setState({ histogramDateFinal: restrictionsDates.maximum_date });
 
         // we only update counterfactual if we change countries
         // set them to their actual restriction dates
@@ -248,30 +253,13 @@ export default class InfoPanel extends React.Component {
             <Row>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
-                  <Card
-                    style={{
-                      marginTop: "1%",
-                      marginBottom: "1%",
-                    }}
-                    bg={"light"}
-                  >
-                    <Card.Body>
-                      <Card.Title>{`${this.state.countryName}`}</Card.Title>
-                      <Card.Text>First case confimed: XXXX</Card.Text>
-                      <Card.Text>
-                        {`First social distance restrictions: ${this.state.dateFirstRestrictionsReal}.`}
-                      </Card.Text>
-
-                      {!this.state.dateLockdownReal ? null : (
-                        <Card.Text>
-                          {`National lockdown: ${this.state.dateLockdownReal}.`}
-                        </Card.Text>
-                      )}
-                      <Card.Text>
-                        {` The first wave ended: ${this.state.histogramDateFinal}.`}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
+                  <CountryDates
+                    countryName={this.state.countryName}
+                    dateFirstRestrictions={this.state.dateFirstRestrictionsReal}
+                    dateFirstWaveEnd={this.state.dateFirstWaveEnd}
+                    dateFirstWaveStart={this.state.dateFirstWaveStart}
+                    dateLockdown={this.state.dateLockdownReal}
+                  />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Card
