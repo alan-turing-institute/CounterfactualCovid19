@@ -342,7 +342,6 @@ export default class InfoPanel extends React.Component {
                       this.state.totalCasesCounterfactual
                     }
                     totalCasesReal={this.state.totalCasesReal}
-                    datesChanged={this.state.datesChanged}
                   />
                 </Row>
               </Col>

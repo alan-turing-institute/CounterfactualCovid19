@@ -56,7 +56,7 @@ export default class Histogram extends React.Component {
     const dateLockdownCounterfactual =
       this.props.dateLockdownCounterfactual != null
         ? convert(this.props.dateLockdownCounterfactual)
-        : this.props.lockdownDate;
+        : this.props.dateLockdownReal;
 
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
@@ -154,9 +154,9 @@ export default class Histogram extends React.Component {
                   strokeDasharray="5 5"
                 />
               )}
-              {this.props.lockdownDate != null && (
+              {this.props.dateLockdownReal != null && (
                 <ReferenceLine
-                  x={this.props.lockdownDate}
+                  x={this.props.dateLockdownReal}
                   label={{ position: "right", value: "Lockdown", fontSize: 12 }}
                   strokeDasharray="5 5"
                 />
@@ -168,3 +168,4 @@ export default class Histogram extends React.Component {
     );
   }
 }
+

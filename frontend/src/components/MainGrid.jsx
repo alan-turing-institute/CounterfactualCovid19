@@ -17,7 +17,6 @@ export default class MainGrid extends React.Component {
     this.state = {
       countries: [],
       isoCode: null,
-      summedAvgCases: null,
       sizeMapComponent: "88vh",
       sizeHistogramComponent: "0vh",
     };
@@ -42,7 +41,6 @@ export default class MainGrid extends React.Component {
       console.log(`Setting currently selected country to none`);
       this.setState({
         isoCode: null,
-        summedAvgCases: null,
         sizeMapComponent: "88vh",
         sizeHistogramComponent: "0vh",
       });
@@ -50,7 +48,6 @@ export default class MainGrid extends React.Component {
       console.log(`Setting currently selected country to ${iso_code}`);
       this.setState({
         isoCode: iso_code,
-        summedAvgCases: summed_avg_cases,
         sizeMapComponent: "40vh",
         sizeHistogramComponent: "48vh",
       });
@@ -79,14 +76,13 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
-            {this.state.isoCode == null ? (
+            {!this.state.isoCode ? (
               <Loading />
             ) : (
               <Row style={{ height: this.state.sizeHistogramComponent }}>
                 <Col xs={12} style={{ padding: "0px" }}>
                   <InfoPanel
                     isoCode={this.state.isoCode}
-                    summedAvgCases={this.state.summedAvgCases}
                     height={this.state.sizeHistogramComponent}
                   />
                 </Col>
