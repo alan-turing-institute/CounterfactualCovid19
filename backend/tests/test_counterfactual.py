@@ -37,6 +37,7 @@ class SimulationTestCase(unittest.TestCase):
                     date(2020, 4, 11),
                 ],
                 "iso_code": ["FRA", "GBR", "FRA", "GBR", "FRA", "GBR"],
+                "area": [547557, 241930, 547557, 241930, 547557, 241930],
                 "population": [
                     67059887,
                     66834405,
@@ -123,6 +124,7 @@ class SimulationTestCase(unittest.TestCase):
             {
                 "date": date(2020, 4, 11),
                 "iso_code": "FRA",
+                "area": 547557,
                 "population": 67059887,
                 "weekly_avg_cases": 5670,
                 "summed_avg_cases": 18970,
@@ -134,6 +136,7 @@ class SimulationTestCase(unittest.TestCase):
             {
                 "date": date(2020, 4, 10),
                 "iso_code": "GBR",
+                "area": 241930,
                 "population": 66834405,
                 "weekly_avg_cases": 4781,
                 "summed_avg_cases": 9581,
@@ -158,6 +161,7 @@ class SimulationTestCase(unittest.TestCase):
             {
                 "date": date(2020, 4, 10),
                 "iso_code": "FRA",
+                "area": 547557,
                 "population": 67059887,
                 "weekly_avg_cases": 6300,
                 "summed_avg_cases": 13300,
@@ -182,6 +186,7 @@ class SimulationTestCase(unittest.TestCase):
             {
                 "date": date(2020, 4, 10),
                 "iso_code": "GBR",
+                "area": 241930,
                 "population": 66834405,
                 "weekly_avg_cases": 4781,
                 "summed_avg_cases": 9581,

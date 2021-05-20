@@ -26,7 +26,7 @@ export default class Histogram extends React.Component {
   }
 
   async loadCasesData() {
-    console.log("Fetching case data");
+    console.log("Updating histogram data");
 
     // if there is not an available start or end date in the data use this default ones
     const initial_date =
@@ -61,7 +61,7 @@ export default class Histogram extends React.Component {
     // Combine the two datasets into a single data array
     let casesData = [];
 
-    if (casesCounterfactual.length != 0) {
+    if (casesCounterfactual.length !== 0) {
       for (let i = 0; i < casesReal.length; i++) {
         const counterfactual = casesCounterfactual.find(
           (counterfactual) => counterfactual.date === casesReal[i].date

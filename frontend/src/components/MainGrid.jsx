@@ -17,7 +17,6 @@ export default class MainGrid extends React.Component {
     this.state = {
       countries: [],
       isoCode: null,
-      countryName: null,
       summedAvgCases: null,
       sizeMapComponent: "88vh",
       sizeHistogramComponent: "0vh",
@@ -43,19 +42,14 @@ export default class MainGrid extends React.Component {
       console.log(`Setting currently selected country to none`);
       this.setState({
         isoCode: null,
-        countryName: null,
         summedAvgCases: null,
         sizeMapComponent: "88vh",
         sizeHistogramComponent: "0vh",
       });
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
-      const selectedCountry = this.state.countries.find(
-        (country) => country.id === iso_code
-      );
       this.setState({
         isoCode: iso_code,
-        countryName: selectedCountry.properties.name,
         summedAvgCases: summed_avg_cases,
         sizeMapComponent: "40vh",
         sizeHistogramComponent: "48vh",
@@ -92,7 +86,6 @@ export default class MainGrid extends React.Component {
                 <Col xs={12} style={{ padding: "0px" }}>
                   <InfoPanel
                     isoCode={this.state.isoCode}
-                    countryName={this.state.countryName}
                     summedAvgCases={this.state.summedAvgCases}
                     height={this.state.sizeHistogramComponent}
                   />

@@ -18,8 +18,9 @@ class Migration(migrations.Migration):
                     "iso_code",
                     models.CharField(max_length=3, primary_key=True, serialize=False),
                 ),
-                ("name", models.CharField(max_length=255)),
-                ("population", models.PositiveIntegerField(null=True)),
+                ("area", models.PositiveIntegerField()),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("population", models.PositiveIntegerField()),
                 (
                     "geometry",
                     django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),
