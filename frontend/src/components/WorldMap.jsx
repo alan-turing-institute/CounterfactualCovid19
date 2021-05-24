@@ -53,11 +53,8 @@ export default class WorldMap extends React.Component {
       function (event) {
         // Process the click on the current layer
         this.processLayerClick(layer);
-        // Pass the target ISO code and number of cases up to the callback function
-        this.props.onCountrySelect(
-          event.target.feature.id,
-          event.target.feature.properties.summedAvgCasesPerMillion
-        );
+        // Pass the target ISO code up to the callback function
+        this.props.onCountrySelect(event.target.feature.id);
       }.bind(this) // allows the use of 'this' referring to the WorldMap object inside the anonymous function
     );
   };

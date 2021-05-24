@@ -36,7 +36,7 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code, summed_avg_cases) {
+  handleCountryChange(iso_code) {
     if (iso_code === this.state.isoCode) {
       console.log(`Setting currently selected country to none`);
       this.setState({
