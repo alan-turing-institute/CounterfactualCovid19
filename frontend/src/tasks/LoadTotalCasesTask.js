@@ -56,10 +56,21 @@ class LoadTotalCasesTask {
       }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
-      return response.data[response.data.length - 1];
+      // Use data from the latest date in the response
+      if (response.data.length) {
+        return response.data[response.data.length - 1];
+      }
+      // Return null values if there is no counterfactual data
+      console.warn(
+        `No counterfactual data returned for ${iso_code}. First restriction date ${first_restriction_date}; lockdown date ${lockdown_date}.`
+      );
+      return {
+        summed_avg_cases: null,
+        summed_avg_cases_per_million: null,
+      };
     } catch (error) {
       console.log(error);
-      return [];
+      return {};
     }
   };
 
