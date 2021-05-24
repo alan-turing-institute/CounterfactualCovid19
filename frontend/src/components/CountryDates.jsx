@@ -2,6 +2,16 @@ import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 
+const propTypes = exact({
+  countryName: PropTypes.string,
+  dateFirstRestrictions: PropTypes.string,
+  dateFirstWaveEnd: PropTypes.string,
+  dateFirstWaveStart: PropTypes.string,
+  dateLockdown: PropTypes.string,
+});
+
+const defaultProps = {};
+
 const CountryDates = (props) => {
   return (
     <Card
@@ -31,12 +41,8 @@ const CountryDates = (props) => {
     </Card>
   );
 };
-export default CountryDates;
 
-CountryDates.propTypes = exact({
-  countryName: PropTypes.string,
-  dateFirstRestrictions: PropTypes.string,
-  dateFirstWaveEnd: PropTypes.string,
-  dateFirstWaveStart: PropTypes.string,
-  dateLockdown: PropTypes.string,
-});
+CountryDates.propTypes = propTypes;
+CountryDates.defaultProps = defaultProps;
+
+export default CountryDates;

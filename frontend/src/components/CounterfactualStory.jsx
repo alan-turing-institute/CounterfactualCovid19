@@ -2,6 +2,15 @@ import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 
+const propTypes = exact({
+  dateEnd: PropTypes.string,
+  dateStart: PropTypes.string,
+  shiftFirstRestrictions: PropTypes.string.isRequired,
+  shiftLockdown: PropTypes.string.isRequired,
+});
+
+const defaultProps = {};
+
 const CounterfactualStory = (props) => {
   return (
     <Card
@@ -28,11 +37,8 @@ const CounterfactualStory = (props) => {
     </Card>
   );
 };
-export default CounterfactualStory;
 
-CounterfactualStory.propTypes = exact({
-  dateEnd: PropTypes.string,
-  dateStart: PropTypes.string,
-  shiftFirstRestrictions: PropTypes.string.isRequired,
-  shiftLockdown: PropTypes.string.isRequired,
-});
+CounterfactualStory.propTypes = propTypes;
+CounterfactualStory.defaultProps = defaultProps;
+
+export default CounterfactualStory;

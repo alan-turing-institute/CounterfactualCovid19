@@ -5,6 +5,10 @@ import Container from "react-bootstrap/Container";
 import React, { useState } from "react";
 import Row from "react-bootstrap/Row";
 
+const propTypes = exact({});
+
+const defaultProps = {};
+
 const HeaderPanel = (props) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
 
@@ -57,5 +61,8 @@ const HeaderPanel = (props) => {
     </div>
   );
 };
+
+HeaderPanel.propTypes = propTypes;
+HeaderPanel.defaultProps = defaultProps;
 
 export default HeaderPanel;

@@ -8,14 +8,21 @@ import CountryStatistics from "./CountryStatistics";
 import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
-import LoadCountryDemographicTask from "../tasks/LoadCountryDemographicTask.js";
+import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
 import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
 
-export default class InfoPanel extends React.Component {
+const propTypes = exact({
+  isoCode: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+});
+
+const defaultProps = {};
+
+class InfoPanel extends React.Component {
   constructor(props) {
     super(props);
 
@@ -65,7 +72,8 @@ export default class InfoPanel extends React.Component {
           this.state.dateLockdownCounterfactual
         );
       this.setState({
-        totalCasesCounterfactual: counterfactualCases.summed_avg_cases_per_million,
+        totalCasesCounterfactual:
+          counterfactualCases.summed_avg_cases_per_million,
       });
     } catch (error) {
       console.log(error);
@@ -74,8 +82,7 @@ export default class InfoPanel extends React.Component {
 
   async loadDemographicData() {
     // Retrieve demographic data
-    const task = new LoadCountryDemographicTask();
-    let demographics = await task.retrieve(this.props.isoCode);
+    let demographics = await loadCountryDemographicsTask(this.props.isoCode);
     this.setState({
       countryName: demographics.name,
       countryPopulationDensity: demographics.population_density,
@@ -242,7 +249,7 @@ export default class InfoPanel extends React.Component {
   }
 }
 
-InfoPanel.propTypes = exact({
-  isoCode: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
-});
+InfoPanel.propTypes = propTypes;
+InfoPanel.defaultProps = defaultProps;
+
+export default InfoPanel;

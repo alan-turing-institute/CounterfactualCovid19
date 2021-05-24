@@ -9,7 +9,11 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import WorldMap from "./WorldMap";
 
-export default class MainGrid extends React.Component {
+const propTypes = exact({});
+
+const defaultProps = {};
+
+class MainGrid extends React.Component {
   constructor(props) {
     super(props);
 
@@ -94,3 +98,8 @@ export default class MainGrid extends React.Component {
     );
   }
 }
+
+MainGrid.propTypes = propTypes;
+MainGrid.defaultProps = defaultProps;
+
+export default MainGrid;

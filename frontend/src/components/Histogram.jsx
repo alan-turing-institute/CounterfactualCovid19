@@ -16,7 +16,20 @@ import Loading from "./Loading";
 import PropTypes from "prop-types";
 import React from "react";
 
-export default class Histogram extends React.Component {
+const propTypes = exact({
+  dateFinal: PropTypes.string,
+  dateFirstRestrictionsCounterfactual: PropTypes.string,
+  dateFirstRestrictionsReal: PropTypes.string,
+  dateInitial: PropTypes.string,
+  dateLockdownCounterfactual: PropTypes.string,
+  dateLockdownReal: PropTypes.string,
+  height: PropTypes.string.isRequired,
+  isoCode: PropTypes.string.isRequired,
+});
+
+const defaultProps = {};
+
+class Histogram extends React.Component {
   constructor(props) {
     super(props);
 
@@ -25,17 +38,6 @@ export default class Histogram extends React.Component {
       casesData: [],
     };
   }
-
-  static propTypes = exact({
-    dateFinal: PropTypes.string,
-    dateFirstRestrictionsCounterfactual: PropTypes.string,
-    dateFirstRestrictionsReal: PropTypes.string,
-    dateInitial: PropTypes.string,
-    dateLockdownCounterfactual: PropTypes.string,
-    dateLockdownReal: PropTypes.string,
-    height: PropTypes.string.isRequired,
-    isoCode: PropTypes.string.isRequired,
-  });
 
   async loadCasesData() {
     console.log("Loading real and counterfactual cases");
@@ -147,3 +149,8 @@ export default class Histogram extends React.Component {
     );
   }
 }
+
+Histogram.propTypes = propTypes;
+Histogram.defaultProps = defaultProps;
+
+export default Histogram;

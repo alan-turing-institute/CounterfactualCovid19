@@ -2,6 +2,13 @@ import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 
+const propTypes = exact({
+  totalCasesCounterfactual: PropTypes.number,
+  totalCasesReal: PropTypes.number,
+});
+
+const defaultProps = {};
+
 const CounterfactualStatistics = (props) => {
   return (
     <Card
@@ -34,9 +41,8 @@ const CounterfactualStatistics = (props) => {
     </Card>
   );
 };
-export default CounterfactualStatistics;
 
-CounterfactualStatistics.propTypes = exact({
-  totalCasesCounterfactual: PropTypes.number,
-  totalCasesReal: PropTypes.number,
-});
+CounterfactualStatistics.propTypes = propTypes;
+CounterfactualStatistics.defaultProps = defaultProps;
+
+export default CounterfactualStatistics;

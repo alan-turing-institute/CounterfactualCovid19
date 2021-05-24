@@ -1,5 +1,9 @@
 import legendItems from "../entities/LegendItems";
 
+const propTypes = exact({});
+
+const defaultProps = {};
+
 const Legend = () => {
   const legendItemsReverse = [...legendItems].reverse();
   return (
@@ -31,5 +35,8 @@ const Legend = () => {
     </div>
   );
 };
+
+Legend.propTypes = propTypes;
+Legend.defaultProps = defaultProps;
 
 export default Legend;

@@ -1,5 +1,9 @@
 import Spinner from "react-bootstrap/Spinner";
 
+const propTypes = exact({});
+
+const defaultProps = {};
+
 const Loading = () => {
   const loadingStyle = {
     height: "100vh",
@@ -21,5 +25,8 @@ const Loading = () => {
     </div>
   );
 };
+
+Loading.propTypes = propTypes;
+Loading.defaultProps = defaultProps;
 
 export default Loading;

@@ -2,12 +2,10 @@ import axios from "axios";
 import legendItems from "../entities/LegendItems";
 
 class LoadTotalCasesTask {
-  decorateCountries = async (countryGeoms) => {
+  decorateCountries = async (countryGeoms, endDate) => {
     console.log("Loading cases data from Django backend...");
     try {
-      const integratedCasesData = await this.#getIntegratedCasesData(
-        "2020-07-06"
-      );
+      const integratedCasesData = await this.#getIntegratedCasesData(endDate);
       return this.#processCovidData(countryGeoms, integratedCasesData);
     } catch (error) {
       console.log(error);

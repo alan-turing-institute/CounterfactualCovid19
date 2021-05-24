@@ -5,7 +5,14 @@ import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 import React from "react";
 
-export default class WorldMap extends React.Component {
+const propTypes = exact({
+  onCountrySelect: PropTypes.func.isRequired,
+  countries: PropTypes.array.isRequired,
+});
+
+const defaultProps = {};
+
+class WorldMap extends React.Component {
   constructor(props) {
     super(props);
 
@@ -73,7 +80,7 @@ export default class WorldMap extends React.Component {
   }
 }
 
-WorldMap.propTypes = exact({
-  onCountrySelect: PropTypes.func.isRequired,
-  countries: PropTypes.array.isRequired,
-});
+WorldMap.propTypes = propTypes;
+WorldMap.defaultProps = defaultProps;
+
+export default WorldMap;

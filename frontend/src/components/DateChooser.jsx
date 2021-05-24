@@ -2,20 +2,27 @@ import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 import DatePicker from "react-date-picker";
 
+const propTypes = exact({
+  onDateChange: PropTypes.func.isRequired,
+  dateString: PropTypes.string,
+});
+
+const defaultProps = {};
+
 const DateChooser = (props) => {
-  const stringFromDate = (inputDate) => {
+  function stringFromDate(inputDate) {
     try {
       return inputDate.toISOString().split("T")[0];
     } catch (error) {
       console.log(error);
       return inputDate;
     }
-  };
+  }
 
-  const handleDateChange = async (newDate) => {
+  async function handleDateChange(newDate) {
     console.log(`Setting new date: ${newDate}`);
     await props.onDateChange(stringFromDate(newDate));
-  };
+  }
 
   return props.dateString ? (
     <DatePicker
@@ -30,9 +37,7 @@ const DateChooser = (props) => {
     <div></div>
   );
 };
-export default DateChooser;
+DateChooser.propTypes = propTypes;
+DateChooser.defaultProps = defaultProps;
 
-DateChooser.propTypes = exact({
-  onDateChange: PropTypes.func.isRequired,
-  dateString: PropTypes.string,
-});
+export default DateChooser;
