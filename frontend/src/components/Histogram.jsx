@@ -10,7 +10,6 @@ import {
   YAxis,
   ReferenceLine,
 } from "recharts";
-import convert from "./Utils.js";
 import exact from "prop-types-exact";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 import Loading from "./Loading";
@@ -29,46 +28,32 @@ export default class Histogram extends React.Component {
 
   static propTypes = exact({
     dateFinal: PropTypes.string,
-    dateFirstRestrictionsCounterfactual: PropTypes.instanceOf(Date),
+    dateFirstRestrictionsCounterfactual: PropTypes.string,
     dateFirstRestrictionsReal: PropTypes.string,
     dateInitial: PropTypes.string,
-    dateLockdownCounterfactual: PropTypes.instanceOf(Date),
+    dateLockdownCounterfactual: PropTypes.string,
     dateLockdownReal: PropTypes.string,
     height: PropTypes.string.isRequired,
     isoCode: PropTypes.string.isRequired,
   });
 
   async loadCasesData() {
-    console.log("Updating histogram data");
-
-    // if there is not an available start or end date in the data use this default ones
-    const dateInit =
-      this.props.dateInitial != null ? this.props.dateInitial : "2020-02-20";
-    const dateMaxim =
-      this.props.dateFinal != null ? this.props.dateFinal : "2020-06-23";
-
-    // converting DateFields that come from the DatePicker to string. If there is no
-    // counterfactual date use the default historical one
-    const dateFirstRestrictionsCounterfactual =
-      this.props.dateFirstRestrictionsCounterfactual != null
-        ? convert(this.props.dateFirstRestrictionsCounterfactual)
-        : this.props.dateFirstRestrictionsReal;
-    const dateLockdownCounterfactual =
-      this.props.dateLockdownCounterfactual != null
-        ? convert(this.props.dateLockdownCounterfactual)
-        : this.props.dateLockdownReal;
-
+    console.log("Loading real and counterfactual cases");
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
     let [casesCounterfactual, casesReal] = await Promise.all([
       task.getCounterfactualCovidCases(
         this.props.isoCode,
-        dateInit,
-        dateMaxim,
-        dateFirstRestrictionsCounterfactual,
-        dateLockdownCounterfactual
+        this.props.dateInitial,
+        this.props.dateFinal,
+        this.props.dateFirstRestrictionsCounterfactual,
+        this.props.dateLockdownCounterfactual
       ),
-      task.getRealCovidCases(this.props.isoCode, dateInit, dateMaxim),
+      task.getRealCovidCases(
+        this.props.isoCode,
+        this.props.dateInitial,
+        this.props.dateFinal
+      ),
     ]);
 
     // Combine the two datasets into a single data array
@@ -88,7 +73,6 @@ export default class Histogram extends React.Component {
       }
       this.setState({ casesData: casesData });
     }
-    // Set the component state to trigger a re-render
   }
 
   async componentDidMount() {
@@ -96,28 +80,23 @@ export default class Histogram extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-    // if click in new country reload case data
-    if (this.props.isoCode !== prevProps.isoCode) {
-      await this.loadCasesData();
-    }
-
-    // if counterfactual first restriction date is changed reload case data
+    // Reload case data whenever
+    // 1. A new country is selected
+    // 2. The counterfactual first restriction date is changed
+    // 3. The counterfactual lockdown date is changed
     if (
+      this.props.isoCode !== prevProps.isoCode ||
       this.props.dateFirstRestrictionsCounterfactual !==
-      prevProps.dateFirstRestrictionsCounterfactual
-    ) {
-      await this.loadCasesData();
-    }
-    // if counterfactual lockdown date is changed reload case data
-    if (
+        prevProps.dateFirstRestrictionsCounterfactual ||
       this.props.dateLockdownCounterfactual !==
-      prevProps.dateLockdownCounterfactual
+        prevProps.dateLockdownCounterfactual
     ) {
       await this.loadCasesData();
     }
   }
 
   render() {
+    console.log("Redrawing histogram...");
     return (
       <div
         style={{

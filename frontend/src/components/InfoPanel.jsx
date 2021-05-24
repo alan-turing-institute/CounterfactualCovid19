@@ -65,8 +65,7 @@ export default class InfoPanel extends React.Component {
           this.state.dateLockdownCounterfactual
         );
       this.setState({
-        total_counterfactual_cases:
-          counterfactualCases.summed_avg_cases_per_million,
+        totalCasesCounterfactual: counterfactualCases.summed_avg_cases_per_million,
       });
     } catch (error) {
       console.log(error);
