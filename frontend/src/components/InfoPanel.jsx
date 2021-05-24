@@ -1,12 +1,11 @@
 import "../css/InfoPanel.css";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import convert from "./Utils.js";
 import CounterfactualStatistics from "./CounterfactualStatistics";
 import CounterfactualStory from "./CounterfactualStory";
 import CountryDates from "./CountryDates";
 import CountryStatistics from "./CountryStatistics";
-import DatePicker from "react-date-picker";
+import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import LoadCountryDemographicTask from "../tasks/LoadCountryDemographicTask.js";
@@ -55,16 +54,6 @@ export default class InfoPanel extends React.Component {
   }
 
   async loadCasesCounterfactual() {
-    // Convert DateFields that come from the DatePicker to string.
-    const dateFirstRestrictions =
-      this.state.dateFirstRestrictionsCounterfactual != null
-        ? convert(this.state.dateFirstRestrictionsCounterfactual)
-        : this.state.dateFirstRestrictionsReal;
-    const dateLockdown =
-      this.state.dateLockdownCounterfactual != null
-        ? convert(this.state.dateLockdownCounterfactual)
-        : this.state.dateLockdownReal;
-
     const task = new LoadTotalCasesTask();
     try {
       const counterfactualCases =
@@ -72,8 +61,8 @@ export default class InfoPanel extends React.Component {
           this.props.isoCode,
           this.state.dateHistogramStart,
           this.state.dateHistogramEnd,
-          dateFirstRestrictions,
-          dateLockdown
+          this.state.dateFirstRestrictionsCounterfactual,
+          this.state.dateLockdownCounterfactual
         );
       this.setState({
         total_counterfactual_cases:
@@ -97,42 +86,26 @@ export default class InfoPanel extends React.Component {
   async loadRestrictionData() {
     // Retrieve restriction data
     const task = new LoadRestrictionsDatesTask();
-    let restrictionsDates = await task.getCountryRestrictionDates(
-      this.props.isoCode
-    );
-
-    if ((restrictionsDates != null) & (this.props.isoCode != null)) {
-      try {
-        // Set the component state with the restriction data
-        this.setState({
-          dateFirstRestrictionsReal: restrictionsDates.first_restrictions_date,
-          dateLockdownReal: restrictionsDates.lockdown_date,
-          dateHistogramStart: restrictionsDates.initial_date,
-          dateHistogramEnd: restrictionsDates.maximum_date,
-          dateFirstWaveStart: "XXXX",
-          dateFirstWaveEnd: restrictionsDates.maximum_date,
-        });
-
-        // we only update counterfactual if we change countries
-        // set them to their actual restriction dates
-
-        if (this.state.dateFirstRestrictionsReal != null) {
-          // for the datepicker to work this needs to be a Date object.
-          this.setState({
-            dateFirstRestrictionsCounterfactual: new Date(
-              this.state.dateFirstRestrictionsReal
-            ),
-          });
-        }
-        if (this.state.dateLockdownReal != null) {
-          // for the datepicker to work this needs to be a Date object.
-          this.setState({
-            dateLockdownCounterfactual: new Date(this.state.dateLockdownReal),
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      const restrictionsDates = await task.getCountryRestrictionDates(
+        this.props.isoCode
+      );
+      // Set the component state with the restriction data
+      this.setState({
+        dateFirstRestrictionsCounterfactual:
+          restrictionsDates.first_restrictions_date,
+        dateFirstRestrictionsReal: restrictionsDates.first_restrictions_date,
+        dateLockdownCounterfactual: restrictionsDates.lockdown_date,
+        dateLockdownReal: restrictionsDates.lockdown_date,
+        dateHistogramStart:
+          restrictionsDates.initial_date || this.state.dateHistogramStart,
+        dateHistogramEnd:
+          restrictionsDates.maximum_date || this.state.dateHistogramEnd,
+        dateFirstWaveStart: "XXXX",
+        dateFirstWaveEnd: restrictionsDates.maximum_date,
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -159,13 +132,19 @@ export default class InfoPanel extends React.Component {
 
   // this runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
-    this.setState({ dateFirstRestrictionsCounterfactual: newDate });
+    await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
+    console.log(
+      `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
+    );
     await this.loadCasesCounterfactual();
   }
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
-    this.setState({ dateLockdownCounterfactual: newDate });
+    await this.setState({ dateLockdownCounterfactual: newDate });
+    console.log(
+      `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
+    );
     await this.loadCasesCounterfactual();
   }
 
@@ -202,25 +181,19 @@ export default class InfoPanel extends React.Component {
                     }}
                   >
                     <Col>
-                      <DatePicker
-                        onChange={this.onFirstRestrictionsChange}
-                        value={this.state.dateFirstRestrictionsCounterfactual}
+                      <DateChooser
+                        dateString={
+                          this.state.dateFirstRestrictionsCounterfactual
+                        }
                         key="date-first-restrictions"
-                        format="yyyy-MM-dd"
-                        className="form-control"
-                        monthsShown={1}
-                        popperPlacement="bottom"
+                        onDateChange={this.onFirstRestrictionsChange}
                       />
                     </Col>
                     <Col>
-                      <DatePicker
-                        onChange={this.onLockdownChange}
-                        value={this.state.dateLockdownCounterfactual}
+                      <DateChooser
+                        dateString={this.state.dateLockdownCounterfactual}
                         key="date-lockdown"
-                        format="yyyy-MM-dd"
-                        className="form-control"
-                        monthsShown={1}
-                        popperPlacement="bottom"
+                        onDateChange={this.onLockdownChange}
                       />
                     </Col>
                   </Row>
