@@ -1,3 +1,4 @@
+import exact from "prop-types-exact";
 import Spinner from "react-bootstrap/Spinner";
 
 const propTypes = exact({});

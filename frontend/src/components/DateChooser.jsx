@@ -1,6 +1,6 @@
+import DatePicker from "react-date-picker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
-import DatePicker from "react-date-picker";
 
 const propTypes = exact({
   onDateChange: PropTypes.func.isRequired,

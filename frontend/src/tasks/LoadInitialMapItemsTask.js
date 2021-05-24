@@ -4,7 +4,7 @@ import LoadTotalCasesTask from "./LoadTotalCasesTask";
 // Asynchronously load geometry and cases data from Django backend
 const loadInitialMapItems = async () => {
   console.log("Loading map data from Django backend...");
-  const countries = await loadGeometriesTask.retrieve();
+  const countries = await loadGeometriesTask();
   const loadTotalCasesTask = new LoadTotalCasesTask();
   const mapItems = await loadTotalCasesTask.decorateCountries(
     countries,

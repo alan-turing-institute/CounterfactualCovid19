@@ -1,3 +1,4 @@
+import exact from "prop-types-exact";
 import legendItems from "../entities/LegendItems";
 
 const propTypes = exact({});

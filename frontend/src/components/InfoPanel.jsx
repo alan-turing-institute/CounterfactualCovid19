@@ -42,7 +42,7 @@ class InfoPanel extends React.Component {
     };
     this.initial_state = this.state;
 
-    // Bind the datepicker change functions to allow it to be used by other objects
+    // Bind the datepicker change functions to allow them to be used by other objects
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }

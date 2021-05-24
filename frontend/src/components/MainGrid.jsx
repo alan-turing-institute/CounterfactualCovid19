@@ -1,5 +1,6 @@
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import exact from "prop-types-exact";
 import HeaderPanel from "./HeaderPanel";
 import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
