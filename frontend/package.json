@@ -3,22 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^13.1.9",
-    "axios": "^0.21.1",
-    "bootstrap": "^5.0.1",
-    "leaflet": "^1.7.1",
-    "prop-types": "^15.7.2",
-    "prop-types-exact": "^1.2.0",
-    "react": "^17.0.2",
-    "react-bootstrap": "^1.6.0",
-    "react-date-picker": "8.1.1",
-    "react-dom": "^17.0.2",
-    "react-leaflet": "^3.2.0",
-    "react-scripts": "^4.0.3",
-    "reactstrap": "8.9.0",
-    "recharts": "^2.0.9"
+    "axios": ">=0.21.1",
+    "bootstrap": ">=5.0.1",
+    "leaflet": ">=1.7.1",
+    "prop-types": ">=15.7.2",
+    "prop-types-exact": ">=1.2.0",
+    "react": ">=17.0.2",
+    "react-bootstrap": ">=1.6.0",
+    "react-date-picker": ">=8.1.1",
+    "react-dom": ">=17.0.2",
+    "react-leaflet": ">=3.2.0",
+    "react-scripts": ">=4.0.3",
+    "recharts": ">=2.0.9"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": ">=5.12.0",
+    "@testing-library/react": ">=11.2.7",
+    "babel-eslint": ">=10.1.0",
+    "eslint-config-react-app": ">=6.0.0",
+    "eslint-plugin-flowtype": ">=5.7.2",
+    "eslint-plugin-import": ">=2.23.3",
+    "eslint-plugin-jsx-a11y": ">=6.4.1",
+    "eslint-plugin-react": ">=7.23.2"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -30,6 +36,15 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alan-turing-institute/CounterfactualCovid19.git"
+  },
+  "contributors": [
+    "Kellyn Arnold <K.F.Arnold@leeds.ac.uk>",
+    "Camila Rangel Smith <crangelsmith@turing.ac.uk>",
+    "James Robinson <jrobinson@turing.ac.uk>"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
