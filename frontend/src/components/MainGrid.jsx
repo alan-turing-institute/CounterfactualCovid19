@@ -1,15 +1,20 @@
-import React from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
+import exact from "prop-types-exact";
+import HeaderPanel from "./HeaderPanel";
 import InfoPanel from "./InfoPanel";
 import Legend from "./Legend";
 import Loading from "./Loading";
-import HeaderPanel from "./HeaderPanel";
-import WorldMap from "./WorldMap";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
+import React from "react";
+import Row from "react-bootstrap/Row";
+import WorldMap from "./WorldMap";
 
-export default class MainGrid extends React.Component {
+const propTypes = exact({});
+
+const defaultProps = {};
+
+class MainGrid extends React.Component {
   constructor(props) {
     super(props);
 
@@ -17,7 +22,6 @@ export default class MainGrid extends React.Component {
     this.state = {
       countries: [],
       isoCode: null,
-      summedAvgCases: null,
       sizeMapComponent: "88vh",
       sizeHistogramComponent: "0vh",
     };
@@ -37,12 +41,11 @@ export default class MainGrid extends React.Component {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code, summed_avg_cases) {
+  handleCountryChange(iso_code) {
     if (iso_code === this.state.isoCode) {
       console.log(`Setting currently selected country to none`);
       this.setState({
         isoCode: null,
-        summedAvgCases: null,
         sizeMapComponent: "88vh",
         sizeHistogramComponent: "0vh",
       });
@@ -50,7 +53,6 @@ export default class MainGrid extends React.Component {
       console.log(`Setting currently selected country to ${iso_code}`);
       this.setState({
         isoCode: iso_code,
-        summedAvgCases: summed_avg_cases,
         sizeMapComponent: "40vh",
         sizeHistogramComponent: "48vh",
       });
@@ -79,14 +81,13 @@ export default class MainGrid extends React.Component {
                 <Legend />
               </Col>
             </Row>
-            {this.state.isoCode == null ? (
+            {!this.state.isoCode ? (
               <Loading />
             ) : (
               <Row style={{ height: this.state.sizeHistogramComponent }}>
                 <Col xs={12} style={{ padding: "0px" }}>
                   <InfoPanel
                     isoCode={this.state.isoCode}
-                    summedAvgCases={this.state.summedAvgCases}
                     height={this.state.sizeHistogramComponent}
                   />
                 </Col>
@@ -98,3 +99,8 @@ export default class MainGrid extends React.Component {
     );
   }
 }
+
+MainGrid.propTypes = propTypes;
+MainGrid.defaultProps = defaultProps;
+
+export default MainGrid;

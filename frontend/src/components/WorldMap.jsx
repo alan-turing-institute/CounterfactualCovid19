@@ -1,9 +1,18 @@
-import React from "react";
-import { MapContainer, GeoJSON } from "react-leaflet";
+import "../css/WorldMap.css";
 import "leaflet/dist/leaflet.css";
-import "./WorldMap.css";
+import { MapContainer, GeoJSON } from "react-leaflet";
+import exact from "prop-types-exact";
+import PropTypes from "prop-types";
+import React from "react";
 
-export default class WorldMap extends React.Component {
+const propTypes = exact({
+  onCountrySelect: PropTypes.func.isRequired,
+  countries: PropTypes.array.isRequired,
+});
+
+const defaultProps = {};
+
+class WorldMap extends React.Component {
   constructor(props) {
     super(props);
 
@@ -51,11 +60,8 @@ export default class WorldMap extends React.Component {
       function (event) {
         // Process the click on the current layer
         this.processLayerClick(layer);
-        // Pass the target ISO code and number of cases up to the callback function
-        this.props.onCountrySelect(
-          event.target.feature.id,
-          event.target.feature.properties.summedAvgCasesPerMillion
-        );
+        // Pass the target ISO code up to the callback function
+        this.props.onCountrySelect(event.target.feature.id);
       }.bind(this) // allows the use of 'this' referring to the WorldMap object inside the anonymous function
     );
   };
@@ -73,3 +79,8 @@ export default class WorldMap extends React.Component {
     );
   }
 }
+
+WorldMap.propTypes = propTypes;
+WorldMap.defaultProps = defaultProps;
+
+export default WorldMap;

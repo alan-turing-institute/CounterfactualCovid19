@@ -1,4 +1,9 @@
+import exact from "prop-types-exact";
 import Spinner from "react-bootstrap/Spinner";
+
+const propTypes = exact({});
+
+const defaultProps = {};
 
 const Loading = () => {
   const loadingStyle = {
@@ -21,5 +26,8 @@ const Loading = () => {
     </div>
   );
 };
+
+Loading.propTypes = propTypes;
+Loading.defaultProps = defaultProps;
 
 export default Loading;
