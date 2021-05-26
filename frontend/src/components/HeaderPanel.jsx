@@ -1,8 +1,10 @@
-import { Button, Popover, PopoverHeader, PopoverBody } from "reactstrap";
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import exact from "prop-types-exact";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
 
@@ -28,6 +30,16 @@ class HeaderPanel extends React.Component {
   }
 
   render() {
+    const popover = (
+      <Popover>
+        <Popover.Title>About this project</Popover.Title>
+        <Popover.Content>
+          Sed posuere consectetur est at lobortis. Aenean eu leo quam.
+          Pellentesque ornare sem lacinia quam venenatis vestibulum.
+        </Popover.Content>
+      </Popover>
+    );
+
     return (
       <div>
         <Container fluid>
@@ -56,21 +68,18 @@ class HeaderPanel extends React.Component {
                 padding: "0px",
               }}
             >
-              <Button id="about" type="button" size="md" block>
-                About this project
-              </Button>
-              <Popover
+              <OverlayTrigger
+                trigger="click"
                 placement="bottom"
-                isOpen={this.state.popoverOpen}
-                target="about"
-                toggle={this.toggle}
+                transition={false}
+                overlay={popover}
               >
-                <PopoverHeader>About this project</PopoverHeader>
-                <PopoverBody>
-                  Sed posuere consectetur est at lobortis. Aenean eu leo quam.
-                  Pellentesque ornare sem lacinia quam venenatis vestibulum.
-                </PopoverBody>
-              </Popover>
+                {({ ...overlayTriggerProps }) => (
+                  <Button variant="secondary" {...overlayTriggerProps}>
+                    About this project
+                  </Button>
+                )}
+              </OverlayTrigger>
             </Col>
           </Row>
         </Container>
