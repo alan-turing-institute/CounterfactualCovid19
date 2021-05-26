@@ -227,10 +227,7 @@ class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <CounterfactualStory
                     dateStart={this.state.dateHistogramStart}
-                    dateEnd={this.state.dateHistogramEnd}
-                    shiftFirstRestrictions="XXXX"
-                    shiftLockdown="XXXX"
-                  />
+                    dateEnd={this.state.dateHistogramEnd}/>
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <CounterfactualStatistics
@@ -238,6 +235,8 @@ class InfoPanel extends React.Component {
                       this.state.totalCasesCounterfactual
                     }
                     totalCasesReal={this.state.totalCasesReal}
+                    shiftFirstRestrictions={new Date(this.state.dateFirstRestrictionsReal)-new Date(this.state.dateFirstRestrictionsCounterfactual)}
+                    shiftLockdown={new Date(this.state.dateLockdownReal)-new Date(this.state.dateLockdownCounterfactual)}
                   />
                 </Row>
               </Col>
