@@ -34,7 +34,7 @@ const CounterfactualStatistics = (props) => {
               .toString()} \n `}
           </Card.Text>
         )}
-        {!(props.totalCasesCounterfactual & props.totalCasesReal) ? null : (
+        {(!(props.shiftFirstRestrictions!==0 || props.shiftLockdown!==0) || !props.totalCasesCounterfactual ) ? null : (
           <Card.Text>
             {`Reduction in total cases: ${(
               (1 - props.totalCasesCounterfactual / props.totalCasesReal) *
