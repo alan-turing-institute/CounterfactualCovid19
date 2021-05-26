@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 const propTypes = exact({
   totalCasesCounterfactual: PropTypes.number,
   totalCasesReal: PropTypes.number,
+  shiftFirstRestrictions: PropTypes.instanceOf(Date).isRequired,
+  shiftLockdown: PropTypes.instanceOf(Date).isRequired,
 });
 
 const defaultProps = {};
