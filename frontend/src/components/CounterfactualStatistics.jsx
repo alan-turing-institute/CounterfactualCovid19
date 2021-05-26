@@ -12,9 +12,8 @@ const propTypes = exact({
 const defaultProps = {};
 
 const CounterfactualStatistics = (props) => {
-
   // divide to turn shift from date difference to days
-  const to_days = (1000 * 3600 * 24);
+  const to_days = 1000 * 3600 * 24;
   return (
     <Card
       style={{
@@ -25,8 +24,12 @@ const CounterfactualStatistics = (props) => {
     >
       <Card.Body>
         <Card.Title>Counterfactual Statistics</Card.Title>
-        <Card.Text>{`Shift in first restrictions: ${props.shiftFirstRestrictions/to_days} days`}</Card.Text>
-        <Card.Text>{`Shift in lockdown: ${props.shiftLockdown/to_days} days`}</Card.Text>
+        <Card.Text>{`Shift in first restrictions: ${
+          props.shiftFirstRestrictions / to_days
+        } days`}</Card.Text>
+        <Card.Text>{`Shift in lockdown: ${
+          props.shiftLockdown / to_days
+        } days`}</Card.Text>
         {!props.totalCasesCounterfactual ? null : (
           <Card.Text>
             {`Total COVID-19 Cases per Million: ${props.totalCasesCounterfactual
@@ -34,7 +37,8 @@ const CounterfactualStatistics = (props) => {
               .toString()} \n `}
           </Card.Text>
         )}
-        {(!(props.shiftFirstRestrictions!==0 || props.shiftLockdown!==0) || !props.totalCasesCounterfactual ) ? null : (
+        {!(props.shiftFirstRestrictions !== 0 || props.shiftLockdown !== 0) ||
+        !props.totalCasesCounterfactual ? null : (
           <Card.Text>
             {`Reduction in total cases: ${(
               (1 - props.totalCasesCounterfactual / props.totalCasesReal) *
