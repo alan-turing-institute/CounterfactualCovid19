@@ -26,12 +26,16 @@ const CounterfactualStatistics = (props) => {
     >
       <Card.Body>
         <Card.Title>Counterfactual Statistics</Card.Title>
+        {!(props.shiftFirstRestrictions) ? null : (
         <Card.Text>{`Shift in first restrictions: ${daysFromDate(
           props.shiftFirstRestrictions
         )} days`}</Card.Text>
+        )}
+        {!(props.shiftLockdown) ? null : (
         <Card.Text>{`Shift in lockdown: ${daysFromDate(
           props.shiftLockdown
         )} days`}</Card.Text>
+        )}
         {!props.totalCasesCounterfactual ? null : (
           <Card.Text>
             {`Total COVID-19 Cases per Million: ${props.totalCasesCounterfactual
