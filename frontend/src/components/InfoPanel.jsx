@@ -46,6 +46,10 @@ class InfoPanel extends React.Component {
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
+  daysDiff(date1, date2) {
+    // get the time difference between two dates.
+    return new Date(date1) - new Date(date2);
+  }
 
   async loadCasesReal() {
     const task = new LoadTotalCasesTask();
@@ -228,8 +232,6 @@ class InfoPanel extends React.Component {
                   <CounterfactualStory
                     dateStart={this.state.dateHistogramStart}
                     dateEnd={this.state.dateHistogramEnd}
-                    shiftFirstRestrictions="XXXX"
-                    shiftLockdown="XXXX"
                   />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
@@ -238,6 +240,14 @@ class InfoPanel extends React.Component {
                       this.state.totalCasesCounterfactual
                     }
                     totalCasesReal={this.state.totalCasesReal}
+                    shiftFirstRestrictions={this.daysDiff(
+                      this.state.dateFirstRestrictionsReal,
+                      this.state.dateFirstRestrictionsCounterfactual
+                    )}
+                    shiftLockdown={this.daysDiff(
+                      this.state.dateLockdownReal,
+                      this.state.dateLockdownCounterfactual
+                    )}
                   />
                 </Row>
               </Col>
