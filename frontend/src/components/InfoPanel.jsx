@@ -48,7 +48,7 @@ class InfoPanel extends React.Component {
   }
   daysDiff(date1, date2) {
     // get the time difference between two dates.
-    return (new Date(date1) - new Date(date2));
+    return new Date(date1) - new Date(date2);
   }
 
   async loadCasesReal() {
@@ -242,11 +242,12 @@ class InfoPanel extends React.Component {
                     totalCasesReal={this.state.totalCasesReal}
                     shiftFirstRestrictions={this.daysDiff(
                       this.state.dateFirstRestrictionsReal,
-                      this.state.dateFirstRestrictionsCounterfactual)
-                    }
-                    shiftLockdown={
-                      this.daysDiff(this.state.dateLockdownReal,this.state.dateLockdownCounterfactual)
-                    }
+                      this.state.dateFirstRestrictionsCounterfactual
+                    )}
+                    shiftLockdown={this.daysDiff(
+                      this.state.dateLockdownReal,
+                      this.state.dateLockdownCounterfactual
+                    )}
                   />
                 </Row>
               </Col>
