@@ -13,7 +13,9 @@ const defaultProps = {};
 
 const CounterfactualStatistics = (props) => {
   // divide to turn shift from date difference to days
-  const to_days = 1000 * 3600 * 24;
+  function daysFromDate(inputDate) {
+  return (inputDate / (1000 * 3600 * 24));
+}
   return (
     <Card
       style={{
@@ -24,11 +26,11 @@ const CounterfactualStatistics = (props) => {
     >
       <Card.Body>
         <Card.Title>Counterfactual Statistics</Card.Title>
-        <Card.Text>{`Shift in first restrictions: ${
-          props.shiftFirstRestrictions / to_days
+        <Card.Text>{`Shift in first restrictions: ${daysFromDate(
+          props.shiftFirstRestrictions )
         } days`}</Card.Text>
-        <Card.Text>{`Shift in lockdown: ${
-          props.shiftLockdown / to_days
+        <Card.Text>{`Shift in lockdown: ${daysFromDate(
+          props.shiftLockdown)
         } days`}</Card.Text>
         {!props.totalCasesCounterfactual ? null : (
           <Card.Text>
