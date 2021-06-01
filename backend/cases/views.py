@@ -12,6 +12,7 @@ from .serializers import (
     CasesRealDailyNormalisedSerializer,
     CasesRealIntegratedSerializer,
     DeathsRealDailyNormalisedSerializer,
+    DeathsRealIntegratedSerializer,
 )
 
 
@@ -164,3 +165,21 @@ class DeathsRealDailyNormalisedView(PerCountryRealViewMixin, viewsets.ModelViewS
     """Daily new and cumulative deaths normalised by population"""
 
     serializer_class = DeathsRealDailyNormalisedSerializer
+
+
+class DeathsRealIntegratedView(PerCountryRealViewMixin, viewsets.ModelViewSet):
+    """Integrated number of deaths normalised by population"""
+
+    serializer_class = DeathsRealIntegratedSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Aggregate by country, calculating total cases and per-capita total cases
+        return queryset.values("country").annotate(
+            date=Max("date"),
+            summed_avg_deaths=Sum("weekly_avg_deaths"),
+            summed_avg_deaths_per_million=ExpressionWrapper(
+                1e6 * Sum("weekly_avg_deaths") / F("country__population"),
+                output_field=FloatField(),
+            ),
+        )

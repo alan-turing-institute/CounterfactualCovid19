@@ -4,6 +4,7 @@ from .concrete import (
     CasesRealDailyNormalisedSerializer,
     CasesRealIntegratedSerializer,
     DeathsRealDailyNormalisedSerializer,
+    DeathsRealIntegratedSerializer,
 )
 from .ephemeral import (
     CasesCounterfactualDailyAbsoluteSerializer,
@@ -12,11 +13,12 @@ from .ephemeral import (
 )
 
 __all__ = [
+    CasesCounterfactualDailyAbsoluteSerializer,
+    CasesCounterfactualDailyNormalisedSerializer,
+    CasesCounterfactualIntegratedSerializer,
     CasesRealDailyAbsoluteSerializer,
     CasesRealDailyNormalisedSerializer,
     CasesRealIntegratedSerializer,
     DeathsRealDailyNormalisedSerializer,
-    CasesCounterfactualDailyAbsoluteSerializer,
-    CasesCounterfactualDailyNormalisedSerializer,
-    CasesCounterfactualIntegratedSerializer,
+    DeathsRealIntegratedSerializer,
 ]
