@@ -1,16 +1,16 @@
+import applyCountryColours from "./LoadCountryColoursTask";
 import loadGeometriesTask from "./LoadCountryGeometryTask";
-import LoadTotalCasesTask from "./LoadTotalCasesTask";
+import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 
 // Asynchronously load geometry and cases data from Django backend
-const loadInitialMapItems = async () => {
+const loadInitialMapItems = async (endDate) => {
   console.log("Loading map data from Django backend...");
   const countries = await loadGeometriesTask();
-  const loadTotalCasesTask = new LoadTotalCasesTask();
-  const mapItems = await loadTotalCasesTask.decorateCountries(
-    countries,
-    "2020-07-06"
-  );
-  console.log(`Loaded map data for ${mapItems.length} countries`);
+  console.log("Loading cases data from Django backend...");
+  const task = new LoadPerCountryStatisticsTask();
+  const casesData = await task.loadIntegratedCasesAllCountries(endDate);
+  const mapItems = await applyCountryColours(countries, casesData);
+  console.log(`Loaded data for ${mapItems.length} countries`);
   return mapItems;
 };
 

@@ -10,11 +10,7 @@ import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
-import {
-  loadIntegratedCases,
-  loadIntegratedCounterfactualCases,
-  loadIntegratedDeaths,
-} from "../tasks/LoadPerCountryStatisticsTasks.js";
+import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
@@ -57,12 +53,13 @@ class InfoPanel extends React.Component {
   }
 
   async loadStatisticsReal() {
+    const task = new LoadPerCountryStatisticsTask();
     try {
-      const realCases = await loadIntegratedCases(
+      const realCases = await task.loadIntegratedCases(
         this.props.isoCode,
         this.state.dateHistogramEnd
       );
-      const realDeaths = await loadIntegratedDeaths(
+      const realDeaths = await task.loadIntegratedDeaths(
         this.props.isoCode,
         this.state.dateHistogramEnd
       );
@@ -77,7 +74,8 @@ class InfoPanel extends React.Component {
 
   async loadStatisticsCounterfactual() {
     try {
-      const counterfactualCases = await loadIntegratedCounterfactualCases(
+      const task = new LoadPerCountryStatisticsTask();
+      const counterfactualCases = await task.loadIntegratedCounterfactualCases(
         this.props.isoCode,
         this.state.dateHistogramStart,
         this.state.dateHistogramEnd,
