@@ -34,6 +34,7 @@ def run():
                     country=country,
                     date=entry.Date,
                     weekly_avg_cases=entry.Daily_cases_MA7,
+                    weekly_avg_deaths=entry.Daily_deaths_MA7,
                 )
                 record.save()
 

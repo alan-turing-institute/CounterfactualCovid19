@@ -4,7 +4,7 @@ from countries.models import Country
 
 
 class CasesRecord(models.Model):
-    """Rolling weekly average cases numbers on a daily basis"""
+    """Rolling weekly average cases and deaths on a daily basis"""
 
     class Meta:
         """Metaclass for imposing constraints"""
@@ -18,6 +18,7 @@ class CasesRecord(models.Model):
     )
     date = models.DateField()
     weekly_avg_cases = models.FloatField()
+    weekly_avg_deaths = models.FloatField()
 
     def __str__(self):
-        return f"{self.country.name} had {self.weekly_avg_cases} on {self.date}"
+        return f"{self.country.name} had {self.weekly_avg_cases} cases and {self.weekly_avg_deaths} on {self.date}"
