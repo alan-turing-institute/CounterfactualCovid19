@@ -13,12 +13,12 @@ from .ephemeral import (
 )
 
 __all__ = [
-    CasesCounterfactualDailyAbsoluteSerializer,
-    CasesCounterfactualDailyNormalisedSerializer,
-    CasesCounterfactualIntegratedSerializer,
-    CasesRealDailyAbsoluteSerializer,
-    CasesRealDailyNormalisedSerializer,
-    CasesRealIntegratedSerializer,
-    DeathsRealDailyNormalisedSerializer,
-    DeathsRealIntegratedSerializer,
+    "CasesCounterfactualDailyAbsoluteSerializer",
+    "CasesCounterfactualDailyNormalisedSerializer",
+    "CasesCounterfactualIntegratedSerializer",
+    "CasesRealDailyAbsoluteSerializer",
+    "CasesRealDailyNormalisedSerializer",
+    "CasesRealIntegratedSerializer",
+    "DeathsRealDailyNormalisedSerializer",
+    "DeathsRealIntegratedSerializer",
 ]
