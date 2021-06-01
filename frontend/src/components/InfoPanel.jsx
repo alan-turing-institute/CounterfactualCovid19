@@ -47,9 +47,13 @@ class InfoPanel extends React.Component {
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
-  daysDiff(date1, date2) {
-    // get the time difference between two dates.
-    return new Date(date1) - new Date(date2);
+
+  daysDelta(date1, date2) {
+    // Get the time difference between two dates.
+    console.log(`date1 ${date1}; date2 ${date2}`);
+    if (!date1 || !date2) { return 0 }
+    const secondsDelta = new Date(date1) - new Date(date2);
+    return secondsDelta / (1000 * 3600 * 24);
   }
 
   async loadStatisticsReal() {
@@ -248,11 +252,11 @@ class InfoPanel extends React.Component {
                       this.state.totalCasesCounterfactual
                     }
                     totalCasesReal={this.state.totalCasesReal}
-                    shiftFirstRestrictions={this.daysDiff(
+                    shiftFirstRestrictions={this.daysDelta(
                       this.state.dateFirstRestrictionsReal,
                       this.state.dateFirstRestrictionsCounterfactual
                     )}
-                    shiftLockdown={this.daysDiff(
+                    shiftLockdown={this.daysDelta(
                       this.state.dateLockdownReal,
                       this.state.dateLockdownCounterfactual
                     )}
