@@ -5,7 +5,6 @@ const applyCountryColours = (countryGeoms, integratedCasesData) => {
     console.log(
       `Determining colour scheme for ${countryGeoms.length} countries...`
     );
-    console.log("%O", integratedCasesData);
     for (let i = 0; i < countryGeoms.length; i++) {
       // Find matching country
       const countryGeom = countryGeoms[i];

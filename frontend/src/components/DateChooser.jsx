@@ -26,12 +26,13 @@ const DateChooser = (props) => {
 
   return props.dateString ? (
     <DatePicker
-      onChange={handleDateChange}
-      value={new Date(props.dateString)}
-      format="yyyy-MM-dd"
       className="form-control"
+      clearIcon={null}
+      format="yyyy-MM-dd"
       monthsShown={1}
+      onChange={handleDateChange}
       popperPlacement="bottom"
+      value={new Date(props.dateString)}
     />
   ) : (
     <div></div>
