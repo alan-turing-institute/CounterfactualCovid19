@@ -50,7 +50,6 @@ class InfoPanel extends React.Component {
 
   daysDelta(date1, date2) {
     // Get the time difference between two dates.
-    console.log(`date1 ${date1}; date2 ${date2}`);
     if (!date1 || !date2) { return 0 }
     const secondsDelta = new Date(date1) - new Date(date2);
     return secondsDelta / (1000 * 3600 * 24);
