@@ -11,6 +11,8 @@ from .serializers import (
     CasesRealDailyAbsoluteSerializer,
     CasesRealDailyNormalisedSerializer,
     CasesRealIntegratedSerializer,
+    DeathsRealDailyNormalisedSerializer,
+    DeathsRealIntegratedSerializer,
 )
 
 
@@ -85,7 +87,7 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
         )
 
 
-class CasesRealViewMixin(ABC):
+class PerCountryRealViewMixin(ABC):
     """Interface for real cases views"""
 
     @property
@@ -100,15 +102,20 @@ class CasesRealViewMixin(ABC):
     def get_queryset(self):
         """Construct a default queryset with filters"""
 
-        # Annotate the queryset with cumulative cases information
-        # We run a window function over all entries, summing `cases` over all previous entries
-        # We finish by returning the query ordered by date
+        # Annotate the queryset with cumulative numbers information.
+        # We run a window function over all entries, summing `cases` and `deaths`
+        # over all previous entries. We return the query ordered by date
         queryset = CasesRecord.objects.annotate(  # pylint: disable=no-member
             summed_avg_cases=Window(
                 expression=Sum("weekly_avg_cases"),
                 partition_by=[F("country")],
                 order_by=F("date").asc(),
-            )
+            ),
+            summed_avg_deaths=Window(
+                expression=Sum("weekly_avg_deaths"),
+                partition_by=[F("country")],
+                order_by=F("date").asc(),
+            ),
         ).order_by("country__iso_code", "date")
 
         # Apply filters on ISO code, start date and end date
@@ -124,19 +131,19 @@ class CasesRealViewMixin(ABC):
         return queryset
 
 
-class CasesRealDailyAbsoluteView(CasesRealViewMixin, viewsets.ModelViewSet):
+class CasesRealDailyAbsoluteView(PerCountryRealViewMixin, viewsets.ModelViewSet):
     """Daily new and cumulative cases"""
 
     serializer_class = CasesRealDailyAbsoluteSerializer
 
 
-class CasesRealDailyNormalisedView(CasesRealViewMixin, viewsets.ModelViewSet):
+class CasesRealDailyNormalisedView(PerCountryRealViewMixin, viewsets.ModelViewSet):
     """Daily new and cumulative cases normalised by population"""
 
     serializer_class = CasesRealDailyNormalisedSerializer
 
 
-class CasesRealIntegratedView(CasesRealViewMixin, viewsets.ModelViewSet):
+class CasesRealIntegratedView(PerCountryRealViewMixin, viewsets.ModelViewSet):
     """Integrated number of cases normalised by population"""
 
     serializer_class = CasesRealIntegratedSerializer
@@ -149,6 +156,30 @@ class CasesRealIntegratedView(CasesRealViewMixin, viewsets.ModelViewSet):
             summed_avg_cases=Sum("weekly_avg_cases"),
             summed_avg_cases_per_million=ExpressionWrapper(
                 1e6 * Sum("weekly_avg_cases") / F("country__population"),
+                output_field=FloatField(),
+            ),
+        )
+
+
+class DeathsRealDailyNormalisedView(PerCountryRealViewMixin, viewsets.ModelViewSet):
+    """Daily new and cumulative deaths normalised by population"""
+
+    serializer_class = DeathsRealDailyNormalisedSerializer
+
+
+class DeathsRealIntegratedView(PerCountryRealViewMixin, viewsets.ModelViewSet):
+    """Integrated number of deaths normalised by population"""
+
+    serializer_class = DeathsRealIntegratedSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Aggregate by country, calculating total cases and per-capita total cases
+        return queryset.values("country").annotate(
+            date=Max("date"),
+            summed_avg_deaths=Sum("weekly_avg_deaths"),
+            summed_avg_deaths_per_million=ExpressionWrapper(
+                1e6 * Sum("weekly_avg_deaths") / F("country__population"),
                 output_field=FloatField(),
             ),
         )

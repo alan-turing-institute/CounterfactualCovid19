@@ -10,7 +10,7 @@ import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
-import LoadTotalCasesTask from "../tasks/LoadTotalCasesTask.js";
+import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
@@ -39,6 +39,7 @@ class InfoPanel extends React.Component {
       dateHistogramEnd: "2020-07-06",
       totalCasesCounterfactual: null,
       totalCasesReal: null,
+      totalDeathsReal: null,
     };
     this.initial_state = this.state;
 
@@ -51,30 +52,36 @@ class InfoPanel extends React.Component {
     return new Date(date1) - new Date(date2);
   }
 
-  async loadCasesReal() {
-    const task = new LoadTotalCasesTask();
+  async loadStatisticsReal() {
+    const task = new LoadPerCountryStatisticsTask();
     try {
-      const realCases = await task.getIntegratedCasesCountryData(
+      const realCases = await task.loadIntegratedCases(
         this.props.isoCode,
         this.state.dateHistogramEnd
       );
-      this.setState({ totalCasesReal: realCases.summed_avg_cases_per_million });
+      const realDeaths = await task.loadIntegratedDeaths(
+        this.props.isoCode,
+        this.state.dateHistogramEnd
+      );
+      this.setState({
+        totalCasesReal: realCases.summed_avg_cases_per_million,
+        totalDeathsReal: realDeaths.summed_avg_deaths_per_million,
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
-  async loadCasesCounterfactual() {
-    const task = new LoadTotalCasesTask();
+  async loadStatisticsCounterfactual() {
     try {
-      const counterfactualCases =
-        await task.getIntegratedCounterfactualCountryData(
-          this.props.isoCode,
-          this.state.dateHistogramStart,
-          this.state.dateHistogramEnd,
-          this.state.dateFirstRestrictionsCounterfactual,
-          this.state.dateLockdownCounterfactual
-        );
+      const task = new LoadPerCountryStatisticsTask();
+      const counterfactualCases = await task.loadIntegratedCounterfactualCases(
+        this.props.isoCode,
+        this.state.dateHistogramStart,
+        this.state.dateHistogramEnd,
+        this.state.dateFirstRestrictionsCounterfactual,
+        this.state.dateLockdownCounterfactual
+      );
       this.setState({
         totalCasesCounterfactual:
           counterfactualCases.summed_avg_cases_per_million,
@@ -123,8 +130,8 @@ class InfoPanel extends React.Component {
     await Promise.all([
       this.loadDemographicData(),
       this.loadRestrictionData(),
-      this.loadCasesReal(),
-      this.loadCasesCounterfactual(),
+      this.loadStatisticsReal(),
+      this.loadStatisticsCounterfactual(),
     ]);
   }
 
@@ -146,7 +153,7 @@ class InfoPanel extends React.Component {
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
-    await this.loadCasesCounterfactual();
+    await this.loadStatisticsCounterfactual();
   }
 
   // this runs when we change the lockdown counterfactual date
@@ -155,7 +162,7 @@ class InfoPanel extends React.Component {
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
-    await this.loadCasesCounterfactual();
+    await this.loadStatisticsCounterfactual();
   }
 
   render() {
@@ -177,6 +184,7 @@ class InfoPanel extends React.Component {
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
                     totalCases={this.state.totalCasesReal}
+                    totalDeaths={this.state.totalDeathsReal}
                     populationDensity={this.state.countryPopulationDensity}
                   />
                 </Row>

@@ -23,6 +23,8 @@ from cases.views import (
     CasesRealDailyAbsoluteView,
     CasesRealDailyNormalisedView,
     CasesRealIntegratedView,
+    DeathsRealDailyNormalisedView,
+    DeathsRealIntegratedView,
 )
 from countries.views import CountryGeometryView, CountryDemographicView
 from dates.views import (
@@ -64,6 +66,17 @@ router.register(
     "cases/real/integrated",
     CasesRealIntegratedView,
     basename="real_integrated",
+)
+# Deaths
+router.register(
+    "deaths/real/daily/normalised",
+    DeathsRealDailyNormalisedView,
+    basename="deaths_real_daily_normalised",
+)
+router.register(
+    "deaths/real/integrated",
+    DeathsRealIntegratedView,
+    basename="deaths_real_integrated",
 )
 # Countries
 router.register("country/geometry", CountryGeometryView, basename="country_geometry")

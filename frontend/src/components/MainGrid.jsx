@@ -21,6 +21,7 @@ class MainGrid extends React.Component {
     // Add component-level state
     this.state = {
       countries: [],
+      defaultEndDate: "2020-07-06",
       isoCode: null,
       sizeMapComponent: "88vh",
       sizeHistogramComponent: "0vh",
@@ -33,7 +34,9 @@ class MainGrid extends React.Component {
   // This runs when the component is first loaded
   async componentDidMount() {
     try {
-      const initialMapItems = await loadInitialMapItems();
+      const initialMapItems = await loadInitialMapItems(
+        this.state.defaultEndDate
+      );
       this.setState({ countries: initialMapItems });
     } catch (error) {
       console.log(error);

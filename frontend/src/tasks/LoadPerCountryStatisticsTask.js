@@ -1,19 +1,8 @@
 import axios from "axios";
-import legendItems from "../entities/LegendItems";
 
-class LoadTotalCasesTask {
-  decorateCountries = async (countryGeoms, endDate) => {
-    console.log("Loading cases data from Django backend...");
-    try {
-      const integratedCasesData = await this.#getIntegratedCasesData(endDate);
-      return this.#processCovidData(countryGeoms, integratedCasesData);
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
-  #getIntegratedCasesData = async (end_date) => {
+// Asynchronously load integrated cases data from Django backend
+class LoadPerCountryStatisticsTask {
+  loadIntegratedCasesAllCountries = async (end_date) => {
     try {
       const target = `http://localhost:8000/api/cases/real/integrated/?end_date=${end_date}`;
       console.debug(`Backend ${target}`);
@@ -25,7 +14,7 @@ class LoadTotalCasesTask {
     }
   };
 
-  getIntegratedCasesCountryData = async (iso_code, end_date) => {
+  loadIntegratedCases = async (iso_code, end_date) => {
     try {
       const target = `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`;
       console.debug(`Backend ${target}`);
@@ -37,7 +26,8 @@ class LoadTotalCasesTask {
     }
   };
 
-  getIntegratedCounterfactualCountryData = async (
+  // Asynchronously load integrated cases simulation from Django backend
+  loadIntegratedCounterfactualCases = async (
     iso_code,
     start_date,
     end_date,
@@ -72,34 +62,17 @@ class LoadTotalCasesTask {
     }
   };
 
-  #processCovidData = (countryGeoms, integratedCasesData) => {
-    console.log(
-      `Determining colour scheme for ${countryGeoms.length} geometries...`
-    );
-    for (let i = 0; i < countryGeoms.length; i++) {
-      // Find matching country
-      const countryGeom = countryGeoms[i];
-      const countryData = integratedCasesData.find(
-        (countryData) => countryGeom.id === countryData.iso_code
-      );
-      // Decorate with total cases per million
-      countryGeom.properties.summedAvgCasesPerMillion = countryData
-        ? Number(countryData.summed_avg_cases_per_million)
-        : 0;
-      // Set appropriate colour
-      this.#setCountryColour(countryGeom);
-    }
-    return countryGeoms;
-  };
-
-  #setCountryColour = (countryGeom) => {
-    const legendItem = legendItems.find((item) =>
-      item.isFor(countryGeom.properties.summedAvgCasesPerMillion)
-    );
-    if (legendItem != null) {
-      countryGeom.properties.color = legendItem.color;
+  // Asynchronously load integrated deaths data from Django backend
+  loadIntegratedDeaths = async (iso_code, end_date) => {
+    try {
+      const target = `http://localhost:8000/api/deaths/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`;
+      console.debug(`Backend ${target}`);
+      const response = await axios.get(target, {});
+      return response.data[0];
+    } catch (error) {
+      console.log(error);
+      return [];
     }
   };
 }
-
-export default LoadTotalCasesTask;
+export default LoadPerCountryStatisticsTask;

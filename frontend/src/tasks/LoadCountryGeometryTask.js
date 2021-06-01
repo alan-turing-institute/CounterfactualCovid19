@@ -2,7 +2,6 @@ import axios from "axios";
 
 // Asynchronously load country demographic data from Django backend
 const loadGeometriesTask = async () => {
-  console.log("Loading geometries from Django backend...");
   try {
     const target = "http://localhost:8000/api/country/geometry/";
     console.debug(`Backend ${target}`);

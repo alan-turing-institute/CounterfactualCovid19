@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const propTypes = exact({
   totalCases: PropTypes.number,
+  totalDeaths: PropTypes.number,
   populationDensity: PropTypes.number,
 });
 
@@ -27,7 +28,13 @@ const CountryStatistics = (props) => {
               .toString()} \n `}
           </Card.Text>
         )}
-        <Card.Text>{`Total COVID-19 Deaths per Million: XXX`}</Card.Text>
+        {!props.totalDeaths ? null : (
+          <Card.Text>
+            {`Total COVID-19 Deaths per Million: ${props.totalDeaths
+              .toFixed(0)
+              .toString()}`}
+          </Card.Text>
+        )}
         {!props.populationDensity ? null : (
           <Card.Text>
             {`Population density (per square km): ${props.populationDensity
