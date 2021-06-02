@@ -170,7 +170,7 @@ class InfoPanel extends React.Component {
 
   // this runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
-    this.setState({ dateFirstRestrictionsCounterfactual: newDate });
+    await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
@@ -179,7 +179,7 @@ class InfoPanel extends React.Component {
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
-    this.setState({ dateLockdownCounterfactual: newDate });
+    await this.setState({ dateLockdownCounterfactual: newDate });
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
@@ -211,31 +211,28 @@ class InfoPanel extends React.Component {
                 </Row>
               </Col>
               <Col xs={6} md={6} lg={6}>
-                <Row xs={1} md={1} lg={1}>
-                  <Row
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Col>
-                      <DateChooser
-                        initialDate={this.state.dateFirstRestrictionsReal}
-                        allowedDates={this.state.allowedDatesFirstRestrictions}
-                        caption="First restrictions date"
-                        onDateChange={this.onFirstRestrictionsChange}
-                      />
-                    </Col>
-                    <Col>
-                      <DateChooser
-                        initialDate={this.state.dateLockdownReal}
-                        allowedDates={this.state.allowedDatesLockdown}
-                        caption="Lockdown date"
-                        onDateChange={this.onLockdownChange}
-                      />
-                    </Col>
-                  </Row>
+                <Row
+                  xs={1}
+                  md={1}
+                  lg={1}
+                  key={this.props.isoCode} /* Recreate whenever key changes */
+                >
+                  <Col xs={6} md={6} lg={6}>
+                    <DateChooser
+                      allowedDates={this.state.allowedDatesFirstRestrictions}
+                      caption="First restrictions date"
+                      nominalDate={this.state.dateFirstRestrictionsReal}
+                      onDateChange={this.onFirstRestrictionsChange}
+                    />
+                  </Col>
+                  <Col xs={6} md={6} lg={6}>
+                    <DateChooser
+                      allowedDates={this.state.allowedDatesLockdown}
+                      caption="Lockdown date"
+                      nominalDate={this.state.dateLockdownReal}
+                      onDateChange={this.onLockdownChange}
+                    />
+                  </Col>
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Histogram
