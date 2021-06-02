@@ -1,10 +1,13 @@
-import DatePicker from "react-date-picker";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 
 const propTypes = exact({
+  initialDate: PropTypes.string,
   onDateChange: PropTypes.func.isRequired,
-  dateString: PropTypes.string,
+  allowedDates: PropTypes.array,
+  caption: PropTypes.string.isRequired,
 });
 
 const defaultProps = {};
@@ -23,20 +26,24 @@ const DateChooser = (props) => {
   }
 
   async function handleDateChange(newDate) {
-    console.log(`Setting new date: ${newDate}`);
+    console.log(`Changing ${props.caption}: ${newDate}`);
     await props.onDateChange(stringFromDate(newDate));
   }
 
-  return props.dateString ? (
-    <DatePicker
-      className="form-control"
-      clearIcon={null}
-      format="yyyy-MM-dd"
-      monthsShown={1}
-      onChange={handleDateChange}
-      popperPlacement="bottom"
-      value={new Date(props.dateString)}
-    />
+  const allowedDates = props.allowedDates
+    ? props.allowedDates.map((element) => new Date(element))
+    : null;
+
+  return allowedDates ? (
+    <div>
+      <DatePicker
+        selected={props.initialDate ? new Date(props.initialDate) : null}
+        dateFormat="yyyy-MM-dd"
+        onChange={handleDateChange}
+        includeDates={allowedDates}
+      />
+      <em>{props.caption}</em>
+    </div>
   ) : (
     <div></div>
   );

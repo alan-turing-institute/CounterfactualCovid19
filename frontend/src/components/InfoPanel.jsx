@@ -10,6 +10,7 @@ import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
+import LoadCounterfactualRestrictionsDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 import PropTypes from "prop-types";
 import React from "react";
@@ -27,6 +28,8 @@ class InfoPanel extends React.Component {
     super(props);
 
     this.state = {
+      allowedDatesFirstRestrictions: null,
+      allowedDatesLockdown: null,
       countryName: null,
       countryPopulationDensity: null,
       dateFirstWaveStart: null,
@@ -126,12 +129,31 @@ class InfoPanel extends React.Component {
     }
   }
 
+  async loadAllowedDates() {
+    const task = new LoadCounterfactualRestrictionsDatesTask();
+    const lockdownDates = await task.loadLockdownDates(this.props.isoCode);
+    const firstRestrictionsDates = await task.loadFirstRestrictionsDates(
+      this.props.isoCode
+    );
+    this.setState({
+      allowedDatesFirstRestrictions:
+        "possible_restrictions_dates" in firstRestrictionsDates
+          ? firstRestrictionsDates.possible_restrictions_dates
+          : null,
+      allowedDatesLockdown:
+        "possible_lockdown_dates" in lockdownDates
+          ? lockdownDates.possible_lockdown_dates
+          : null,
+    });
+  }
+
   async reloadStateData() {
     await Promise.all([
       this.loadDemographicData(),
       this.loadRestrictionData(),
       this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
     ]);
   }
 
@@ -149,7 +171,7 @@ class InfoPanel extends React.Component {
 
   // this runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
-    await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
+    this.setState({ dateFirstRestrictionsCounterfactual: newDate });
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
@@ -158,7 +180,7 @@ class InfoPanel extends React.Component {
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
-    await this.setState({ dateLockdownCounterfactual: newDate });
+    this.setState({ dateLockdownCounterfactual: newDate });
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
@@ -200,17 +222,17 @@ class InfoPanel extends React.Component {
                   >
                     <Col>
                       <DateChooser
-                        dateString={
-                          this.state.dateFirstRestrictionsCounterfactual
-                        }
-                        key="date-first-restrictions"
+                        initialDate={this.state.dateFirstRestrictionsReal}
+                        allowedDates={this.state.allowedDatesFirstRestrictions}
+                        caption="First restrictions date"
                         onDateChange={this.onFirstRestrictionsChange}
                       />
                     </Col>
                     <Col>
                       <DateChooser
-                        dateString={this.state.dateLockdownCounterfactual}
-                        key="date-lockdown"
+                        initialDate={this.state.dateLockdownReal}
+                        allowedDates={this.state.allowedDatesLockdown}
+                        caption="Lockdown date"
                         onDateChange={this.onLockdownChange}
                       />
                     </Col>
