@@ -1,4 +1,3 @@
-import "../css/InfoPanel.css";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import CounterfactualStatistics from "./CounterfactualStatistics";
@@ -9,7 +8,8 @@ import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
-import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
+import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
+import LoadCounterfactualRestrictionsDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 import PropTypes from "prop-types";
 import React from "react";
@@ -27,6 +27,8 @@ class InfoPanel extends React.Component {
     super(props);
 
     this.state = {
+      allowedDatesFirstRestrictions: null,
+      allowedDatesLockdown: null,
       countryName: null,
       countryPopulationDensity: null,
       dateFirstWaveStart: null,
@@ -107,28 +109,41 @@ class InfoPanel extends React.Component {
 
   async loadRestrictionData() {
     // Retrieve restriction data
-    const task = new LoadRestrictionsDatesTask();
     try {
-      const restrictionsDates = await task.getCountryRestrictionDates(
-        this.props.isoCode
-      );
+      const realDates = await loadRealDatesTask(this.props.isoCode);
       // Set the component state with the restriction data
       this.setState({
-        dateFirstRestrictionsCounterfactual:
-          restrictionsDates.first_restrictions_date,
-        dateFirstRestrictionsReal: restrictionsDates.first_restrictions_date,
-        dateLockdownCounterfactual: restrictionsDates.lockdown_date,
-        dateLockdownReal: restrictionsDates.lockdown_date,
+        dateFirstRestrictionsCounterfactual: realDates.first_restrictions_date,
+        dateFirstRestrictionsReal: realDates.first_restrictions_date,
+        dateLockdownCounterfactual: realDates.lockdown_date,
+        dateLockdownReal: realDates.lockdown_date,
         dateHistogramStart:
-          restrictionsDates.initial_date || this.state.dateHistogramStart,
-        dateHistogramEnd:
-          restrictionsDates.maximum_date || this.state.dateHistogramEnd,
+          realDates.initial_date || this.state.dateHistogramStart,
+        dateHistogramEnd: realDates.maximum_date || this.state.dateHistogramEnd,
         dateFirstWaveStart: "XXXX",
-        dateFirstWaveEnd: restrictionsDates.maximum_date,
+        dateFirstWaveEnd: realDates.maximum_date,
       });
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async loadAllowedDates() {
+    const task = new LoadCounterfactualRestrictionsDatesTask();
+    const lockdownDates = await task.loadLockdownDates(this.props.isoCode);
+    const firstRestrictionsDates = await task.loadFirstRestrictionsDates(
+      this.props.isoCode
+    );
+    this.setState({
+      allowedDatesFirstRestrictions:
+        "possible_restrictions_dates" in firstRestrictionsDates
+          ? firstRestrictionsDates.possible_restrictions_dates
+          : null,
+      allowedDatesLockdown:
+        "possible_lockdown_dates" in lockdownDates
+          ? lockdownDates.possible_lockdown_dates
+          : null,
+    });
   }
 
   async reloadStateData() {
@@ -137,6 +152,7 @@ class InfoPanel extends React.Component {
       this.loadRestrictionData(),
       this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
     ]);
   }
 
@@ -195,31 +211,28 @@ class InfoPanel extends React.Component {
                 </Row>
               </Col>
               <Col xs={6} md={6} lg={6}>
-                <Row xs={1} md={1} lg={1}>
-                  <Row
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Col>
-                      <DateChooser
-                        dateString={
-                          this.state.dateFirstRestrictionsCounterfactual
-                        }
-                        key="date-first-restrictions"
-                        onDateChange={this.onFirstRestrictionsChange}
-                      />
-                    </Col>
-                    <Col>
-                      <DateChooser
-                        dateString={this.state.dateLockdownCounterfactual}
-                        key="date-lockdown"
-                        onDateChange={this.onLockdownChange}
-                      />
-                    </Col>
-                  </Row>
+                <Row
+                  xs={1}
+                  md={1}
+                  lg={1}
+                  key={this.props.isoCode} /* Recreate whenever key changes */
+                >
+                  <Col xs={6} md={6} lg={6}>
+                    <DateChooser
+                      allowedDates={this.state.allowedDatesFirstRestrictions}
+                      caption="First restrictions date"
+                      nominalDate={this.state.dateFirstRestrictionsReal}
+                      onDateChange={this.onFirstRestrictionsChange}
+                    />
+                  </Col>
+                  <Col xs={6} md={6} lg={6}>
+                    <DateChooser
+                      allowedDates={this.state.allowedDatesLockdown}
+                      caption="Lockdown date"
+                      nominalDate={this.state.dateLockdownReal}
+                      onDateChange={this.onLockdownChange}
+                    />
+                  </Col>
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <Histogram

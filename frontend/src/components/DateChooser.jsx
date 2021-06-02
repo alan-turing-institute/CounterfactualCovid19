@@ -1,16 +1,33 @@
-import DatePicker from "react-date-picker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../css/DateChooser.css";
+import DatePicker from "react-datepicker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
+import React from "react";
 
 const propTypes = exact({
+  allowedDates: PropTypes.array,
+  caption: PropTypes.string.isRequired,
+  nominalDate: PropTypes.string,
   onDateChange: PropTypes.func.isRequired,
-  dateString: PropTypes.string,
 });
 
 const defaultProps = {};
 
-const DateChooser = (props) => {
-  function stringFromDate(inputDate) {
+class DateChooser extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // Add component-level state
+    this.state = {
+      date: null,
+    };
+
+    // Bind functions that need to be used by other functions
+    this.handleDateChange = this.handleDateChange.bind(this);
+  }
+
+  stringFromDate(inputDate) {
     try {
       const year = inputDate.getFullYear();
       const month = `0${inputDate.getMonth() + 1}`.slice(-2);
@@ -22,25 +39,36 @@ const DateChooser = (props) => {
     }
   }
 
-  async function handleDateChange(newDate) {
-    console.log(`Setting new date: ${newDate}`);
-    await props.onDateChange(stringFromDate(newDate));
+  async handleDateChange(newDate) {
+    console.log(`${this.props.caption} updated to ${newDate}`);
+    this.setState({ date: newDate });
+    await this.props.onDateChange(this.stringFromDate(newDate));
   }
 
-  return props.dateString ? (
-    <DatePicker
-      className="form-control"
-      clearIcon={null}
-      format="yyyy-MM-dd"
-      monthsShown={1}
-      onChange={handleDateChange}
-      popperPlacement="bottom"
-      value={new Date(props.dateString)}
-    />
-  ) : (
-    <div></div>
-  );
-};
+  render() {
+    const includeDates = this.props.allowedDates
+      ? this.props.allowedDates.map((element) => new Date(element))
+      : null;
+    const highlightDates = this.props.nominalDate
+      ? [new Date(this.props.nominalDate)]
+      : null;
+
+    return includeDates ? (
+      <div className="date-chooser">
+        <DatePicker
+          dateFormat="yyyy-MM-dd"
+          highlightDates={highlightDates}
+          includeDates={includeDates}
+          onChange={this.handleDateChange}
+          selected={this.state.date}
+        />
+        <em>{this.props.caption}</em>
+      </div>
+    ) : (
+      <div></div>
+    );
+  }
+}
 DateChooser.propTypes = propTypes;
 DateChooser.defaultProps = defaultProps;
 
