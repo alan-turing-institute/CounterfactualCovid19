@@ -1,4 +1,5 @@
 import "react-datepicker/dist/react-datepicker.css";
+import "../css/DateChooser.css";
 import DatePicker from "react-datepicker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
@@ -35,7 +36,7 @@ const DateChooser = (props) => {
     : null;
 
   return allowedDates ? (
-    <div>
+    <div className="date-chooser">
       <DatePicker
         selected={props.initialDate ? new Date(props.initialDate) : null}
         dateFormat="yyyy-MM-dd"

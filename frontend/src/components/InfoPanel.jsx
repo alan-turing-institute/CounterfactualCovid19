@@ -1,4 +1,3 @@
-import "../css/InfoPanel.css";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import CounterfactualStatistics from "./CounterfactualStatistics";
