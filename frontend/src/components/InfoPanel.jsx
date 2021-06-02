@@ -9,7 +9,7 @@ import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
-import LoadRestrictionsDatesTask from "../tasks/LoadRestrictionsDatesTask.js";
+import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 import PropTypes from "prop-types";
 import React from "react";
@@ -107,24 +107,19 @@ class InfoPanel extends React.Component {
 
   async loadRestrictionData() {
     // Retrieve restriction data
-    const task = new LoadRestrictionsDatesTask();
     try {
-      const restrictionsDates = await task.getCountryRestrictionDates(
-        this.props.isoCode
-      );
+      const realDates = await loadRealDatesTask(this.props.isoCode);
       // Set the component state with the restriction data
       this.setState({
-        dateFirstRestrictionsCounterfactual:
-          restrictionsDates.first_restrictions_date,
-        dateFirstRestrictionsReal: restrictionsDates.first_restrictions_date,
-        dateLockdownCounterfactual: restrictionsDates.lockdown_date,
-        dateLockdownReal: restrictionsDates.lockdown_date,
+        dateFirstRestrictionsCounterfactual: realDates.first_restrictions_date,
+        dateFirstRestrictionsReal: realDates.first_restrictions_date,
+        dateLockdownCounterfactual: realDates.lockdown_date,
+        dateLockdownReal: realDates.lockdown_date,
         dateHistogramStart:
-          restrictionsDates.initial_date || this.state.dateHistogramStart,
-        dateHistogramEnd:
-          restrictionsDates.maximum_date || this.state.dateHistogramEnd,
+          realDates.initial_date || this.state.dateHistogramStart,
+        dateHistogramEnd: realDates.maximum_date || this.state.dateHistogramEnd,
         dateFirstWaveStart: "XXXX",
-        dateFirstWaveEnd: restrictionsDates.maximum_date,
+        dateFirstWaveEnd: realDates.maximum_date,
       });
     } catch (error) {
       console.log(error);
