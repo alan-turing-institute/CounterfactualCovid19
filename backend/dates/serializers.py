@@ -63,7 +63,7 @@ class PossibleLockdownDateSetSerializer(serializers.ModelSerializer):
 
     def get_possible_lockdown_dates(self, datadict):  # pylint: disable=no-self-use
         """Getter for possible_lockdown_dates field"""
-        return datadict["lockdown_dates"]
+        return sorted(list(set(datadict["lockdown_dates"])))
 
 
 class PossibleRestrictionsDateSetSerializer(serializers.ModelSerializer):
@@ -87,4 +87,4 @@ class PossibleRestrictionsDateSetSerializer(serializers.ModelSerializer):
 
     def get_possible_restrictions_dates(self, datadict):  # pylint: disable=no-self-use
         """Getter for possible_restrictions_dates field"""
-        return datadict["restrictions_dates"]
+        return sorted(list(set(datadict["restrictions_dates"])))
