@@ -28,7 +28,6 @@ from cases.views import (
 )
 from countries.views import CountryGeometryView, CountryDemographicView
 from dates.views import (
-    KnotDateSetView,
     ModelDateRangeView,
     PossibleLockdownDateSetView,
     PossibleRestrictionsDateSetView,
@@ -83,8 +82,10 @@ router.register("country/geometry", CountryGeometryView, basename="country_geome
 router.register(
     "country/demographic", CountryDemographicView, basename="country_demographic"
 )
+router.register(
+    "country/importantdates", ModelDateRangeView, basename="country_importantdates"
+)
 # Dates
-# router.register("dates/counterfactual/knotpoints", KnotDateSetView, basename="dates_counterfactual_knotpoints")
 router.register(
     "dates/possible/lockdown",
     PossibleLockdownDateSetView,
@@ -94,9 +95,6 @@ router.register(
     "dates/possible/firstrestrictions",
     PossibleRestrictionsDateSetView,
     basename="dates_possible_firstrestrictions",
-)
-router.register(
-    "dates/real/bycountry", ModelDateRangeView, basename="dates_real_bycountry"
 )
 
 urlpatterns = [
