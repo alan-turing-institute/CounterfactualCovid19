@@ -93,6 +93,7 @@ class InfoPanel extends React.Component {
         totalCasesCounterfactual:
           counterfactualCases.summed_avg_cases_per_million,
       });
+      await this.loadAllowedDates();
     } catch (error) {
       console.log(error);
     }
@@ -112,7 +113,7 @@ class InfoPanel extends React.Component {
     try {
       const realDates = await loadRealDatesTask(this.props.isoCode);
       // Set the component state with the restriction data
-      this.setState({
+      await this.setState({
         dateFirstRestrictionsCounterfactual: realDates.first_restrictions_date,
         dateFirstRestrictionsReal: realDates.first_restrictions_date,
         dateLockdownCounterfactual: realDates.lockdown_date,
@@ -129,10 +130,15 @@ class InfoPanel extends React.Component {
   }
 
   async loadAllowedDates() {
+    console.log("In loadAllowedDates");
     const task = new LoadCounterfactualRestrictionsDatesTask();
-    const lockdownDates = await task.loadLockdownDates(this.props.isoCode);
+    const lockdownDates = await task.loadLockdownDates(
+      this.props.isoCode,
+      this.state.dateFirstRestrictionsCounterfactual
+    );
     const firstRestrictionsDates = await task.loadFirstRestrictionsDates(
-      this.props.isoCode
+      this.props.isoCode,
+      this.state.dateLockdownCounterfactual
     );
     this.setState({
       allowedDatesFirstRestrictions:
@@ -152,7 +158,6 @@ class InfoPanel extends React.Component {
       this.loadRestrictionData(),
       this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
-      this.loadAllowedDates(),
     ]);
   }
 
