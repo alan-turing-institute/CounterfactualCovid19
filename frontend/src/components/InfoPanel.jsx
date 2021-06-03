@@ -231,7 +231,7 @@ class InfoPanel extends React.Component {
                   <Col xs={6} md={6} lg={6}>
                     <DateChooser
                       allowedDates={this.state.allowedDatesFirstRestrictions}
-                      caption="First restrictions date"
+                      caption="First social distance restrictions"
                       nominalDate={this.state.dateFirstRestrictionsReal}
                       onDateChange={this.onFirstRestrictionsChange}
                     />
@@ -239,7 +239,7 @@ class InfoPanel extends React.Component {
                   <Col xs={6} md={6} lg={6}>
                     <DateChooser
                       allowedDates={this.state.allowedDatesLockdown}
-                      caption="Lockdown date"
+                      caption="National lockdown"
                       nominalDate={this.state.dateLockdownReal}
                       onDateChange={this.onLockdownChange}
                     />

@@ -65,7 +65,7 @@ class DateChooser extends React.Component {
       : null;
     const highlightDates = this.props.nominalDate
       ? [new Date(this.props.nominalDate)]
-      : null;
+      : [];
 
     return includeDates ? (
       <div className="date-chooser">
@@ -75,6 +75,7 @@ class DateChooser extends React.Component {
           includeDates={includeDates}
           onChange={this.handleDateChange}
           selected={this.state.date}
+          isClearable
         />
         <em>{this.props.caption}</em>
       </div>

@@ -18,7 +18,7 @@ class LoadCounterfactualRestrictionsDatesTask {
 
   loadFirstRestrictionsDates = async (isoCode, lockdownDate) => {
     try {
-      var target = `http://localhost:8000/api/dates/possible/firstrestrictions/?iso_code=${isoCode}&lockdown_date=${lockdownDate}`;
+      var target = `http://localhost:8000/api/dates/possible/firstrestrictions/?iso_code=${isoCode}`;
       if (lockdownDate) {
         target = `${target}&lockdown_date=${lockdownDate}`;
       }
