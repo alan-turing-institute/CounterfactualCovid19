@@ -23,12 +23,15 @@ class DateChooser extends React.Component {
       date: null,
     };
 
-    // Bind functions that need to be used by other functions
+    // Bind functions that need to use `this`
     this.handleDateChange = this.handleDateChange.bind(this);
   }
 
   stringFromDate(inputDate) {
     try {
+      if (!inputDate) {
+        return inputDate;
+      }
       const year = inputDate.getFullYear();
       const month = `0${inputDate.getMonth() + 1}`.slice(-2);
       const day = `0${inputDate.getDate()}`.slice(-2);
@@ -40,9 +43,20 @@ class DateChooser extends React.Component {
   }
 
   async handleDateChange(newDate) {
-    console.log(`${this.props.caption} updated to ${newDate}`);
-    this.setState({ date: newDate });
-    await this.props.onDateChange(this.stringFromDate(newDate));
+    const newDateString = this.stringFromDate(newDate);
+    console.log(`${this.props.caption} updated to ${newDateString}`);
+    // 1. Propagate the date change to the callback function
+    // 2. Validate the local date change and update the state accordingly
+    await Promise.all([
+      this.props.onDateChange(newDateString),
+      this.setState({
+        date:
+          this.props.allowedDates &&
+          this.props.allowedDates.find((element) => element === newDateString)
+            ? newDate
+            : null,
+      }),
+    ]);
   }
 
   render() {

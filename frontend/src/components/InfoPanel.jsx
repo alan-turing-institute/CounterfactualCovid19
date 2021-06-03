@@ -45,7 +45,7 @@ class InfoPanel extends React.Component {
     };
     this.initial_state = this.state;
 
-    // Bind the datepicker change functions to allow them to be used by other objects
+    // Bind functions that need to use `this`
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
@@ -93,7 +93,6 @@ class InfoPanel extends React.Component {
         totalCasesCounterfactual:
           counterfactualCases.summed_avg_cases_per_million,
       });
-      await this.loadAllowedDates();
     } catch (error) {
       console.log(error);
     }
@@ -130,7 +129,6 @@ class InfoPanel extends React.Component {
   }
 
   async loadAllowedDates() {
-    console.log("In loadAllowedDates");
     const task = new LoadCounterfactualRestrictionsDatesTask();
     const lockdownDates = await task.loadLockdownDates(
       this.props.isoCode,
@@ -142,11 +140,12 @@ class InfoPanel extends React.Component {
     );
     this.setState({
       allowedDatesFirstRestrictions:
+        firstRestrictionsDates &&
         "possible_restrictions_dates" in firstRestrictionsDates
           ? firstRestrictionsDates.possible_restrictions_dates
           : null,
       allowedDatesLockdown:
-        "possible_lockdown_dates" in lockdownDates
+        lockdownDates && "possible_lockdown_dates" in lockdownDates
           ? lockdownDates.possible_lockdown_dates
           : null,
     });
@@ -158,28 +157,32 @@ class InfoPanel extends React.Component {
       this.loadRestrictionData(),
       this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
     ]);
   }
 
-  // this runs when the info panel is first mounted
+  // This runs when the info panel is first mounted
   async componentDidMount() {
     await this.reloadStateData();
   }
 
-  // this runs when we click in a new country, reload all date information
+  // This runs when we click in a new country, reload all date information
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.reloadStateData();
     }
   }
 
-  // this runs when we change the first restrictions counterfactual date
+  // This runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
     await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
-    await this.loadStatisticsCounterfactual();
+    await Promise.all([
+      this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
+    ]);
   }
 
   // this runs when we change the lockdown counterfactual date
@@ -188,7 +191,10 @@ class InfoPanel extends React.Component {
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
-    await this.loadStatisticsCounterfactual();
+    await Promise.all([
+      this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
+    ]);
   }
 
   render() {
