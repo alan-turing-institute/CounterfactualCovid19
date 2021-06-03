@@ -84,13 +84,20 @@ router.register(
     "country/demographic", CountryDemographicView, basename="country_demographic"
 )
 # Dates
-router.register("knotpoints", KnotDateSetView, basename="knotpoints")
-router.register("modeldaterange", ModelDateRangeView, basename="modeldaterange")
-router.register("lockdowndates", PossibleLockdownDateSetView, basename="lockdowndates")
+# router.register("dates/counterfactual/knotpoints", KnotDateSetView, basename="dates_counterfactual_knotpoints")
 router.register(
-    "restrictionsdates", PossibleRestrictionsDateSetView, basename="restrictiondates"
+    "dates/possible/lockdown",
+    PossibleLockdownDateSetView,
+    basename="dates_possible_lockdown",
 )
-
+router.register(
+    "dates/possible/firstrestrictions",
+    PossibleRestrictionsDateSetView,
+    basename="dates_possible_firstrestrictions",
+)
+router.register(
+    "dates/real/bycountry", ModelDateRangeView, basename="dates_real_bycountry"
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
