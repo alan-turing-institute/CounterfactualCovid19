@@ -29,7 +29,7 @@ const propTypes = exact({
 
 const defaultProps = {};
 
-class Histogram extends React.Component {
+class Histogram extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -98,7 +98,7 @@ class Histogram extends React.Component {
   }
 
   render() {
-    console.log("Redrawing histogram...");
+    console.debug("Redrawing histogram...");
     return (
       <div
         style={{

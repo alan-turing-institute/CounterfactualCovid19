@@ -22,7 +22,7 @@ const propTypes = exact({
 
 const defaultProps = {};
 
-class InfoPanel extends React.Component {
+class InfoPanel extends React.PureComponent {
   constructor(props) {
     super(props);
 

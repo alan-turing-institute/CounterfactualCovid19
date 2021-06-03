@@ -14,7 +14,7 @@ const propTypes = exact({
 
 const defaultProps = {};
 
-class DateChooser extends React.Component {
+class DateChooser extends React.PureComponent {
   constructor(props) {
     super(props);
 

@@ -12,7 +12,7 @@ const propTypes = exact({
 
 const defaultProps = {};
 
-class WorldMap extends React.Component {
+class WorldMap extends React.PureComponent {
   constructor(props) {
     super(props);
 
