@@ -21,7 +21,7 @@ class HeaderPanel extends React.Component {
       popoverOpen: false,
     };
 
-    // Bind the toggle function to allow it to use state
+    // Bind functions that need to use `this`
     this.toggle = this.toggle.bind(this);
   }
 

@@ -1,9 +1,12 @@
 import axios from "axios";
 
 class LoadCounterfactualRestrictionsDatesTask {
-  loadLockdownDates = async (isoCode) => {
+  loadLockdownDates = async (isoCode, firstRestrictionsDate) => {
     try {
-      const target = `http://localhost:8000/api/lockdowndates/?iso_code=${isoCode}`;
+      var target = `http://localhost:8000/api/dates/possible/lockdown/?iso_code=${isoCode}`;
+      if (firstRestrictionsDate) {
+        target = `${target}&restrictions_date=${firstRestrictionsDate}`;
+      }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
       return response.data[0];
@@ -13,9 +16,12 @@ class LoadCounterfactualRestrictionsDatesTask {
     }
   };
 
-  loadFirstRestrictionsDates = async (isoCode) => {
+  loadFirstRestrictionsDates = async (isoCode, lockdownDate) => {
     try {
-      const target = `http://localhost:8000/api/restrictionsdates/?iso_code=${isoCode}`;
+      var target = `http://localhost:8000/api/dates/possible/firstrestrictions/?iso_code=${isoCode}`;
+      if (lockdownDate) {
+        target = `${target}&lockdown_date=${lockdownDate}`;
+      }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
       return response.data[0];

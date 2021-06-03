@@ -45,7 +45,7 @@ class InfoPanel extends React.Component {
     };
     this.initial_state = this.state;
 
-    // Bind the datepicker change functions to allow them to be used by other objects
+    // Bind functions that need to use `this`
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
   }
@@ -112,7 +112,7 @@ class InfoPanel extends React.Component {
     try {
       const realDates = await loadRealDatesTask(this.props.isoCode);
       // Set the component state with the restriction data
-      this.setState({
+      await this.setState({
         dateFirstRestrictionsCounterfactual: realDates.first_restrictions_date,
         dateFirstRestrictionsReal: realDates.first_restrictions_date,
         dateLockdownCounterfactual: realDates.lockdown_date,
@@ -130,17 +130,22 @@ class InfoPanel extends React.Component {
 
   async loadAllowedDates() {
     const task = new LoadCounterfactualRestrictionsDatesTask();
-    const lockdownDates = await task.loadLockdownDates(this.props.isoCode);
+    const lockdownDates = await task.loadLockdownDates(
+      this.props.isoCode,
+      this.state.dateFirstRestrictionsCounterfactual
+    );
     const firstRestrictionsDates = await task.loadFirstRestrictionsDates(
-      this.props.isoCode
+      this.props.isoCode,
+      this.state.dateLockdownCounterfactual
     );
     this.setState({
       allowedDatesFirstRestrictions:
+        firstRestrictionsDates &&
         "possible_restrictions_dates" in firstRestrictionsDates
           ? firstRestrictionsDates.possible_restrictions_dates
           : null,
       allowedDatesLockdown:
-        "possible_lockdown_dates" in lockdownDates
+        lockdownDates && "possible_lockdown_dates" in lockdownDates
           ? lockdownDates.possible_lockdown_dates
           : null,
     });
@@ -156,25 +161,28 @@ class InfoPanel extends React.Component {
     ]);
   }
 
-  // this runs when the info panel is first mounted
+  // This runs when the info panel is first mounted
   async componentDidMount() {
     await this.reloadStateData();
   }
 
-  // this runs when we click in a new country, reload all date information
+  // This runs when we click in a new country, reload all date information
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.reloadStateData();
     }
   }
 
-  // this runs when we change the first restrictions counterfactual date
+  // This runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
     await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
-    await this.loadStatisticsCounterfactual();
+    await Promise.all([
+      this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
+    ]);
   }
 
   // this runs when we change the lockdown counterfactual date
@@ -183,7 +191,10 @@ class InfoPanel extends React.Component {
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
-    await this.loadStatisticsCounterfactual();
+    await Promise.all([
+      this.loadStatisticsCounterfactual(),
+      this.loadAllowedDates(),
+    ]);
   }
 
   render() {
@@ -220,7 +231,7 @@ class InfoPanel extends React.Component {
                   <Col xs={6} md={6} lg={6}>
                     <DateChooser
                       allowedDates={this.state.allowedDatesFirstRestrictions}
-                      caption="First restrictions date"
+                      caption="First social distance restrictions"
                       nominalDate={this.state.dateFirstRestrictionsReal}
                       onDateChange={this.onFirstRestrictionsChange}
                     />
@@ -228,7 +239,7 @@ class InfoPanel extends React.Component {
                   <Col xs={6} md={6} lg={6}>
                     <DateChooser
                       allowedDates={this.state.allowedDatesLockdown}
-                      caption="Lockdown date"
+                      caption="National lockdown"
                       nominalDate={this.state.dateLockdownReal}
                       onDateChange={this.onLockdownChange}
                     />

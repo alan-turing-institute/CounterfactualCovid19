@@ -27,7 +27,7 @@ class MainGrid extends React.Component {
       sizeHistogramComponent: "0vh",
     };
 
-    // Bind the `handleCountryChange` function to allow it to be used by other objects
+    // Bind functions that need to use `this`
     this.handleCountryChange = this.handleCountryChange.bind(this);
   }
 
