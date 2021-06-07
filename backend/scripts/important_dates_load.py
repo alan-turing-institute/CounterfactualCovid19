@@ -43,6 +43,8 @@ def run():
                     maximum_date=entry.Date_T,
                     first_restrictions_date=entry.Date_first_restriction,
                     lockdown_date=entry.Date_lockdown,
+                    first_case_date=entry.Date_1,
+
                 )
                 record.save()
 
