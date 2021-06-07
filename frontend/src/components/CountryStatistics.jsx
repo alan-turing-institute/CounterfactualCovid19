@@ -1,13 +1,14 @@
 import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
-import PropTypes from "prop-types";
-import React from "react";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
+import PropTypes from "prop-types";
+import React from "react";
 
 const propTypes = exact({
   isoCode: PropTypes.string.isRequired,
   dateEnd: PropTypes.string.isRequired,
+  onDataChange: PropTypes.func.isRequired,
 });
 
 const defaultProps = {};
@@ -37,11 +38,16 @@ class CountryStatistics extends React.PureComponent {
         this.props.isoCode,
         this.props.dateEnd
       );
+      // Update state and pass values back to callback function
       this.setState({
         totalCases: realCases.summed_avg_cases_per_million,
         totalDeaths: realDeaths.summed_avg_deaths_per_million,
         populationDensity: demographics.population_density,
       });
+      this.props.onDataChange(
+        realCases.summed_avg_cases_per_million,
+        realDeaths.summed_avg_deaths_per_million
+      );
     } catch (error) {
       console.log(error);
     }

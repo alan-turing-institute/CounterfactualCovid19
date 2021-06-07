@@ -1,5 +1,5 @@
-import "react-datepicker/dist/react-datepicker.css";
 import "../css/DateChooser.css";
+import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";

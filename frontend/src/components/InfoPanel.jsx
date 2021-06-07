@@ -7,9 +7,9 @@ import CountryStatistics from "./CountryStatistics";
 import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
-import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import LoadCounterfactualRestrictionsDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
+import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
@@ -43,6 +43,15 @@ class InfoPanel extends React.PureComponent {
     // Bind functions that need to use `this`
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
+    this.onRealDataChange = this.onRealDataChange.bind(this);
+  }
+
+  // Create an await-able function that will not
+  // resolve until the state change is completed.
+  setStateAsync(state) {
+    return new Promise((resolve) => {
+      this.setState(state, resolve);
+    });
   }
 
   daysDelta(date1, date2) {
@@ -52,26 +61,6 @@ class InfoPanel extends React.PureComponent {
     }
     const secondsDelta = new Date(date1) - new Date(date2);
     return secondsDelta / (1000 * 3600 * 24);
-  }
-
-  async loadStatisticsReal() {
-    const task = new LoadPerCountryStatisticsTask();
-    try {
-      const realCases = await task.loadIntegratedCases(
-        this.props.isoCode,
-        this.state.dateModelEnd
-      );
-      const realDeaths = await task.loadIntegratedDeaths(
-        this.props.isoCode,
-        this.state.dateModelEnd
-      );
-      this.setState({
-        totalCasesReal: realCases.summed_avg_cases_per_million,
-        totalDeathsReal: realDeaths.summed_avg_deaths_per_million,
-      });
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   async loadStatisticsCounterfactual() {
@@ -103,8 +92,7 @@ class InfoPanel extends React.PureComponent {
         dateFirstRestrictionsReal: realDates.first_restrictions_date,
         dateLockdownCounterfactual: realDates.lockdown_date,
         dateLockdownReal: realDates.lockdown_date,
-        dateModelStart:
-          realDates.initial_date || this.state.dateModelStart,
+        dateModelStart: realDates.initial_date || this.state.dateModelStart,
         dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
       });
     } catch (error) {
@@ -137,7 +125,6 @@ class InfoPanel extends React.PureComponent {
   async reloadStateData() {
     await Promise.all([
       this.loadRestrictionData(),
-      this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
       this.loadAllowedDates(),
     ]);
@@ -157,7 +144,7 @@ class InfoPanel extends React.PureComponent {
 
   // This runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
-    await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
+    await this.setStateAsync({ dateFirstRestrictionsCounterfactual: newDate });
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
@@ -169,7 +156,7 @@ class InfoPanel extends React.PureComponent {
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
-    await this.setState({ dateLockdownCounterfactual: newDate });
+    await this.setStateAsync({ dateLockdownCounterfactual: newDate });
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
@@ -177,6 +164,17 @@ class InfoPanel extends React.PureComponent {
       this.loadStatisticsCounterfactual(),
       this.loadAllowedDates(),
     ]);
+  }
+
+  // This runs when the CountryStatistics update
+  async onRealDataChange(totalCases, totalDeaths) {
+    await this.setStateAsync({
+      totalCasesReal: totalCases,
+      totalDeathsReal: totalDeaths,
+    });
+    console.log(
+      `Setting totalCasesReal to ${this.state.totalCasesReal} and totalDeathsReal to ${this.state.totalDeathsReal}`
+    );
   }
 
   render() {
@@ -193,6 +191,7 @@ class InfoPanel extends React.PureComponent {
                   <CountryStatistics
                     isoCode={this.props.isoCode}
                     dateEnd={this.state.dateModelEnd}
+                    onDataChange={this.onRealDataChange}
                   />
                 </Row>
               </Col>

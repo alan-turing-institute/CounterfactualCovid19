@@ -1,8 +1,8 @@
 import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
-import PropTypes from "prop-types";
 import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
+import PropTypes from "prop-types";
 import React from "react";
 
 const propTypes = exact({
