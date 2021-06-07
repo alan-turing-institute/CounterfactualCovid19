@@ -140,13 +140,12 @@ class InfoPanel extends React.PureComponent {
     );
     this.setState({
       allowedDatesFirstRestrictions:
-        firstRestrictionsDates &&
-        "possible_restrictions_dates" in firstRestrictionsDates
-          ? firstRestrictionsDates.possible_restrictions_dates
+        firstRestrictionsDates && "possible_dates" in firstRestrictionsDates
+          ? firstRestrictionsDates.possible_dates
           : null,
       allowedDatesLockdown:
-        lockdownDates && "possible_lockdown_dates" in lockdownDates
-          ? lockdownDates.possible_lockdown_dates
+        lockdownDates && "possible_dates" in lockdownDates
+          ? lockdownDates.possible_dates
           : null,
     });
   }
