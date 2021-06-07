@@ -40,7 +40,6 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
             "first_restrictions_date",
             "lockdown_date",
             "first_case_date",
-
         )
 
 
