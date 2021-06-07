@@ -7,7 +7,6 @@ import CountryStatistics from "./CountryStatistics";
 import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
-import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import LoadCounterfactualRestrictionsDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
@@ -29,8 +28,6 @@ class InfoPanel extends React.PureComponent {
     this.state = {
       allowedDatesFirstRestrictions: null,
       allowedDatesLockdown: null,
-      countryName: null,
-      countryPopulationDensity: null,
       dateFirstRestrictionsCounterfactual: null,
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
@@ -96,15 +93,6 @@ class InfoPanel extends React.PureComponent {
     }
   }
 
-  async loadDemographicData() {
-    // Retrieve demographic data
-    let demographics = await loadCountryDemographicsTask(this.props.isoCode);
-    this.setState({
-      countryName: demographics.name,
-      countryPopulationDensity: demographics.population_density,
-    });
-  }
-
   async loadRestrictionData() {
     // Retrieve restriction data
     try {
@@ -148,7 +136,6 @@ class InfoPanel extends React.PureComponent {
 
   async reloadStateData() {
     await Promise.all([
-      this.loadDemographicData(),
       this.loadRestrictionData(),
       this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
@@ -204,9 +191,8 @@ class InfoPanel extends React.PureComponent {
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
-                    totalCases={this.state.totalCasesReal}
-                    totalDeaths={this.state.totalDeathsReal}
-                    populationDensity={this.state.countryPopulationDensity}
+                    isoCode={this.props.isoCode}
+                    dateEnd={this.state.dateHistogramEnd}
                   />
                 </Row>
               </Col>
