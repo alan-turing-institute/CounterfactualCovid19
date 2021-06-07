@@ -31,8 +31,6 @@ class InfoPanel extends React.PureComponent {
       allowedDatesLockdown: null,
       countryName: null,
       countryPopulationDensity: null,
-      dateFirstWaveStart: null,
-      dateFirstWaveEnd: null,
       dateFirstRestrictionsCounterfactual: null,
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
@@ -120,8 +118,6 @@ class InfoPanel extends React.PureComponent {
         dateHistogramStart:
           realDates.initial_date || this.state.dateHistogramStart,
         dateHistogramEnd: realDates.maximum_date || this.state.dateHistogramEnd,
-        dateFirstWaveStart: "XXXX",
-        dateFirstWaveEnd: realDates.maximum_date,
       });
     } catch (error) {
       console.log(error);
@@ -204,13 +200,7 @@ class InfoPanel extends React.PureComponent {
             <Row>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
-                  <CountryDates
-                    countryName={this.state.countryName}
-                    dateFirstRestrictions={this.state.dateFirstRestrictionsReal}
-                    dateFirstWaveEnd={this.state.dateFirstWaveEnd}
-                    dateFirstWaveStart={this.state.dateFirstWaveStart}
-                    dateLockdown={this.state.dateLockdownReal}
-                  />
+                  <CountryDates isoCode={this.props.isoCode} />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
