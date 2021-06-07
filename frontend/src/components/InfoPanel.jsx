@@ -32,8 +32,8 @@ class InfoPanel extends React.PureComponent {
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
-      dateHistogramStart: "2020-02-20",
-      dateHistogramEnd: "2020-07-06",
+      dateModelStart: "2020-02-20",
+      dateModelEnd: "2020-07-06",
       totalCasesCounterfactual: null,
       totalCasesReal: null,
       totalDeathsReal: null,
@@ -59,11 +59,11 @@ class InfoPanel extends React.PureComponent {
     try {
       const realCases = await task.loadIntegratedCases(
         this.props.isoCode,
-        this.state.dateHistogramEnd
+        this.state.dateModelEnd
       );
       const realDeaths = await task.loadIntegratedDeaths(
         this.props.isoCode,
-        this.state.dateHistogramEnd
+        this.state.dateModelEnd
       );
       this.setState({
         totalCasesReal: realCases.summed_avg_cases_per_million,
@@ -79,8 +79,8 @@ class InfoPanel extends React.PureComponent {
       const task = new LoadPerCountryStatisticsTask();
       const counterfactualCases = await task.loadIntegratedCounterfactualCases(
         this.props.isoCode,
-        this.state.dateHistogramStart,
-        this.state.dateHistogramEnd,
+        this.state.dateModelStart,
+        this.state.dateModelEnd,
         this.state.dateFirstRestrictionsCounterfactual,
         this.state.dateLockdownCounterfactual
       );
@@ -103,9 +103,9 @@ class InfoPanel extends React.PureComponent {
         dateFirstRestrictionsReal: realDates.first_restrictions_date,
         dateLockdownCounterfactual: realDates.lockdown_date,
         dateLockdownReal: realDates.lockdown_date,
-        dateHistogramStart:
-          realDates.initial_date || this.state.dateHistogramStart,
-        dateHistogramEnd: realDates.maximum_date || this.state.dateHistogramEnd,
+        dateModelStart:
+          realDates.initial_date || this.state.dateModelStart,
+        dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
       });
     } catch (error) {
       console.log(error);
@@ -192,7 +192,7 @@ class InfoPanel extends React.PureComponent {
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
                     isoCode={this.props.isoCode}
-                    dateEnd={this.state.dateHistogramEnd}
+                    dateEnd={this.state.dateModelEnd}
                   />
                 </Row>
               </Col>
@@ -224,8 +224,8 @@ class InfoPanel extends React.PureComponent {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.dateHistogramStart}
-                    dateFinal={this.state.dateHistogramEnd}
+                    dateInitial={this.state.dateModelStart}
+                    dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal
                     }
@@ -242,8 +242,8 @@ class InfoPanel extends React.PureComponent {
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
                   <CounterfactualStory
-                    dateStart={this.state.dateHistogramStart}
-                    dateEnd={this.state.dateHistogramEnd}
+                    dateStart={this.state.dateModelStart}
+                    dateEnd={this.state.dateModelEnd}
                   />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
