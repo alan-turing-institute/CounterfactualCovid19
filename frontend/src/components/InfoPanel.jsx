@@ -96,7 +96,6 @@ class InfoPanel extends React.PureComponent {
         dateModelStart: realDates.initial_date || this.state.dateModelStart,
         dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
         dateFirstCase: realDates.first_case_date || this.state.dateModelStart,
-
       });
     } catch (error) {
       console.log(error);
