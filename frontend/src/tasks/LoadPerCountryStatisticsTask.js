@@ -44,11 +44,11 @@ class LoadPerCountryStatisticsTask {
       }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
-      // Use data from the latest date in the response
+      // Return counterfactual data if there is any
       if (response.data.length) {
-        return response.data[response.data.length - 1];
+        return response.data[0];
       }
-      // Return null values if there is no counterfactual data
+      // ... otherwise warn and return null values
       console.warn(
         `No counterfactual data returned for ${iso_code}. First restriction date ${first_restriction_date}; lockdown date ${lockdown_date}.`
       );
