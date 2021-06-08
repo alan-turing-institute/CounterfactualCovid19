@@ -7,10 +7,9 @@ import CountryStatistics from "./CountryStatistics";
 import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
-import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
-import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import LoadCounterfactualRestrictionsDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
+import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
@@ -22,23 +21,19 @@ const propTypes = exact({
 
 const defaultProps = {};
 
-class InfoPanel extends React.Component {
+class InfoPanel extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       allowedDatesFirstRestrictions: null,
       allowedDatesLockdown: null,
-      countryName: null,
-      countryPopulationDensity: null,
-      dateFirstWaveStart: null,
-      dateFirstWaveEnd: null,
       dateFirstRestrictionsCounterfactual: null,
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
-      dateHistogramStart: "2020-02-20",
-      dateHistogramEnd: "2020-07-06",
+      dateModelStart: "2020-02-20",
+      dateModelEnd: "2020-07-06",
       totalCasesCounterfactual: null,
       totalCasesReal: null,
       totalDeathsReal: null,
@@ -48,6 +43,15 @@ class InfoPanel extends React.Component {
     // Bind functions that need to use `this`
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
+    this.onRealDataChange = this.onRealDataChange.bind(this);
+  }
+
+  // Create an await-able function that will not
+  // resolve until the state change is completed.
+  setStateAsync(state) {
+    return new Promise((resolve) => {
+      this.setState(state, resolve);
+    });
   }
 
   daysDelta(date1, date2) {
@@ -59,33 +63,13 @@ class InfoPanel extends React.Component {
     return secondsDelta / (1000 * 3600 * 24);
   }
 
-  async loadStatisticsReal() {
-    const task = new LoadPerCountryStatisticsTask();
-    try {
-      const realCases = await task.loadIntegratedCases(
-        this.props.isoCode,
-        this.state.dateHistogramEnd
-      );
-      const realDeaths = await task.loadIntegratedDeaths(
-        this.props.isoCode,
-        this.state.dateHistogramEnd
-      );
-      this.setState({
-        totalCasesReal: realCases.summed_avg_cases_per_million,
-        totalDeathsReal: realDeaths.summed_avg_deaths_per_million,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   async loadStatisticsCounterfactual() {
     try {
       const task = new LoadPerCountryStatisticsTask();
       const counterfactualCases = await task.loadIntegratedCounterfactualCases(
         this.props.isoCode,
-        this.state.dateHistogramStart,
-        this.state.dateHistogramEnd,
+        this.state.dateModelStart,
+        this.state.dateModelEnd,
         this.state.dateFirstRestrictionsCounterfactual,
         this.state.dateLockdownCounterfactual
       );
@@ -98,15 +82,6 @@ class InfoPanel extends React.Component {
     }
   }
 
-  async loadDemographicData() {
-    // Retrieve demographic data
-    let demographics = await loadCountryDemographicsTask(this.props.isoCode);
-    this.setState({
-      countryName: demographics.name,
-      countryPopulationDensity: demographics.population_density,
-    });
-  }
-
   async loadRestrictionData() {
     // Retrieve restriction data
     try {
@@ -117,11 +92,8 @@ class InfoPanel extends React.Component {
         dateFirstRestrictionsReal: realDates.first_restrictions_date,
         dateLockdownCounterfactual: realDates.lockdown_date,
         dateLockdownReal: realDates.lockdown_date,
-        dateHistogramStart:
-          realDates.initial_date || this.state.dateHistogramStart,
-        dateHistogramEnd: realDates.maximum_date || this.state.dateHistogramEnd,
-        dateFirstWaveStart: "XXXX",
-        dateFirstWaveEnd: realDates.maximum_date,
+        dateModelStart: realDates.initial_date || this.state.dateModelStart,
+        dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
       });
     } catch (error) {
       console.log(error);
@@ -140,22 +112,19 @@ class InfoPanel extends React.Component {
     );
     this.setState({
       allowedDatesFirstRestrictions:
-        firstRestrictionsDates &&
-        "possible_restrictions_dates" in firstRestrictionsDates
-          ? firstRestrictionsDates.possible_restrictions_dates
+        firstRestrictionsDates && "possible_dates" in firstRestrictionsDates
+          ? firstRestrictionsDates.possible_dates
           : null,
       allowedDatesLockdown:
-        lockdownDates && "possible_lockdown_dates" in lockdownDates
-          ? lockdownDates.possible_lockdown_dates
+        lockdownDates && "possible_dates" in lockdownDates
+          ? lockdownDates.possible_dates
           : null,
     });
   }
 
   async reloadStateData() {
     await Promise.all([
-      this.loadDemographicData(),
       this.loadRestrictionData(),
-      this.loadStatisticsReal(),
       this.loadStatisticsCounterfactual(),
       this.loadAllowedDates(),
     ]);
@@ -175,7 +144,7 @@ class InfoPanel extends React.Component {
 
   // This runs when we change the first restrictions counterfactual date
   async onFirstRestrictionsChange(newDate) {
-    await this.setState({ dateFirstRestrictionsCounterfactual: newDate });
+    await this.setStateAsync({ dateFirstRestrictionsCounterfactual: newDate });
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
@@ -187,7 +156,7 @@ class InfoPanel extends React.Component {
 
   // this runs when we change the lockdown counterfactual date
   async onLockdownChange(newDate) {
-    await this.setState({ dateLockdownCounterfactual: newDate });
+    await this.setStateAsync({ dateLockdownCounterfactual: newDate });
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
@@ -195,6 +164,17 @@ class InfoPanel extends React.Component {
       this.loadStatisticsCounterfactual(),
       this.loadAllowedDates(),
     ]);
+  }
+
+  // This runs when the CountryStatistics update
+  async onRealDataChange(totalCases, totalDeaths) {
+    await this.setStateAsync({
+      totalCasesReal: totalCases,
+      totalDeathsReal: totalDeaths,
+    });
+    console.log(
+      `Setting totalCasesReal to ${this.state.totalCasesReal} and totalDeathsReal to ${this.state.totalDeathsReal}`
+    );
   }
 
   render() {
@@ -205,19 +185,13 @@ class InfoPanel extends React.Component {
             <Row>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
-                  <CountryDates
-                    countryName={this.state.countryName}
-                    dateFirstRestrictions={this.state.dateFirstRestrictionsReal}
-                    dateFirstWaveEnd={this.state.dateFirstWaveEnd}
-                    dateFirstWaveStart={this.state.dateFirstWaveStart}
-                    dateLockdown={this.state.dateLockdownReal}
-                  />
+                  <CountryDates isoCode={this.props.isoCode} />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
-                    totalCases={this.state.totalCasesReal}
-                    totalDeaths={this.state.totalDeathsReal}
-                    populationDensity={this.state.countryPopulationDensity}
+                    isoCode={this.props.isoCode}
+                    dateEnd={this.state.dateModelEnd}
+                    onDataChange={this.onRealDataChange}
                   />
                 </Row>
               </Col>
@@ -249,8 +223,8 @@ class InfoPanel extends React.Component {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.dateHistogramStart}
-                    dateFinal={this.state.dateHistogramEnd}
+                    dateInitial={this.state.dateModelStart}
+                    dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal
                     }
@@ -267,8 +241,8 @@ class InfoPanel extends React.Component {
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
                   <CounterfactualStory
-                    dateStart={this.state.dateHistogramStart}
-                    dateEnd={this.state.dateHistogramEnd}
+                    dateStart={this.state.dateModelStart}
+                    dateEnd={this.state.dateModelEnd}
                   />
                 </Row>
                 <Row xs={1} md={1} lg={1}>

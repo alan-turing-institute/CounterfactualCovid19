@@ -14,7 +14,7 @@ const propTypes = exact({});
 
 const defaultProps = {};
 
-class MainGrid extends React.Component {
+class MainGrid extends React.PureComponent {
   constructor(props) {
     super(props);
 

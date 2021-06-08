@@ -12,7 +12,7 @@ const propTypes = exact({});
 
 const defaultProps = {};
 
-class HeaderPanel extends React.Component {
+class HeaderPanel extends React.PureComponent {
   constructor(props) {
     super(props);
 

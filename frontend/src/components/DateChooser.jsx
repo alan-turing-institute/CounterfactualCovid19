@@ -1,5 +1,5 @@
-import "react-datepicker/dist/react-datepicker.css";
 import "../css/DateChooser.css";
+import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
@@ -14,7 +14,7 @@ const propTypes = exact({
 
 const defaultProps = {};
 
-class DateChooser extends React.Component {
+class DateChooser extends React.PureComponent {
   constructor(props) {
     super(props);
 

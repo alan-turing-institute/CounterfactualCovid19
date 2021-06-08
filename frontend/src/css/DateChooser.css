@@ -6,21 +6,21 @@
 
 /* Avoid Popper CSS issue: https://github.com/Hacker0x01/react-datepicker/issues/3009 */
 .react-datepicker-popper[data-placement^="bottom"] {
-  margin-top: 0;
+  margin-top: 0 !important;
   padding-top: 10px;
 }
 
 .react-datepicker-popper[data-placement^="top"] {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
   padding-bottom: 10px;
 }
 
 .react-datepicker-popper[data-placement^="right"] {
-  margin-left: 0;
+  margin-left: 0 !important;
   padding-left: 8px;
 }
 
 .react-datepicker-popper[data-placement^="left"] {
-  margin-right: 0;
+  margin-right: 0 !important;
   padding-right: 8px;
 }
