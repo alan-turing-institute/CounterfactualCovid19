@@ -34,6 +34,7 @@ class InfoPanel extends React.PureComponent {
       dateLockdownReal: null,
       dateModelStart: "2020-02-20",
       dateModelEnd: "2020-07-06",
+      dateFirstCase: "2020-02-01",
       totalCasesCounterfactual: null,
       totalCasesReal: null,
       totalDeathsReal: null,
@@ -94,6 +95,8 @@ class InfoPanel extends React.PureComponent {
         dateLockdownReal: realDates.lockdown_date,
         dateModelStart: realDates.initial_date || this.state.dateModelStart,
         dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
+        dateFirstCase: realDates.first_case_date || this.state.dateModelStart,
+
       });
     } catch (error) {
       console.log(error);
@@ -223,7 +226,7 @@ class InfoPanel extends React.PureComponent {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.dateModelStart}
+                    dateInitial={this.state.dateFirstCase}
                     dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal
