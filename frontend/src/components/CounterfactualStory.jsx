@@ -24,7 +24,7 @@ const CounterfactualStory = (props) => {
           Use the calendars to select counterfactual dates for first social
           distance restrictions (left) and/or lockdown (right).
         </Card.Text>
-        {!(props.dateStart & props.dateEnd) ? null : (
+        {(!props.dateStart & !props.dateEnd) ? null : (
           <Card.Text>
             {`The spread of COVID-19 was simulated between ${props.dateStart} and ${props.dateEnd}.`}
           </Card.Text>
