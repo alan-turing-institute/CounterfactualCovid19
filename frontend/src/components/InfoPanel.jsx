@@ -127,9 +127,9 @@ class InfoPanel extends React.PureComponent {
 
   async reloadStateData() {
     await Promise.all([
-      this.loadRestrictionData(),
+      await this.loadRestrictionData(),
+      await this.loadAllowedDates(),
       this.loadStatisticsCounterfactual(),
-      this.loadAllowedDates(),
     ]);
   }
 
@@ -152,8 +152,8 @@ class InfoPanel extends React.PureComponent {
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
     await Promise.all([
-      this.loadStatisticsCounterfactual(),
       this.loadAllowedDates(),
+      this.loadStatisticsCounterfactual(),
     ]);
   }
 
@@ -164,8 +164,8 @@ class InfoPanel extends React.PureComponent {
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
     await Promise.all([
-      this.loadStatisticsCounterfactual(),
       this.loadAllowedDates(),
+      this.loadStatisticsCounterfactual(),
     ]);
   }
 
