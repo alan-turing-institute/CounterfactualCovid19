@@ -39,6 +39,7 @@ class ModelDateRangeSerializer(serializers.ModelSerializer):
             "maximum_date",
             "first_restrictions_date",
             "lockdown_date",
+            "first_case_date",
         )
 
 

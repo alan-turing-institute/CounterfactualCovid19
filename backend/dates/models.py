@@ -38,6 +38,7 @@ class ModelDateRange(models.Model):
     maximum_date = models.DateField()
     first_restrictions_date = models.DateField(null=True)
     lockdown_date = models.DateField(null=True)
+    first_case_date = models.DateField(null=True)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Meta class"""

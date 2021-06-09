@@ -32,8 +32,9 @@ class InfoPanel extends React.PureComponent {
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
-      dateModelStart: "2020-02-20",
-      dateModelEnd: "2020-07-06",
+      dateModelStart: null,
+      dateModelEnd: null,
+      dateFirstCase: null,
       totalCasesCounterfactual: null,
       totalCasesReal: null,
       totalDeathsReal: null,
@@ -94,6 +95,7 @@ class InfoPanel extends React.PureComponent {
         dateLockdownReal: realDates.lockdown_date,
         dateModelStart: realDates.initial_date || this.state.dateModelStart,
         dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
+        dateFirstCase: realDates.first_case_date || this.state.dateModelStart,
       });
     } catch (error) {
       console.log(error);
@@ -123,11 +125,9 @@ class InfoPanel extends React.PureComponent {
   }
 
   async reloadStateData() {
-    await Promise.all([
-      this.loadRestrictionData(),
-      this.loadStatisticsCounterfactual(),
-      this.loadAllowedDates(),
-    ]);
+    await this.loadRestrictionData();
+    await this.loadAllowedDates();
+    await this.loadStatisticsCounterfactual();
   }
 
   // This runs when the info panel is first mounted
@@ -148,10 +148,9 @@ class InfoPanel extends React.PureComponent {
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
-    await Promise.all([
-      this.loadStatisticsCounterfactual(),
-      this.loadAllowedDates(),
-    ]);
+
+    await this.loadAllowedDates();
+    await this.loadStatisticsCounterfactual();
   }
 
   // this runs when we change the lockdown counterfactual date
@@ -160,10 +159,9 @@ class InfoPanel extends React.PureComponent {
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
-    await Promise.all([
-      this.loadStatisticsCounterfactual(),
-      this.loadAllowedDates(),
-    ]);
+
+    await this.loadAllowedDates();
+    await this.loadStatisticsCounterfactual();
   }
 
   // This runs when the CountryStatistics update
@@ -223,7 +221,7 @@ class InfoPanel extends React.PureComponent {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.dateModelStart}
+                    dateInitial={this.state.dateFirstCase}
                     dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal

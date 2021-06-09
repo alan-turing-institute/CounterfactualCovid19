@@ -31,7 +31,7 @@ class CountryDates extends React.PureComponent {
     const realDates = await loadRealDatesTask(this.props.isoCode);
     this.setState({
       countryName: demographics.name,
-      dateFirstWaveStart: "XXXX",
+      dateFirstWaveStart: realDates.first_case_date,
       dateFirstWaveEnd: realDates.maximum_date,
       dateFirstRestrictions: realDates.first_restrictions_date,
       dateLockdown: realDates.lockdown_date,
