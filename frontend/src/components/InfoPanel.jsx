@@ -188,6 +188,7 @@ class InfoPanel extends React.PureComponent {
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
                     isoCode={this.props.isoCode}
+                    dateStart={this.state.dateModelStart}
                     dateEnd={this.state.dateModelEnd}
                     onDataChange={this.onRealDataChange}
                   />

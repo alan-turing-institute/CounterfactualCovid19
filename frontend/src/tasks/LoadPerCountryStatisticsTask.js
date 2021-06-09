@@ -14,9 +14,9 @@ class LoadPerCountryStatisticsTask {
     }
   };
 
-  loadIntegratedCases = async (iso_code, end_date) => {
+  loadIntegratedCases = async (iso_code, start_date, end_date) => {
     try {
-      const target = `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`;
+      const target = `http://localhost:8000/api/cases/real/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`;
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
       return response.data[0];
@@ -44,11 +44,11 @@ class LoadPerCountryStatisticsTask {
       }
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
-      // Use data from the latest date in the response
+      // Return counterfactual data if there is any
       if (response.data.length) {
-        return response.data[response.data.length - 1];
+        return response.data[0];
       }
-      // Return null values if there is no counterfactual data
+      // ... otherwise warn and return null values
       console.warn(
         `No counterfactual data returned for ${iso_code}. First restriction date ${first_restriction_date}; lockdown date ${lockdown_date}.`
       );
@@ -63,9 +63,9 @@ class LoadPerCountryStatisticsTask {
   };
 
   // Asynchronously load integrated deaths data from Django backend
-  loadIntegratedDeaths = async (iso_code, end_date) => {
+  loadIntegratedDeaths = async (iso_code, start_date, end_date) => {
     try {
-      const target = `http://localhost:8000/api/deaths/real/integrated/?iso_code=${iso_code}&end_date=${end_date}`;
+      const target = `http://localhost:8000/api/deaths/real/integrated/?iso_code=${iso_code}&start_date=${start_date}&end_date=${end_date}`;
       console.debug(`Backend ${target}`);
       const response = await axios.get(target, {});
       return response.data[0];

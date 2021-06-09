@@ -2,20 +2,11 @@
 from rest_framework import viewsets
 from django.contrib.postgres.aggregates import ArrayAgg
 from .serializers import (
-    KnotDateSetSerializer,
     ModelDateRangeSerializer,
     PossibleLockdownDateSetSerializer,
     PossibleRestrictionsDateSetSerializer,
 )
-from .models import KnotDateSet, ModelDateRange, PossibleDateSet
-
-
-class KnotDateSetView(viewsets.ReadOnlyModelViewSet):
-    """View for KnotDateSet"""
-
-    serializer_class = KnotDateSetSerializer
-    queryset = KnotDateSet.objects.all()  # pylint: disable=no-member
-    http_method_names = ["get", "list"]
+from .models import ModelDateRange, PossibleDateSet
 
 
 class ModelDateRangeView(viewsets.ReadOnlyModelViewSet):

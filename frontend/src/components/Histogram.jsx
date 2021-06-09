@@ -43,7 +43,7 @@ class Histogram extends React.PureComponent {
     console.log("Loading real and counterfactual cases");
     // Retrieve real and counterfactual data in parallel
     const task = new LoadDailyCasesTask();
-    let [casesCounterfactual, casesReal] = await Promise.all([
+    const [casesCounterfactual, casesReal] = await Promise.all([
       task.getCounterfactualCovidCases(
         this.props.isoCode,
         this.props.dateInitial,
@@ -75,10 +75,6 @@ class Histogram extends React.PureComponent {
       }
       this.setState({ casesData: casesData });
     }
-  }
-
-  async componentDidMount() {
-    await this.loadCasesData();
   }
 
   async componentDidUpdate(prevProps) {

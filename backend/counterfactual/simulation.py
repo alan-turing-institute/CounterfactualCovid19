@@ -342,13 +342,17 @@ def simulate_single_country(
         time_period_boundaries = [pd.Timestamp.min, pd.Timestamp.max]
         growth_factors = [knots.growth_factor_0_1]
         with suppress(AttributeError):
-            # If knot_date_1 exists then we know that growth_factor_1_2 exists
-            time_period_boundaries.append(knots.counterfactual_knot_date_1)
-            growth_factors.append(knots.growth_factor_1_2)
+            # Check counterfactual_knot_date_1 for NaT before adding it
+            if not pd.isnull(knots.counterfactual_knot_date_1):
+                # If knot_date_1 exists then we know that growth_factor_1_2 exists
+                time_period_boundaries.append(knots.counterfactual_knot_date_1)
+                growth_factors.append(knots.growth_factor_1_2)
         with suppress(AttributeError):
-            # If knot_date_2 exists then we know that growth_factor_2_3 exists
-            time_period_boundaries.append(knots.counterfactual_knot_date_2)
-            growth_factors.append(knots.growth_factor_2_3)
+            # Check counterfactual_knot_date_2 for NaT before adding it
+            if not pd.isnull(knots.counterfactual_knot_date_2):
+                # If knot_date_2 exists then we know that growth_factor_2_3 exists
+                time_period_boundaries.append(knots.counterfactual_knot_date_2)
+                growth_factors.append(knots.growth_factor_2_3)
         time_period_boundaries = sorted(time_period_boundaries)
 
         # Simulate all days from the second onwards

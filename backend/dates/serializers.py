@@ -1,27 +1,6 @@
 """Serializers for Django dates app"""
 from rest_framework import serializers
-from .models import ModelDateRange, KnotDateSet, PossibleDateSet
-
-
-class KnotDateSetSerializer(serializers.ModelSerializer):
-    """Serializer for KnotDateSetView"""
-
-    iso_code = serializers.PrimaryKeyRelatedField(source="country", read_only=True)
-
-    class Meta:
-        """Metaclass for output fields"""
-
-        model = KnotDateSet
-        fields = (
-            "iso_code",
-            "knot_date_1",
-            "knot_date_2",
-            "n_knots",
-            "growth_factor_0_1",
-            "growth_factor_1_2",
-            "growth_factor_2_3",
-            "weight",
-        )
+from .models import ModelDateRange, PossibleDateSet
 
 
 class ModelDateRangeSerializer(serializers.ModelSerializer):

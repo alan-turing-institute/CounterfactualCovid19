@@ -60,8 +60,6 @@ class CasesCounterfactualDailyAbsoluteView(
             iso_codes, boundary_dates, knot_dates, summary=False
         )
 
-        # return NotImplementedError
-
 
 class CasesCounterfactualDailyNormalisedView(
     CasesCounterfactualViewMixin, viewsets.ViewSet
@@ -82,9 +80,10 @@ class CasesCounterfactualIntegratedView(CasesCounterfactualViewMixin, viewsets.V
     serializer_class = CasesCounterfactualIntegratedSerializer
 
     def simulate(self, iso_codes, boundary_dates, knot_dates):
-        return CounterfactualCasesRecord.simulate(
+        records = CounterfactualCasesRecord.simulate(
             iso_codes, boundary_dates, knot_dates, summary=True
         )
+        return [max(records, key=lambda r: r["date"])] if records else []
 
 
 class PerCountryRealViewMixin(ABC):

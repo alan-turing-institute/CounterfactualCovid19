@@ -7,6 +7,7 @@ import React from "react";
 
 const propTypes = exact({
   isoCode: PropTypes.string.isRequired,
+  dateStart: PropTypes.string.isRequired,
   dateEnd: PropTypes.string.isRequired,
   onDataChange: PropTypes.func.isRequired,
 });
@@ -32,10 +33,12 @@ class CountryStatistics extends React.PureComponent {
     try {
       const realCases = await statistics.loadIntegratedCases(
         this.props.isoCode,
+        this.props.dateStart,
         this.props.dateEnd
       );
       const realDeaths = await statistics.loadIntegratedDeaths(
         this.props.isoCode,
+        this.props.dateStart,
         this.props.dateEnd
       );
       // Update state and pass values back to callback function
