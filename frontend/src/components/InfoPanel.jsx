@@ -162,7 +162,6 @@ class InfoPanel extends React.PureComponent {
 
     await this.loadAllowedDates();
     await this.loadStatisticsCounterfactual();
-
   }
 
   // This runs when the CountryStatistics update
