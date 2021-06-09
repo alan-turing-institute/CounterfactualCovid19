@@ -77,6 +77,7 @@ class Histogram extends React.PureComponent {
     }
   }
 
+  // This runs whenever the props or state change
   async componentDidUpdate(prevProps) {
     // Reload case data whenever
     // 1. A new country is selected
@@ -89,7 +90,7 @@ class Histogram extends React.PureComponent {
       this.props.dateLockdownCounterfactual !==
         prevProps.dateLockdownCounterfactual
     ) {
-      await this.loadCasesData();
+      return this.loadCasesData();
     }
   }
 
@@ -114,10 +115,11 @@ class Histogram extends React.PureComponent {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="casesReal" fill="#413ea0" />
+              <Bar dataKey="casesReal" fill="#413ea0" label="Real cases"/>
               <Line
                 type="monotone"
                 dataKey="casesCounterfactual"
+                label="Counterfactual cases"
                 stroke="#ff7300"
               />
               {this.props.dateFirstRestrictionsReal != null && (

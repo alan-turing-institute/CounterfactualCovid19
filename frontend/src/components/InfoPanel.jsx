@@ -7,9 +7,10 @@ import CountryStatistics from "./CountryStatistics";
 import DateChooser from "./DateChooser";
 import exact from "prop-types-exact";
 import Histogram from "./Histogram";
-import LoadCounterfactualRestrictionsDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
+import LoadCounterfactualDatesTask from "../tasks/LoadCounterfactualDatesTask.js";
 import LoadPerCountryStatisticsTask from "../tasks/LoadPerCountryStatisticsTask.js";
 import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
+import loadCountryDemographicsTask from "../tasks/LoadCountryDemographicTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
@@ -28,23 +29,24 @@ class InfoPanel extends React.PureComponent {
     this.state = {
       allowedDatesFirstRestrictions: null,
       allowedDatesLockdown: null,
+      countryName: null,
       dateFirstRestrictionsCounterfactual: null,
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
       dateModelStart: null,
       dateModelEnd: null,
-      dateFirstCase: null,
+      dateFirstWaveStart: null,
+      dateFirstWaveEnd: null,
       totalCasesCounterfactual: null,
       totalCasesReal: null,
       totalDeathsReal: null,
+      populationDensity: null,
     };
-    this.initial_state = this.state;
 
     // Bind functions that need to use `this`
     this.onFirstRestrictionsChange = this.onFirstRestrictionsChange.bind(this);
     this.onLockdownChange = this.onLockdownChange.bind(this);
-    this.onRealDataChange = this.onRealDataChange.bind(this);
   }
 
   // Create an await-able function that will not
@@ -64,78 +66,82 @@ class InfoPanel extends React.PureComponent {
     return secondsDelta / (1000 * 3600 * 24);
   }
 
-  async loadStatisticsCounterfactual() {
+  async loadRealData() {
     try {
-      const task = new LoadPerCountryStatisticsTask();
-      const counterfactualCases = await task.loadIntegratedCounterfactualCases(
-        this.props.isoCode,
-        this.state.dateModelStart,
-        this.state.dateModelEnd,
-        this.state.dateFirstRestrictionsCounterfactual,
-        this.state.dateLockdownCounterfactual
-      );
-      this.setState({
-        totalCasesCounterfactual:
-          counterfactualCases.summed_avg_cases_per_million,
+      // Load dates and demographics
+      const [dates, demographics] = await Promise.all([
+        loadRealDatesTask(this.props.isoCode),
+        loadCountryDemographicsTask(this.props.isoCode),
+      ]);
+      // Load cases and deaths
+      const statistics = new LoadPerCountryStatisticsTask();
+      const [cases, deaths] = await Promise.all([
+        statistics.loadIntegratedCases(
+          this.props.isoCode,
+          dates.initial_date,
+          dates.maximum_date,
+        ),
+        statistics.loadIntegratedDeaths(
+          this.props.isoCode,
+          dates.initial_date,
+          dates.maximum_date,
+        ),
+      ]);
+      // Update component state
+      return this.setStateAsync({
+        countryName: demographics.name,
+        dateFirstCase: dates.first_case_date,
+        dateFirstRestrictionsCounterfactual: dates.first_restrictions_date,
+        dateFirstRestrictionsReal: dates.first_restrictions_date,
+        dateLockdownCounterfactual: dates.lockdown_date,
+        dateLockdownReal: dates.lockdown_date,
+        dateModelEnd: dates.maximum_date,
+        dateModelStart: dates.initial_date,
+        populationDensity: demographics.population_density,
+        totalCasesReal: cases.summed_avg_cases_per_million,
+        totalDeathsReal: deaths.summed_avg_deaths_per_million,
       });
     } catch (error) {
       console.log(error);
     }
   }
 
-  async loadRestrictionData() {
-    // Retrieve restriction data
+  async loadCounterfactualData() {
     try {
-      const realDates = await loadRealDatesTask(this.props.isoCode);
-      // Set the component state with the restriction data
-      await this.setState({
-        dateFirstRestrictionsCounterfactual: realDates.first_restrictions_date,
-        dateFirstRestrictionsReal: realDates.first_restrictions_date,
-        dateLockdownCounterfactual: realDates.lockdown_date,
-        dateLockdownReal: realDates.lockdown_date,
-        dateModelStart: realDates.initial_date || this.state.dateModelStart,
-        dateModelEnd: realDates.maximum_date || this.state.dateModelEnd,
-        dateFirstCase: realDates.first_case_date || this.state.dateModelStart,
+      const dates = new LoadCounterfactualDatesTask();
+      const statistics = new LoadPerCountryStatisticsTask();
+      const [firstRestrictionsDates, lockdownDates, cases] = await Promise.all([
+        dates.loadFirstRestrictionsDates(this.props.isoCode, this.state.dateLockdownCounterfactual),
+        dates.loadLockdownDates(this.props.isoCode, this.state.dateFirstRestrictionsCounterfactual),
+        statistics.loadIntegratedCounterfactualCases(
+          this.props.isoCode,
+          this.state.dateModelStart,
+          this.state.dateModelEnd,
+          this.state.dateFirstRestrictionsCounterfactual,
+          this.state.dateLockdownCounterfactual,
+        ),
+      ]);
+      return this.setStateAsync({
+        allowedDatesFirstRestrictions: firstRestrictionsDates.possible_dates,
+        allowedDatesLockdown: lockdownDates.possible_dates,
+        totalCasesCounterfactual: cases.summed_avg_cases_per_million,
       });
     } catch (error) {
       console.log(error);
     }
-  }
-
-  async loadAllowedDates() {
-    const task = new LoadCounterfactualRestrictionsDatesTask();
-    const lockdownDates = await task.loadLockdownDates(
-      this.props.isoCode,
-      this.state.dateFirstRestrictionsCounterfactual
-    );
-    const firstRestrictionsDates = await task.loadFirstRestrictionsDates(
-      this.props.isoCode,
-      this.state.dateLockdownCounterfactual
-    );
-    this.setState({
-      allowedDatesFirstRestrictions:
-        firstRestrictionsDates && "possible_dates" in firstRestrictionsDates
-          ? firstRestrictionsDates.possible_dates
-          : null,
-      allowedDatesLockdown:
-        lockdownDates && "possible_dates" in lockdownDates
-          ? lockdownDates.possible_dates
-          : null,
-    });
   }
 
   async reloadStateData() {
-    await this.loadRestrictionData();
-    await this.loadAllowedDates();
-    await this.loadStatisticsCounterfactual();
+    await this.loadRealData();
+    await this.loadCounterfactualData();
   }
 
-  // This runs when the info panel is first mounted
+  // This runs when the component is first mounted
   async componentDidMount() {
     await this.reloadStateData();
   }
 
-  // This runs when we click in a new country, reload all date information
+  // This runs whenever the props or state change
   async componentDidUpdate(prevProps) {
     if (this.props.isoCode !== prevProps.isoCode) {
       await this.reloadStateData();
@@ -148,9 +154,7 @@ class InfoPanel extends React.PureComponent {
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
-
-    await this.loadAllowedDates();
-    await this.loadStatisticsCounterfactual();
+    await this.loadCounterfactualData();
   }
 
   // this runs when we change the lockdown counterfactual date
@@ -159,20 +163,7 @@ class InfoPanel extends React.PureComponent {
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
-
-    await this.loadAllowedDates();
-    await this.loadStatisticsCounterfactual();
-  }
-
-  // This runs when the CountryStatistics update
-  async onRealDataChange(totalCases, totalDeaths) {
-    await this.setStateAsync({
-      totalCasesReal: totalCases,
-      totalDeathsReal: totalDeaths,
-    });
-    console.log(
-      `Setting totalCasesReal to ${this.state.totalCasesReal} and totalDeathsReal to ${this.state.totalDeathsReal}`
-    );
+    await this.loadCounterfactualData();
   }
 
   render() {
@@ -183,14 +174,19 @@ class InfoPanel extends React.PureComponent {
             <Row>
               <Col xs={3} md={3} lg={3}>
                 <Row xs={1} md={1} lg={1}>
-                  <CountryDates isoCode={this.props.isoCode} />
+                  <CountryDates
+                    countryName={this.state.countryName}
+                    dateFirstWaveEnd={this.state.dateFirstCase}
+                    dateFirstWaveStart={this.state.dateModelEnd}
+                    dateFirstRestrictions={this.state.dateFirstRestrictionsReal}
+                    dateLockdown={this.state.dateLockdownReal}
+                  />
                 </Row>
                 <Row xs={1} md={1} lg={1}>
                   <CountryStatistics
-                    isoCode={this.props.isoCode}
-                    dateStart={this.state.dateModelStart}
-                    dateEnd={this.state.dateModelEnd}
-                    onDataChange={this.onRealDataChange}
+                    totalCases={this.state.totalCasesReal}
+                    totalDeaths={this.state.totalDeathsReal}
+                    populationDensity={this.state.populationDensity}
                   />
                 </Row>
               </Col>
@@ -222,7 +218,7 @@ class InfoPanel extends React.PureComponent {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.dateFirstCase}
+                    dateInitial={this.state.dateFirstWaveStart}
                     dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal
