@@ -125,11 +125,9 @@ class InfoPanel extends React.PureComponent {
   }
 
   async reloadStateData() {
-    await Promise.all([
-      await this.loadRestrictionData(),
-      await this.loadAllowedDates(),
-      this.loadStatisticsCounterfactual(),
-    ]);
+    await this.loadRestrictionData();
+    await this.loadAllowedDates();
+    await this.loadStatisticsCounterfactual();
   }
 
   // This runs when the info panel is first mounted
@@ -150,10 +148,9 @@ class InfoPanel extends React.PureComponent {
     console.log(
       `Set counterfactual first restrictions date to ${this.state.dateFirstRestrictionsCounterfactual}`
     );
-    await Promise.all([
-      this.loadAllowedDates(),
-      this.loadStatisticsCounterfactual(),
-    ]);
+
+    await this.loadAllowedDates();
+    await this.loadStatisticsCounterfactual();
   }
 
   // this runs when we change the lockdown counterfactual date
@@ -162,10 +159,10 @@ class InfoPanel extends React.PureComponent {
     console.log(
       `Set counterfactual lockdown date to ${this.state.dateLockdownCounterfactual}`
     );
-    await Promise.all([
-      this.loadAllowedDates(),
-      this.loadStatisticsCounterfactual(),
-    ]);
+
+    await this.loadAllowedDates();
+    await this.loadStatisticsCounterfactual();
+
   }
 
   // This runs when the CountryStatistics update
