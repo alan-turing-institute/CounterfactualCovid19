@@ -40,8 +40,10 @@ class Histogram extends React.PureComponent {
   }
 
   async loadCasesData() {
-    console.log("Loading real and counterfactual cases");
     // Retrieve real and counterfactual data in parallel
+    console.log(
+      `Loading real and counterfactual cases between ${this.props.dateInitial} and ${this.props.dateFinal}`
+    );
     const task = new LoadDailyCasesTask();
     const [casesCounterfactual, casesReal] = await Promise.all([
       task.getCounterfactualCovidCases(
@@ -68,8 +70,9 @@ class Histogram extends React.PureComponent {
         );
         const record = {
           date: casesReal[i].date,
-          casesReal: casesReal[i].summed_avg_cases_per_million,
-          casesCounterfactual: counterfactual.summed_avg_cases_per_million || 0,
+          "Real cases": casesReal[i].summed_avg_cases_per_million,
+          "Counterfactual cases":
+            counterfactual.summed_avg_cases_per_million || 0,
         };
         casesData.push(record);
       }
@@ -115,11 +118,10 @@ class Histogram extends React.PureComponent {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="casesReal" fill="#413ea0" label="Real cases" />
+              <Bar dataKey="Real cases" fill="#413ea0" />
               <Line
                 type="monotone"
-                dataKey="casesCounterfactual"
-                label="Counterfactual cases"
+                dataKey="Counterfactual cases"
                 stroke="#ff7300"
               />
               {this.props.dateFirstRestrictionsReal != null && (
