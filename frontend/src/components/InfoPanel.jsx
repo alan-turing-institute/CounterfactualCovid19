@@ -30,14 +30,13 @@ class InfoPanel extends React.PureComponent {
       allowedDatesFirstRestrictions: null,
       allowedDatesLockdown: null,
       countryName: null,
+      dateFirstCase: null,
       dateFirstRestrictionsCounterfactual: null,
       dateFirstRestrictionsReal: null,
       dateLockdownCounterfactual: null,
       dateLockdownReal: null,
       dateModelStart: null,
       dateModelEnd: null,
-      dateFirstWaveStart: null,
-      dateFirstWaveEnd: null,
       totalCasesCounterfactual: null,
       totalCasesReal: null,
       totalDeathsReal: null,
@@ -79,12 +78,12 @@ class InfoPanel extends React.PureComponent {
         statistics.loadIntegratedCases(
           this.props.isoCode,
           dates.initial_date,
-          dates.maximum_date,
+          dates.maximum_date
         ),
         statistics.loadIntegratedDeaths(
           this.props.isoCode,
           dates.initial_date,
-          dates.maximum_date,
+          dates.maximum_date
         ),
       ]);
       // Update component state
@@ -100,6 +99,10 @@ class InfoPanel extends React.PureComponent {
         populationDensity: demographics.population_density,
         totalCasesReal: cases.summed_avg_cases_per_million,
         totalDeathsReal: deaths.summed_avg_deaths_per_million,
+        // Reset the remaining state so that stale data is cleaned up
+        allowedDatesFirstRestrictions: null,
+        allowedDatesLockdown: null,
+        totalCasesCounterfactual: null,
       });
     } catch (error) {
       console.log(error);
@@ -111,14 +114,20 @@ class InfoPanel extends React.PureComponent {
       const dates = new LoadCounterfactualDatesTask();
       const statistics = new LoadPerCountryStatisticsTask();
       const [firstRestrictionsDates, lockdownDates, cases] = await Promise.all([
-        dates.loadFirstRestrictionsDates(this.props.isoCode, this.state.dateLockdownCounterfactual),
-        dates.loadLockdownDates(this.props.isoCode, this.state.dateFirstRestrictionsCounterfactual),
+        dates.loadFirstRestrictionsDates(
+          this.props.isoCode,
+          this.state.dateLockdownCounterfactual
+        ),
+        dates.loadLockdownDates(
+          this.props.isoCode,
+          this.state.dateFirstRestrictionsCounterfactual
+        ),
         statistics.loadIntegratedCounterfactualCases(
           this.props.isoCode,
           this.state.dateModelStart,
           this.state.dateModelEnd,
           this.state.dateFirstRestrictionsCounterfactual,
-          this.state.dateLockdownCounterfactual,
+          this.state.dateLockdownCounterfactual
         ),
       ]);
       return this.setStateAsync({
@@ -218,7 +227,7 @@ class InfoPanel extends React.PureComponent {
                   <Histogram
                     isoCode={this.props.isoCode}
                     height={this.props.height}
-                    dateInitial={this.state.dateFirstWaveStart}
+                    dateInitial={this.state.dateFirstCase}
                     dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
                       this.state.dateFirstRestrictionsReal

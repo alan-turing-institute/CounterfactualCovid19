@@ -66,7 +66,7 @@ class Histogram extends React.PureComponent {
         const counterfactual = casesCounterfactual.find(
           (counterfactual) => counterfactual.date === casesReal[i].date
         );
-        let record = {
+        const record = {
           date: casesReal[i].date,
           casesReal: casesReal[i].summed_avg_cases_per_million,
           casesCounterfactual: counterfactual.summed_avg_cases_per_million || 0,
@@ -115,7 +115,7 @@ class Histogram extends React.PureComponent {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="casesReal" fill="#413ea0" label="Real cases"/>
+              <Bar dataKey="casesReal" fill="#413ea0" label="Real cases" />
               <Line
                 type="monotone"
                 dataKey="casesCounterfactual"
