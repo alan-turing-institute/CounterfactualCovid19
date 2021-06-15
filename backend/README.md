@@ -21,7 +21,7 @@ createdb counterfactualcovid
 You can test that `PostgreSQL` is correctly configured by running
 
 ```bash
-psql counterfactualcovid -U django -c "SELECT * FROM pg_user;"
+psql counterfactualcovid -c "SELECT * FROM pg_user;"
 ```
 
 and checking that you get a list of users back.
@@ -32,7 +32,7 @@ This package requires Python 3.7 or greater.
 
 #### Install using pyenv
 
-Install `pyenv`:
+You need to have `pyenv` installed. Then just run:
 
 ```bash
 pyenv install 3.7.9
