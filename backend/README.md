@@ -68,7 +68,11 @@ On first run you will need to setup the database with the following commands:
 ```bash
 poetry run python3 manage.py makemigrations
 poetry run python3 manage.py migrate
-poetry run python3 manage.py loaddata countries
+poetry run python3 manage.py loaddata countries 
+poetry run python3 manage.py runscript cases_load 
+poetry run python3 manage.py runscript important_dates_load
+poetry run python3 manage.py runscript knotpoint_dates_load
+poetry run python3 manage.py runscript possibledates_load 
 ```
 
 ## Running the backend
