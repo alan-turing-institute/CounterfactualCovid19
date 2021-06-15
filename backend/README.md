@@ -28,10 +28,17 @@ psql counterfactualcovid -c "CREATE USER django WITH PASSWORD 'value';" # where 
 You can test that `PostgreSQL` is correctly configured by running
 
 ```bash
-psql counterfactualcovid -c "SELECT * FROM pg_user;"
+psql counterfactualcovid -U django -c "SELECT * FROM pg_user;"
 ```
 
-and checking that you get a list of users back.
+and checking that you get a list of users back. If you get an error here is because the user `django` doesn't exist. To solve this just create a new user with:
+
+```bash
+createuser django -P
+```
+
+and type the password that is being used for this project (you can find it in line 90 of [this file](/backend/settings/common.py)). 
+
 
 ### PostGIS
 
