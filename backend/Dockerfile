@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim-buster
+FROM python:3.7-slim-buster
 
 # Ensure that logs appear in the correct order without buffering
 ENV PYTHONUNBUFFERED=1

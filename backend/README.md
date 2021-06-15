@@ -95,5 +95,5 @@ poetry run python3 manage.py runscript possibledates_load
 Run the Django backend from the `backend/` directory with:
 
 ```bash
-poetry run python3 manage.py runserver 0.0.0.0:8000
+poetry run python3 manage.py runserver localhost:8000
 ```
