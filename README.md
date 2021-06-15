@@ -1,9 +1,8 @@
 # CounterfactualCovid19
 Welcome to the Counterfactual Covid19 repository. This is a Leeds-Turing project that aims to visualise the counterfactual history of the growth of COVID-19 cases in Europe.
 
-This repository contains three subdirectories:
+This repository contains two subdirectories:
 
-* *counterfactual_calculations*:  This directory contains python code for simulating the growth of COVID-19 cases and is largely based on this original [repository](https://github.com/KFArnold/covid-counterfactual).
 * *backend*: This directory contains `Django` code to produce COVID-19 data and counterfactual simulations
 * *frontend*: This directory contains `react-leaflet` code to visualise the COVID-19 data and counterfactual simulations based on this [repo](https://github.com/CodingWith-Adam/covid19-map)
 
