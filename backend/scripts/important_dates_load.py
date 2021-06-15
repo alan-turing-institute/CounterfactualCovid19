@@ -1,7 +1,7 @@
 """Load important lockdown dates country data into the database"""
 from time import monotonic
 import pandas as pd
-from dates.models import ModelDateRange
+from dates.models import CountryDateSet
 from .utils import create_code_lookup, create_country_lookup
 
 
@@ -22,8 +22,8 @@ def run():
     # replace all NaT with None needed for django
     df_dates.Date_lockdown = df_dates.Date_lockdown.replace({float("nan"): None})
 
-    # Delete all existing ModelDateRange data and regenerate the table
-    ModelDateRange.objects.all().delete()  # pylint: disable=no-member
+    # Delete all existing CountryDateSet data and regenerate the table
+    CountryDateSet.objects.all().delete()  # pylint: disable=no-member
 
     # Add an ISO code column lookup table
     code_lookup = create_code_lookup(df_dates["Country"].unique())
@@ -37,7 +37,7 @@ def run():
         try:
             country = country_lookup[entry.iso_code]
             if country:
-                record = ModelDateRange(
+                record = CountryDateSet(
                     country=country,
                     initial_date=entry.Date_start,
                     maximum_date=entry.Date_T,

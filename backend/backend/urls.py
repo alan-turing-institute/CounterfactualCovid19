@@ -28,7 +28,7 @@ from cases.views import (
 )
 from countries.views import CountryGeometryView, CountryDemographicView
 from dates.views import (
-    ModelDateRangeView,
+    CountryDateSetView,
     PossibleLockdownDateSetView,
     PossibleRestrictionsDateSetView,
 )
@@ -83,7 +83,7 @@ router.register(
     "country/demographic", CountryDemographicView, basename="country_demographic"
 )
 router.register(
-    "country/importantdates", ModelDateRangeView, basename="country_importantdates"
+    "country/importantdates", CountryDateSetView, basename="country_importantdates"
 )
 # Dates
 router.register(

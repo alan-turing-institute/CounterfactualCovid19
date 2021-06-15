@@ -1,4 +1,4 @@
-"""ModelDateRange model"""
+"""Date-related models"""
 from django.db import models
 from countries.models import Country
 
@@ -27,12 +27,12 @@ class KnotDateSet(models.Model):
         return f"{self.country}: ({self.knot_date_1}), {self.knot_date_2}"
 
 
-class ModelDateRange(models.Model):
-    """Range of dates where restrictions can be simulated"""
+class CountryDateSet(models.Model):
+    """Dates when restrictions were applied or can be simulated"""
 
     id = models.AutoField(primary_key=True)
     country = models.ForeignKey(
-        Country, related_name="ModelDateRange", on_delete=models.CASCADE
+        Country, related_name="CountryDateSet", on_delete=models.CASCADE
     )
     initial_date = models.DateField()
     maximum_date = models.DateField()
@@ -46,7 +46,7 @@ class ModelDateRange(models.Model):
         unique_together = ("country", "first_restrictions_date", "lockdown_date")
 
     def __str__(self):
-        return f"{self.country}: ({self.first_restrictions_date}), {self.lockdown_date}"
+        return f"{self.country}: ({self.initial_date} => {self.maximum_date}). First case = {self.first_case_date}; restrictions = {self.first_restrictions_date}); lockdown = {self.lockdown_date}"
 
 
 class PossibleDateSet(models.Model):
