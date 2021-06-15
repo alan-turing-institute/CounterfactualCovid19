@@ -3,8 +3,8 @@ Welcome to the Counterfactual Covid19 repository. This is a Leeds-Turing project
 
 This repository contains two subdirectories:
 
-* *backend*: This directory contains `Django` code to produce COVID-19 data and counterfactual simulations
-* *frontend*: This directory contains `react-leaflet` code to visualise the COVID-19 data and counterfactual simulations based on this [repo](https://github.com/CodingWith-Adam/covid19-map)
+* *backend*: This directory contains `Django` code that loads COVID-19 data from this [repo](https://github.com/alan-turing-institute/CounterfactualCovid19-inputs) and produces and counterfactual simulations.
+* *frontend*: This directory contains `react-leaflet` code to visualise the COVID-19 data and counterfactual simulations based on this [repo](https://github.com/CodingWith-Adam/covid19-map).
 
 ## Manual setup
 
