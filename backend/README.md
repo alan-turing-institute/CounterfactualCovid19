@@ -30,14 +30,6 @@ and checking that you get a list of users back.
 
 This package requires Python 3.7 or greater.
 
-#### Install using conda
-
-```bash
-conda create -n counterfactual python=3.7.9
-conda activate counterfactual
-conda install -c conda-forge libspatialite
-```
-
 #### Install using pyenv
 
 Install `pyenv`:
