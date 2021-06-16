@@ -36,7 +36,7 @@ const CountryDates = (props) => {
           <Card.Text>{`National lockdown: ${props.dateLockdown}.`}</Card.Text>
         )}
         {!props.dateFirstWaveEnd ? null : (
-          <Card.Text>{` The first wave ended: ${props.dateFirstWaveEnd}.`}</Card.Text>
+          <Card.Text>{`First wave ended: ${props.dateFirstWaveEnd}.`}</Card.Text>
         )}
       </Card.Body>
     </Card>
