@@ -50,7 +50,10 @@ Launch the app by running the following:
 docker-compose up -d
 ```
 
-This will create a series of persistent docker-compose images so that future runs will be faster to start up. To cleanup all images and force a full rebuild do
+This will create a series of persistent docker-compose images so that future runs will be faster to start up.
+Note that although `npm` reports several vulnerabilities, we are using the latest versions of all requested libraries - no security fixes are available.
+
+To cleanup all images and force a full rebuild do
 
 ```bash
 docker-compose down -v --rmi all --remove-orphans

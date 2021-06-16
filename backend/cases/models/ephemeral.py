@@ -2,7 +2,7 @@
 import datetime
 import pandas as pd
 from counterfactual import simulate_records, simulate_records_on_date
-from dates.models import KnotDateSet, ModelDateRange, PossibleDateSet
+from dates.models import KnotDateSet, CountryDateSet, PossibleDateSet
 from .concrete import CasesRecord
 
 
@@ -61,8 +61,8 @@ class CounterfactualCasesRecord:
         ).rename(columns={"country": "iso_code"})
 
         # Load date range that the simulation can run over
-        df_modeldaterange = pd.DataFrame.from_records(
-            ModelDateRange.objects.all().values(  # pylint: disable=no-member
+        df_countrydateset = pd.DataFrame.from_records(
+            CountryDateSet.objects.all().values(  # pylint: disable=no-member
                 "country", "initial_date", "maximum_date"
             )
         ).rename(columns={"country": "iso_code"})
@@ -82,14 +82,14 @@ class CounterfactualCasesRecord:
             simulate_records_on_date(
                 df_casesrecord,
                 df_knotdateset,
-                df_modeldaterange,
+                df_countrydateset,
                 df_possibledateset,
                 knot_dates,
             )
         return simulate_records(
             df_casesrecord,
             df_knotdateset,
-            df_modeldaterange,
+            df_countrydateset,
             df_possibledateset,
             knot_dates,
         )

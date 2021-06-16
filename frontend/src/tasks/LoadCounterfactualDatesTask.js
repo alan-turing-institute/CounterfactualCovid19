@@ -1,6 +1,6 @@
 import axios from "axios";
 
-class LoadCounterfactualRestrictionsDatesTask {
+class LoadCounterfactualDatesTask {
   loadLockdownDates = async (isoCode, firstRestrictionsDate) => {
     try {
       var target = `http://localhost:8000/api/dates/possible/lockdown/?iso_code=${isoCode}`;
@@ -32,4 +32,4 @@ class LoadCounterfactualRestrictionsDatesTask {
   };
 }
 
-export default LoadCounterfactualRestrictionsDatesTask;
+export default LoadCounterfactualDatesTask;

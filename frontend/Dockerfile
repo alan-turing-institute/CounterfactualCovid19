@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:15.5.1-alpine3.12
+FROM node:16.3.0-alpine3.13
 
 # Add the frontend directory to make absolute filepaths consistent across services
 WORKDIR /app/frontend

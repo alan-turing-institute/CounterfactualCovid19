@@ -5,17 +5,24 @@ This project was bootstrapped with [Django start project](https://docs.djangopro
 You will need to install the following dependencies in order to run this app:
 
 - [PostgreSQL](#postgresql)
+- [PostGIS](#postgis)
 - [Python](#python)
 
 ### PostgreSQL
 
-You will need to install `PostgreSQL` [following the instructions for your OS](https://www.postgresql.org/download/). For example, for OSX using `Homebrew` you would run:
+You will need to install `PostgreSQL` [following the instructions for your OS](https://www.postgresql.org/download/). For example, for macOS using `Homebrew` you would run:
 
 ```bash
 brew install postgresql
 initdb /usr/local/var/postgres # note that you can use another location if preferred
 pg_ctl -D /usr/local/var/postgres start
+```
+
+Once `PostgreSQL` is installed, you can create the required database and the `django` user by running:
+
+```bash
 createdb counterfactualcovid
+psql counterfactualcovid -c "CREATE USER django WITH PASSWORD 'value';" # where you should replace value with the desired password
 ```
 
 You can test that `PostgreSQL` is correctly configured by running
@@ -26,17 +33,23 @@ psql counterfactualcovid -U django -c "SELECT * FROM pg_user;"
 
 and checking that you get a list of users back.
 
+### PostGIS
+
+Install the `PostGIS` extensions for `PostgreSQL` following the instructions for your OS](https://postgis.net/install/). For example, for macOS using `Homebrew` you would run:
+
+```bash
+brew install postgis
+```
+
+Once `PostGIS` is installed, you can create the required database extension by running
+
+```bash
+psql counterfactualcovid -c "CREATE EXTENSION postgis;"
+```
+
 ### Python
 
 This package requires Python 3.7 or greater.
-
-#### Install using conda
-
-```bash
-conda create -n counterfactual python=3.7.9
-conda activate counterfactual
-conda install -c conda-forge libspatialite
-```
 
 #### Install using pyenv
 
@@ -44,12 +57,6 @@ Install `pyenv`:
 
 ```bash
 pyenv install 3.7.9
-```
-
-Note that if you are using `macOS` you may need the following additional environment variables:
-
-```bash
-PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions --enable-optimizations --with-openssl=$(brew --prefix openssl)" LDFLAGS="${LDFLAGS} -L/usr/local/opt/sqlite/lib" CPPFLAGS="${CPPFLAGS} -I/usr/local/opt/sqlite/include" pyenv install 3.7.9
 ```
 
 Now you can create a virtual environment and set it for local use:
@@ -77,6 +84,10 @@ On first run you will need to setup the database with the following commands:
 poetry run python3 manage.py makemigrations
 poetry run python3 manage.py migrate
 poetry run python3 manage.py loaddata countries
+poetry run python3 manage.py runscript cases_load
+poetry run python3 manage.py runscript important_dates_load
+poetry run python3 manage.py runscript knotpoint_dates_load
+poetry run python3 manage.py runscript possibledates_load
 ```
 
 ## Running the backend
@@ -84,5 +95,5 @@ poetry run python3 manage.py loaddata countries
 Run the Django backend from the `backend/` directory with:
 
 ```bash
-poetry run python3 manage.py runserver
+poetry run python3 manage.py runserver localhost:8000
 ```

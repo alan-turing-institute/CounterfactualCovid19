@@ -2,23 +2,23 @@
 from rest_framework import viewsets
 from django.contrib.postgres.aggregates import ArrayAgg
 from .serializers import (
-    ModelDateRangeSerializer,
+    CountryDateSetSerializer,
     PossibleLockdownDateSetSerializer,
     PossibleRestrictionsDateSetSerializer,
 )
-from .models import ModelDateRange, PossibleDateSet
+from .models import CountryDateSet, PossibleDateSet
 
 
-class ModelDateRangeView(viewsets.ReadOnlyModelViewSet):
-    """View for ModelDateRange"""
+class CountryDateSetView(viewsets.ReadOnlyModelViewSet):
+    """View for CountryDateSet"""
 
-    serializer_class = ModelDateRangeSerializer
-    queryset = ModelDateRange.objects.all()  # pylint: disable=no-member
+    serializer_class = CountryDateSetSerializer
+    queryset = CountryDateSet.objects.all()  # pylint: disable=no-member
     http_method_names = ["get", "list"]
 
     def get_queryset(self):
         """Construct a default queryset with filters"""
-        queryset = ModelDateRange.objects.all()  # pylint: disable=no-member
+        queryset = CountryDateSet.objects.all()  # pylint: disable=no-member
         # Apply filter on ISO code
         iso_code = self.request.query_params.get("iso_code", None)
         if iso_code:

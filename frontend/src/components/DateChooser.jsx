@@ -60,14 +60,19 @@ class DateChooser extends React.PureComponent {
   }
 
   render() {
-    const includeDates = this.props.allowedDates
-      ? this.props.allowedDates.map((element) => new Date(element))
-      : null;
+    const nonNullAllowedDates = this.props.allowedDates
+      ? this.props.allowedDates.filter(Boolean)
+      : [];
+    const includeDates =
+      nonNullAllowedDates.length > 0
+        ? nonNullAllowedDates.map((element) => new Date(element))
+        : null;
     const highlightDates = this.props.nominalDate
       ? [new Date(this.props.nominalDate)]
       : [];
+    const extraProps = includeDates ? {} : { disabled: true };
 
-    return includeDates ? (
+    return (
       <div className="date-chooser">
         <DatePicker
           dateFormat="yyyy-MM-dd"
@@ -76,11 +81,10 @@ class DateChooser extends React.PureComponent {
           onChange={this.handleDateChange}
           selected={this.state.date}
           isClearable
+          {...extraProps}
         />
         <em>{this.props.caption}</em>
       </div>
-    ) : (
-      <div></div>
     );
   }
 }

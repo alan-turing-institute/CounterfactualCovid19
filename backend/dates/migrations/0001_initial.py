@@ -1,4 +1,5 @@
 """Migrations for Django dates app"""
+
 from django.db import migrations, models
 import django.db.models.deletion
 
@@ -14,48 +15,19 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="PossibleDateSet",
-            fields=[
-                ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("n_days_first_restrictions", models.IntegerField(null=True)),
-                ("n_days_lockdown", models.IntegerField(null=True)),
-                (
-                    "dates_counterfactual_first_restrictions",
-                    models.DateField(null=True),
-                ),
-                ("dates_counterfactual_lockdown", models.DateField(null=True)),
-                (
-                    "country",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="PossibleDateSet",
-                        to="countries.country",
-                    ),
-                ),
-            ],
-            options={
-                "unique_together": {
-                    (
-                        "country",
-                        "dates_counterfactual_first_restrictions",
-                        "dates_counterfactual_lockdown",
-                    )
-                },
-            },
-        ),
-        migrations.CreateModel(
-            name="ModelDateRange",
+            name="CountryDateSet",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("initial_date", models.DateField()),
                 ("maximum_date", models.DateField()),
                 ("first_restrictions_date", models.DateField(null=True)),
                 ("lockdown_date", models.DateField(null=True)),
+                ("first_case_date", models.DateField(null=True)),
                 (
                     "country",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="ModelDateRange",
+                        related_name="CountryDateSet",
                         to="countries.country",
                     ),
                 ),
@@ -88,6 +60,36 @@ class Migration(migrations.Migration):
             ],
             options={
                 "unique_together": {("country", "knot_date_1", "knot_date_2")},
+            },
+        ),
+        migrations.CreateModel(
+            name="PossibleDateSet",
+            fields=[
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("n_days_first_restrictions", models.IntegerField(null=True)),
+                ("n_days_lockdown", models.IntegerField(null=True)),
+                (
+                    "dates_counterfactual_first_restrictions",
+                    models.DateField(null=True),
+                ),
+                ("dates_counterfactual_lockdown", models.DateField(null=True)),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="PossibleDateSet",
+                        to="countries.country",
+                    ),
+                ),
+            ],
+            options={
+                "unique_together": {
+                    (
+                        "country",
+                        "dates_counterfactual_first_restrictions",
+                        "dates_counterfactual_lockdown",
+                    )
+                },
             },
         ),
     ]
