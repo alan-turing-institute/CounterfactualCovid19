@@ -60,8 +60,11 @@ class WorldMap extends React.PureComponent {
       function (event) {
         // Process the click on the current layer
         this.processLayerClick(layer);
-        // Pass the target ISO code up to the callback function
-        this.props.onCountrySelect(event.target.feature.id);
+        // Pass the target ISO code and clickable-ness up to the callback function
+        this.props.onCountrySelect(
+          event.target.feature.id,
+          event.target.feature.properties.clickable
+        );
       }.bind(this) // allows the use of 'this' referring to the WorldMap object inside the anonymous function
     );
   };
