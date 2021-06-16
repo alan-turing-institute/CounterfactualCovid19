@@ -83,7 +83,9 @@ class DateChooser extends React.PureComponent {
           isClearable
           {...extraProps}
         />
-        <p><em>{this.props.caption}</em></p>
+        <p>
+          <em>{this.props.caption}</em>
+        </p>
       </div>
     );
   }
