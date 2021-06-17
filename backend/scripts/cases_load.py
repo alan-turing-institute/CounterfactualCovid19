@@ -28,6 +28,10 @@ def run():
 
     for entry in df_cases.itertuples():
         try:
+            # Skip Russia and Monaco
+            if entry.iso_code in ("RUS", "MCO"):
+                continue
+            # ... but for other countries use the lookup table
             country = country_lookup[entry.iso_code]
             if country:
                 record = CasesRecord(
