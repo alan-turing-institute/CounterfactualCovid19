@@ -31,7 +31,7 @@ You can test that `PostgreSQL` is correctly configured by running
 psql counterfactualcovid -U django -c "SELECT * FROM pg_user;"
 ```
 
-and checking that you get a list of users back. 
+and checking that you get a list of users back.
 
 ### PostGIS
 
