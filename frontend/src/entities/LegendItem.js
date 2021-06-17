@@ -3,7 +3,7 @@ class LegendItem {
     this.title = title;
     this.color = color;
     this.isFor = isFor;
-    this.textColor = textColor != null ? textColor : textColor;
+    this.textColor = textColor ? textColor : "black";
   }
 }
 

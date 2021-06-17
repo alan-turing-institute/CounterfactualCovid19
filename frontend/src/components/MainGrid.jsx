@@ -44,8 +44,8 @@ class MainGrid extends React.PureComponent {
   }
 
   // Update the state for a new country
-  handleCountryChange(iso_code) {
-    if (iso_code === this.state.isoCode) {
+  handleCountryChange(iso_code, clickable) {
+    if (iso_code === this.state.isoCode || !clickable) {
       console.log(`Setting currently selected country to none`);
       this.setState({
         isoCode: null,

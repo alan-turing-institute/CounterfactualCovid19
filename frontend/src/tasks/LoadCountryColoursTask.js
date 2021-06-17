@@ -19,6 +19,8 @@ const applyCountryColours = (countryGeoms, integratedCasesData) => {
       if (legendItem) {
         countryGeom.properties.color = legendItem.color;
       }
+      // Mark any countries without cases as unclickable
+      countryGeom.properties.clickable = totalCases > 0;
     }
     return countryGeoms;
   } catch (error) {
