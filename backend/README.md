@@ -33,7 +33,6 @@ psql counterfactualcovid -U django -c "SELECT * FROM pg_user;"
 
 and checking that you get a list of users back. 
 
-
 ### PostGIS
 
 Install the `PostGIS` extensions for `PostgreSQL` following the instructions for your OS](https://postgis.net/install/). For example, for macOS using `Homebrew` you would run:
