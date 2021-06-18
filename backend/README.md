@@ -22,8 +22,10 @@ Once `PostgreSQL` is installed, you can create the required database and the `dj
 
 ```bash
 createdb counterfactualcovid
-psql counterfactualcovid -c "CREATE USER django WITH PASSWORD 'value';"  # where you should replace value with the desired password, the one for this project can be found in line 90 of /backend/settings/common.py). 
+createuser django -P
 ```
+
+and type the password that is being used for this project (you can find it in line 90 of [this file](/backend/settings/common.py)). 
 
 You can test that `PostgreSQL` is correctly configured by running
 
