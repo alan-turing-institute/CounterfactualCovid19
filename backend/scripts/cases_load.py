@@ -11,7 +11,7 @@ def run():
     start = monotonic()
 
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
-    url_cases = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Data/Formatted/Cases_deaths_data_europe.csv"
+    url_cases = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Data/Formatted/Cases_deaths_data_europe.csv"
 
     # Load all cases then filter by date
     df_cases = pd.read_csv(url_cases, parse_dates=["Date"])

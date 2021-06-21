@@ -11,7 +11,7 @@ def run():
     start = monotonic()
 
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
-    url_dates = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/summary_eur.csv"
+    url_dates = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Output/summary_eur.csv"
 
     # Load important dates dataframe and parse them allowing for NAT
     df_dates = pd.read_csv(
