@@ -34,8 +34,14 @@ class HeaderPanel extends React.PureComponent {
       <Popover>
         <Popover.Title>About this project</Popover.Title>
         <Popover.Content>
-          Sed posuere consectetur est at lobortis. Aenean eu leo quam.
-          Pellentesque ornare sem lacinia quam venenatis vestibulum.
+          This is a joint project between the Leeds Institute for Data Analytics at the University of Leeds and the Alan Turing Institute (grant number EP/N510129/1).
+
+          <br />This project aims to assess the effects of lockdown timing on the growth of COVID-19 cases across Europe during the first wave.<br />
+
+          <br />Analytical code and documentation relating to this project can be found at https://github.com/KFArnold/covid-lockdown/;
+          source code and documentation for this dashboard can be found at https://github.com/alan-turing-institute/CounterfactualCovid19.<br />
+
+          <br />Note that countries are coloured on the map according to the number of COVID-19 cases per million recorded as of 6 July 2020.<br />
         </Popover.Content>
       </Popover>
     );
