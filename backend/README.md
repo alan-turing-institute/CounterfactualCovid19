@@ -22,8 +22,10 @@ Once `PostgreSQL` is installed, you can create the required database and the `dj
 
 ```bash
 createdb counterfactualcovid
-psql counterfactualcovid -c "CREATE USER django WITH PASSWORD 'value';" # where you should replace value with the desired password
+createuser django -P
 ```
+
+and type the password that is being used for this project (you can find it in line 90 of [this file](/backend/settings/common.py)). 
 
 You can test that `PostgreSQL` is correctly configured by running
 
@@ -53,7 +55,7 @@ This package requires Python 3.7 or greater.
 
 #### Install using pyenv
 
-Install `pyenv`:
+You need to have `pyenv` installed. Then just run:
 
 ```bash
 pyenv install 3.7.9
