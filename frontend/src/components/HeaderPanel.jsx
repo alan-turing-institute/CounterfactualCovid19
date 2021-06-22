@@ -7,6 +7,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
+import "../css/HeaderPanel.css";
 
 const propTypes = exact({});
 
@@ -59,7 +60,14 @@ class HeaderPanel extends React.PureComponent {
       <div>
         <Container fluid>
           <Row>
-            <Col xs={10} md={10} lg={10} style={{ padding: "0px" }}>
+            <Col xs={1} md={1} lg={1} style={{ padding: "0px",  justifyContent: "center", display: "flex",
+}}>
+            <img className="photo" src={process.env.PUBLIC_URL +'/LidaLogo.jpeg'}   />
+            </Col>
+            <Col xs={1} md={1} lg={1} style={{ padding: "0px"}}>
+            <img className="photo" src={process.env.PUBLIC_URL +'/ATI_logo_black_W500px.jpg'}   />
+            </Col>
+            <Col xs={8} md={8} lg={8} style={{ padding: "0px",  justifyContent: "center", display: "flex"}}>
               <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
                 <Card.Body
                   style={{ display: "flex", justifyContent: "center" }}
@@ -96,6 +104,7 @@ class HeaderPanel extends React.PureComponent {
                 )}
               </OverlayTrigger>
             </Col>
+
           </Row>
         </Container>
       </div>
