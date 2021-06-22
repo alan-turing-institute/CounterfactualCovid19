@@ -59,38 +59,16 @@ class HeaderPanel extends React.PureComponent {
     return (
       <div>
         <Container fluid>
-          <Row>
-            <Col
-              xs={1}
-              md={1}
-              lg={1}
-              style={{
-                padding: "0px",
-                justifyContent: "center",
-                display: "flex",
-              }}
-            >
-              <img
-                className="photo"
-                src={process.env.PUBLIC_URL + "/LidaLogo.jpeg"}
-              />
+          <Row style={{ padding: "0px",  justifyContent: "center", display: "flex"}}>
+            <Col xs={1} md={1} lg={1} >
+            <Row style={{ padding: "2px",  justifyContent: "center", display: "flex"}}>
+            <img className="lida_logo" src={process.env.PUBLIC_URL +'/LidaLogo.jpeg'}   />
+            </Row>
+          <Row style={{ padding: "10px",  justifyContent: "center", display: "flex"}}>
+            <img className="turing_logo" src={process.env.PUBLIC_URL +'/ATI_logo_black_W500px.jpg'}   />
+          </Row>
             </Col>
-            <Col xs={1} md={1} lg={1} style={{ padding: "0px" }}>
-              <img
-                className="photo"
-                src={process.env.PUBLIC_URL + "/ATI_logo_black_W500px.jpg"}
-              />
-            </Col>
-            <Col
-              xs={8}
-              md={8}
-              lg={8}
-              style={{
-                padding: "0px",
-                justifyContent: "center",
-                display: "flex",
-              }}
-            >
+            <Col xs={10} md={10} lg={10} style={{ padding: "2px",  justifyContent: "center", display: "flex"}}>
               <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
                 <Card.Body
                   style={{ display: "flex", justifyContent: "center" }}
@@ -111,7 +89,7 @@ class HeaderPanel extends React.PureComponent {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                padding: "0px",
+                padding: "2px",
               }}
             >
               <OverlayTrigger
