@@ -3,6 +3,8 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import exact from "prop-types-exact";
+import logoLeeds from "../images/logo_leeds.jpg";
+import logoTuring from "../images/logo_turing.jpg";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
@@ -75,14 +77,14 @@ class HeaderPanel extends React.PureComponent {
               <Row style={{ padding: "2px", style }}>
                 <img
                   className="logo"
-                  src={process.env.PUBLIC_URL + "/LidaLogo.jpeg"}
+                  src={logoLeeds}
                   alt="Lida Logo"
                 />
               </Row>
               <Row style={{ padding: "10px", style }}>
                 <img
                   className="logo"
-                  src={process.env.PUBLIC_URL + "/ATI_logo_black_W500px.jpg"}
+                  src={logoTuring}
                   alt="Turing Logo"
                 />
               </Row>
