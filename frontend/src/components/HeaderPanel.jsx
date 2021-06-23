@@ -68,10 +68,10 @@ class HeaderPanel extends React.PureComponent {
           <Row style={{ padding: "0px", style}}>
             <Col xs={1} md={1} lg={1} >
             <Row style={{ padding: "2px", style}}>
-            <img className="lida_logo" src={process.env.PUBLIC_URL +'/LidaLogo.jpeg'}   />
+            <img className="logo" src={process.env.PUBLIC_URL +'/LidaLogo.jpeg'}   />
             </Row>
           <Row style={{ padding: "10px",  style}}>
-            <img className="turing_logo" src={process.env.PUBLIC_URL +'/ATI_logo_black_W500px.jpg'}   />
+            <img className="logo" src={process.env.PUBLIC_URL +'/ATI_logo_black_W500px.jpg'}   />
           </Row>
             </Col>
             <Col xs={10} md={10} lg={10} style={{ padding: "2px", style}}>
@@ -93,8 +93,8 @@ class HeaderPanel extends React.PureComponent {
             </Col>
             <Col
               style={{
-                style,
-                padding: "2px",
+                padding: "15px",
+                style
               }}
             >
               <OverlayTrigger
