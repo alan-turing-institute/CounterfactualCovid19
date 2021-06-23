@@ -44,13 +44,18 @@ class HeaderPanel extends React.PureComponent {
           <br />
           Analytical code and documentation relating to this project can be
           found in{" "}
-          <a href="https://github.com/KFArnold/covid-lockdown/" rel="noreferrer">
+          <a
+            href="https://github.com/KFArnold/covid-lockdown/"
+            rel="noreferrer"
+          >
             https://github.com/KFArnold/covid-lockdown/;
-          </a>
-          {" "}source code and
-          documentation for this dashboard can be found at{" "}
-           <a href="https://github.com/alan-turing-institute/CounterfactualCovid19" rel="noreferrer">
-             https://github.com/alan-turing-institute/CounterfactualCovid19.
+          </a>{" "}
+          source code and documentation for this dashboard can be found at{" "}
+          <a
+            href="https://github.com/alan-turing-institute/CounterfactualCovid19"
+            rel="noreferrer"
+          >
+            https://github.com/alan-turing-institute/CounterfactualCovid19.
           </a>
           <br />
           Note that countries are coloured on the map according to the number of
@@ -60,25 +65,31 @@ class HeaderPanel extends React.PureComponent {
       </Popover>
     );
 
-    const style = {justifyContent: "center", display: "flex"}
+    const style = { justifyContent: "center", display: "flex" };
 
     return (
       <div>
         <Container fluid>
-          <Row style={{ padding: "0px", style}}>
-            <Col xs={1} md={1} lg={1} >
-            <Row style={{ padding: "2px", style}}>
-            <img className="logo" src={process.env.PUBLIC_URL +'/LidaLogo.jpeg'} alt="Lida Logo"  />
-            </Row>
-          <Row style={{ padding: "10px",  style}}>
-            <img className="logo" src={process.env.PUBLIC_URL +'/ATI_logo_black_W500px.jpg'}  alt="Turing Logo"  />
-          </Row>
+          <Row style={{ padding: "0px", style }}>
+            <Col xs={1} md={1} lg={1}>
+              <Row style={{ padding: "2px", style }}>
+                <img
+                  className="logo"
+                  src={process.env.PUBLIC_URL + "/LidaLogo.jpeg"}
+                  alt="Lida Logo"
+                />
+              </Row>
+              <Row style={{ padding: "10px", style }}>
+                <img
+                  className="logo"
+                  src={process.env.PUBLIC_URL + "/ATI_logo_black_W500px.jpg"}
+                  alt="Turing Logo"
+                />
+              </Row>
             </Col>
-            <Col xs={10} md={10} lg={10} style={{ padding: "2px", style}}>
+            <Col xs={10} md={10} lg={10} style={{ padding: "2px", style }}>
               <Card bg={"light"} text={"dark"} style={{ width: "100%" }}>
-                <Card.Body
-                  style={{style}}
-                >
+                <Card.Body style={{ style }}>
                   <Card.Title>
                     What if?: The counterfactual story of the first wave of
                     COVID-19 in Europe.
@@ -94,7 +105,7 @@ class HeaderPanel extends React.PureComponent {
             <Col
               style={{
                 padding: "15px",
-                style
+                style,
               }}
             >
               <OverlayTrigger
