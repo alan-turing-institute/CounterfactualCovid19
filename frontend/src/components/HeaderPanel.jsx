@@ -42,12 +42,16 @@ class HeaderPanel extends React.PureComponent {
           This project aims to assess the effects of lockdown timing on the
           growth of COVID-19 cases across Europe during the first wave.
           <br />
-          <br />
           Analytical code and documentation relating to this project can be
-          found at https://github.com/KFArnold/covid-lockdown/; source code and
-          documentation for this dashboard can be found at
-          https://github.com/alan-turing-institute/CounterfactualCovid19.
-          <br />
+          found in{" "}
+          <a href="https://github.com/KFArnold/covid-lockdown/" rel="noreferrer">
+            https://github.com/KFArnold/covid-lockdown/;
+          </a>
+          {" "}source code and
+          documentation for this dashboard can be found at{" "}
+           <a href="https://github.com/alan-turing-institute/CounterfactualCovid19" rel="noreferrer">
+             https://github.com/alan-turing-institute/CounterfactualCovid19.
+          </a>
           <br />
           Note that countries are coloured on the map according to the number of
           COVID-19 cases per million recorded as of 6 July 2020.
