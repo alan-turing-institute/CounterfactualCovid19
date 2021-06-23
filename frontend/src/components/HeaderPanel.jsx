@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import exact from "prop-types-exact";
-import Image from 'react-bootstrap/Image';
+import Image from "react-bootstrap/Image";
 import logoLeeds from "../images/logo_leeds.jpg";
 import logoTuring from "../images/logo_turing.jpg";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -38,17 +38,29 @@ class HeaderPanel extends React.PureComponent {
         <Popover.Title>About this project</Popover.Title>
         <Popover.Content>
           <p>
-            This is a joint project between the Leeds Institute for Data Analytics at the University of Leeds and the Alan Turing Institute (grant number EP/N510129/1).
+            This is a joint project between the Leeds Institute for Data
+            Analytics at the University of Leeds and the Alan Turing Institute
+            (grant number EP/N510129/1).
           </p>
           <p>
-            This project aims to assess the effects of lockdown timing on the growth of COVID-19 cases across Europe during the first wave.
+            This project aims to assess the effects of lockdown timing on the
+            growth of COVID-19 cases across Europe during the first wave.
           </p>
           <p>
-            Analytical code and documentation relating to this project can be found in <a href="https://github.com/KFArnold/covid-lockdown/">https://github.com/KFArnold/covid-lockdown/</a>.
-            Source code and documentation for this dashboard can be found at <a href="https://github.com/alan-turing-institute/CounterfactualCovid19">https://github.com/alan-turing-institute/CounterfactualCovid19</a>.
+            Analytical code and documentation relating to this project can be
+            found in{" "}
+            <a href="https://github.com/KFArnold/covid-lockdown/">
+              https://github.com/KFArnold/covid-lockdown/
+            </a>
+            . Source code and documentation for this dashboard can be found at{" "}
+            <a href="https://github.com/alan-turing-institute/CounterfactualCovid19">
+              https://github.com/alan-turing-institute/CounterfactualCovid19
+            </a>
+            .
           </p>
           <p>
-            Note that countries are coloured on the map according to the number of COVID-19 cases per million recorded as of 6 July 2020.
+            Note that countries are coloured on the map according to the number
+            of COVID-19 cases per million recorded as of 6 July 2020.
           </p>
         </Popover.Content>
       </Popover>
@@ -68,12 +80,13 @@ class HeaderPanel extends React.PureComponent {
           <Card bg={"light"} text={"dark"}>
             <Card.Body>
               <Card.Title>
-                What if?: The counterfactual story of the first wave of COVID-19 in Europe.
+                What if?: The counterfactual story of the first wave of COVID-19
+                in Europe.
               </Card.Title>
               <Card.Text>
-                This dashboard contains data and counterfactual simulations
-                of the growth of COVID-19 cases during Europe's first wave.
-                Click on a country to start.
+                This dashboard contains data and counterfactual simulations of
+                the growth of COVID-19 cases during Europe's first wave. Click
+                on a country to start.
               </Card.Text>
             </Card.Body>
           </Card>
