@@ -11,7 +11,7 @@ def run():
     start = monotonic()
 
     # Source data processed by @KFArnold which serves at source to the counterfactual simulation and the total datasets
-    url_best_knot = "https://raw.githubusercontent.com/alan-turing-institute/CounterfactualCovid19-inputs/develop/Results/knots_best.csv"
+    url_best_knot = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Output/knots_best.csv"
 
     # Load Dates dataframe and parse them allowing for NAT
     df_best_knot = pd.read_csv(
