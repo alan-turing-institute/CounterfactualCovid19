@@ -1,4 +1,10 @@
-.logo {
-  height: 45px;
-  width: 106px;
+.hp-contents-centered-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hp-row-logo {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

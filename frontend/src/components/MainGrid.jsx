@@ -23,7 +23,7 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
-      sizeMapComponent: "88vh",
+      sizeMapComponent: "85vh",
       sizeHistogramComponent: "0vh",
     };
 
@@ -49,7 +49,7 @@ class MainGrid extends React.PureComponent {
       console.log(`Setting currently selected country to none`);
       this.setState({
         isoCode: null,
-        sizeMapComponent: "88vh",
+        sizeMapComponent: "85vh",
         sizeHistogramComponent: "0vh",
       });
     } else {
@@ -57,7 +57,7 @@ class MainGrid extends React.PureComponent {
       this.setState({
         isoCode: iso_code,
         sizeMapComponent: "40vh",
-        sizeHistogramComponent: "48vh",
+        sizeHistogramComponent: "45vh",
       });
     }
   }
@@ -70,7 +70,7 @@ class MainGrid extends React.PureComponent {
           <Loading />
         ) : (
           <Container fluid>
-            <Row style={{ height: "12vh" }}>
+            <Row style={{ height: "15vh" }}>
               <HeaderPanel />
             </Row>
             <Row style={{ height: this.state.sizeMapComponent }}>
