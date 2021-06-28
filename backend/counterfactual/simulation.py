@@ -339,8 +339,7 @@ def simulate_single_country(
         # if counterfactual_knot_date_1 is before counterfactual_knot_date_2
         # make a flag for skipping knot date 1 from the simulation
         skip_knot_date_1 = False
-        if pd.isnull(knots.counterfactual_knot_date_1) == False \
-                and pd.isnull(knots.counterfactual_knot_date_2) == False:
+        if not pd.isnull(knots.counterfactual_knot_date_1) and not pd.isnull(knots.counterfactual_knot_date_2):
             if knots.counterfactual_knot_date_1 > knots.counterfactual_knot_date_2:
                 skip_knot_date_1 = True
 
@@ -352,7 +351,7 @@ def simulate_single_country(
         with suppress(AttributeError):
             # Check counterfactual_knot_date_1 for NaT before adding it and
             # only use this growth factor if counterfactual_knot_date_1 is before counterfactual_knot_date_2
-            if not pd.isnull(knots.counterfactual_knot_date_1) and skip_knot_date_1 == False:
+            if not pd.isnull(knots.counterfactual_knot_date_1) and not skip_knot_date_1:
                 # If knot_date_1 exists then we know that growth_factor_1_2 exists
                 time_period_boundaries.append(knots.counterfactual_knot_date_1)
                 growth_factors.append(knots.growth_factor_1_2)
