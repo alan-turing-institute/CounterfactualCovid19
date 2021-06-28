@@ -339,7 +339,9 @@ def simulate_single_country(
         # if counterfactual_knot_date_1 is before counterfactual_knot_date_2
         # make a flag for skipping knot date 1 from the simulation
         skip_knot_date_1 = False
-        if not pd.isnull(knots.counterfactual_knot_date_1) and not pd.isnull(knots.counterfactual_knot_date_2):
+        if not pd.isnull(knots.counterfactual_knot_date_1) and not pd.isnull(
+            knots.counterfactual_knot_date_2
+        ):
             if knots.counterfactual_knot_date_1 > knots.counterfactual_knot_date_2:
                 skip_knot_date_1 = True
 
