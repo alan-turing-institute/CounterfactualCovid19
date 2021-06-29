@@ -345,7 +345,6 @@ def simulate_single_country(
             if knots.counterfactual_knot_date_1 > knots.counterfactual_knot_date_2:
                 skip_knot_date_1 = True
 
-
         # Construct a list of time-period boundaries and associated growth factors
         # There is always one more time period to simulate than the number of knot points
         # As the growth factors correspond to the time in between the time-period boundaries
