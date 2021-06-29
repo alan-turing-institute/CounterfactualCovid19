@@ -336,7 +336,7 @@ def simulate_single_country(
         ]
         n_cases_series_tminus1 = simulated_daily_cases[-1][simulation_dates[0]]
 
-        # if counterfactual_knot_date_1 is before counterfactual_knot_date_2
+        # if counterfactual_knot_date_1 happens after counterfactual_knot_date_2
         # make a flag for skipping knot date 1 from the simulation
         skip_knot_date_1 = False
         if not pd.isnull(knots.counterfactual_knot_date_1) and not pd.isnull(
@@ -344,6 +344,7 @@ def simulate_single_country(
         ):
             if knots.counterfactual_knot_date_1 > knots.counterfactual_knot_date_2:
                 skip_knot_date_1 = True
+
 
         # Construct a list of time-period boundaries and associated growth factors
         # There is always one more time period to simulate than the number of knot points
