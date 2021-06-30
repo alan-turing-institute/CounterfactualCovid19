@@ -13,6 +13,7 @@ import {
 import exact from "prop-types-exact";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 import Loading from "./Loading";
+import pDebounce from "p-debounce";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -80,6 +81,9 @@ class Histogram extends React.PureComponent {
     }
   }
 
+  // Delay for 500ms before returning in order to catch multiple calls in quick succession
+  debouncedLoadCasesData = pDebounce(this.loadCasesData, 500);
+
   // This runs whenever the props or state change
   async componentDidUpdate(prevProps) {
     // Reload case data whenever
@@ -93,7 +97,7 @@ class Histogram extends React.PureComponent {
       this.props.dateLockdownCounterfactual !==
         prevProps.dateLockdownCounterfactual
     ) {
-      return this.loadCasesData();
+      return this.debouncedLoadCasesData();
     }
   }
 
