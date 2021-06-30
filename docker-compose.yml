@@ -14,6 +14,7 @@ services:
     restart: always
   backend:
     build: ./backend
+    image: cfvoc.azurecr.io/cfcov-backend:v1
     depends_on:
       - db
     environment:
@@ -28,6 +29,7 @@ services:
     restart: always
   frontend:
     build: ./frontend
+    image: cfvoc.azurecr.io/cfcov-frontend:v1
     depends_on:
       - backend
     networks:
