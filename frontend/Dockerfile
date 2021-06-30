@@ -11,8 +11,11 @@ RUN npm install --legacy-peer-deps
 # Add the rest of the code, noting that node_modules is excluded by .dockerignore
 COPY . /app/frontend
 
+RUN npm run build 
+RUN npm install -g serve
+
 # Make port 3000 available for the app
 EXPOSE 3000
 
 # Entrypoint
-CMD ["npm", "start", "--host 0.0.0.0"]
+CMD ["serve", "-s", "build", "-l", "3000"]
