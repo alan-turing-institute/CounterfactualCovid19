@@ -67,13 +67,13 @@ class HeaderPanel extends React.PureComponent {
     );
 
     return (
-      <Row fluid>
+      <Row>
         <Col xs={1} md={1} lg={1} className="hp-contents-centered-vertical">
           <Row className="hp-row-logo">
-            <Image src={logoLeeds} alt="Lida Logo" fluid />
+            <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
           <Row className="hp-row-logo">
-            <Image src={logoTuring} alt="Turing Logo" fluid />
+            <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
         <Col xs={10} md={10} lg={10} className="hp-contents-centered-vertical">

@@ -14,9 +14,11 @@ def run():
     url_possible_counterfactuals = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Output/possible_days_counterfactual.csv"
 
     # Load possible dates dataframe and parse them allowing for NAT
-    df_possible_dates = pd.read_csv(
-        url_possible_counterfactuals,
-        parse_dates=["Date_first_restriction", "Date_lockdown"],
+    df_possible_dates = pd.dataframe(
+        pd.read_csv(
+            url_possible_counterfactuals,
+            parse_dates=["Date_first_restriction", "Date_lockdown"],
+        )
     )
 
     # replace all NaT with None needed for django
