@@ -42,6 +42,7 @@ const CountryStatistics = (props) => {
     </Card>
   );
 };
+
 CountryStatistics.propTypes = propTypes;
 CountryStatistics.defaultProps = defaultProps;
 

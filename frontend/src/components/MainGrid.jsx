@@ -24,9 +24,9 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
-      sizeHeaderComponent: "15vh",
-      sizeMapComponent: "85vh",
-      sizeHistogramComponent: "0vh",
+      heightHeader: 13,
+      heightMap: 85,
+      heightHistogram: 0,
     };
 
     // Bind functions that need to use `this`
@@ -49,22 +49,21 @@ class MainGrid extends React.PureComponent {
   handleCountryChange(iso_code, clickable) {
     if (iso_code === this.state.isoCode || !clickable) {
       console.log(`Setting currently selected country to none`);
-      this.setState({
-        isoCode: null,
-        sizeMapComponent: "85vh",
-        sizeHistogramComponent: "0vh",
-      });
+      const isoCode = null;
+      const heightHistogram = 0;
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
-      this.setState({
-        isoCode: iso_code,
-        sizeMapComponent: "40vh",
-        sizeHistogramComponent: "45vh",
-      });
+      const isoCode = iso_code;
+      const heightHistogram = 50;
     }
+    const heightMap = 100 - heightHistogram - Number(this.state.heightHeader.replace("vh", ""));
+    this.setState({
+      isoCode: isoCode,
+      heightMap: `${heightMap}vh`,
+      heightHistogram: `${heightHistogram}vh`,
+    });
   }
 
-  // This is evaluated whenever the component is rendered
   render() {
     return (
       <div>
@@ -72,10 +71,10 @@ class MainGrid extends React.PureComponent {
           <Loading />
         ) : (
           <Container fluid>
-            <Row style={{ height: this.state.sizeHeaderComponent }}>
+            <Row style={{ height: this.state.heightHeader }}>
               <HeaderPanel />
             </Row>
-            <Row style={{ height: this.state.sizeMapComponent }}>
+            <Row style={{ height: this.state.heightMap }}>
               <Col md={11} className="common-no-padding">
                 <WorldMap
                   countries={this.state.countries}
@@ -89,11 +88,11 @@ class MainGrid extends React.PureComponent {
             {!this.state.isoCode ? (
               <Loading />
             ) : (
-              <Row style={{ height: this.state.sizeHistogramComponent }}>
+              <Row style={{ height: this.state.heightHistogram }}>
                 <Col xs={12} className="common-no-padding">
                   <InfoPanel
                     isoCode={this.state.isoCode}
-                    height={this.state.sizeHistogramComponent}
+                    height={this.state.heightHistogram}
                   />
                 </Col>
               </Row>

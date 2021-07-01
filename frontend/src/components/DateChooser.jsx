@@ -90,6 +90,7 @@ class DateChooser extends React.PureComponent {
     );
   }
 }
+
 DateChooser.propTypes = propTypes;
 DateChooser.defaultProps = defaultProps;
 
