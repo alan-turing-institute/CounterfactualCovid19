@@ -1,3 +1,4 @@
+import "../css/Legend.css";
 import exact from "prop-types-exact";
 import legendItems from "../entities/LegendItems";
 
@@ -8,26 +9,14 @@ const defaultProps = {};
 const Legend = () => {
   const legendItemsReverse = [...legendItems].reverse();
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "stretch",
-        height: "100%",
-      }}
+    <div className="legend-flex-column"
     >
       {legendItemsReverse.map((item) => (
-        <div
+        <div className="legend-entry"
           key={item.title}
           style={{
             backgroundColor: item.color,
-            display: "flex",
-            flex: 1,
-            alignItems: "center", // vertical
-            justifyContent: "center", // horizontal
             color: item.textColor != null ? item.textColor : "black",
-            fontWeight: "bolder",
-            fontSize: "x-small",
           }}
         >
           <span>{item.title}</span>

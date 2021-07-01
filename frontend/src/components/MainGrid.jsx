@@ -1,3 +1,4 @@
+import "../css/common.css";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import exact from "prop-types-exact";
@@ -23,6 +24,7 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
+      sizeHeaderComponent: "15vh",
       sizeMapComponent: "85vh",
       sizeHistogramComponent: "0vh",
     };
@@ -70,17 +72,17 @@ class MainGrid extends React.PureComponent {
           <Loading />
         ) : (
           <Container fluid>
-            <Row style={{ height: "15vh" }}>
+            <Row style={{ height: this.state.sizeHeaderComponent }}>
               <HeaderPanel />
             </Row>
             <Row style={{ height: this.state.sizeMapComponent }}>
-              <Col md={11} style={{ padding: "0px" }}>
+              <Col md={11} className="common-no-padding">
                 <WorldMap
                   countries={this.state.countries}
                   onCountrySelect={this.handleCountryChange}
                 />
               </Col>
-              <Col xs={1} style={{ padding: "0px" }}>
+              <Col xs={1} className="common-no-padding">
                 <Legend />
               </Col>
             </Row>
@@ -88,7 +90,7 @@ class MainGrid extends React.PureComponent {
               <Loading />
             ) : (
               <Row style={{ height: this.state.sizeHistogramComponent }}>
-                <Col xs={12} style={{ padding: "0px" }}>
+                <Col xs={12} className="common-no-padding">
                   <InfoPanel
                     isoCode={this.state.isoCode}
                     height={this.state.sizeHistogramComponent}

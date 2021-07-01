@@ -1,3 +1,4 @@
+import "../css/common.css";
 import {
   Bar,
   CartesianGrid,
@@ -104,13 +105,7 @@ class Histogram extends React.PureComponent {
   render() {
     console.debug("Redrawing histogram...");
     return (
-      <div
-        style={{
-          height: this.props.height,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+      <div className="common-flex-row" style={{height: this.props.height}}
       >
         {this.state.casesData.length === 0 ? (
           <Loading />

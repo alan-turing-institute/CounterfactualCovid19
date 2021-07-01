@@ -1,3 +1,7 @@
 .leaflet-container {
   background-color: rgb(214, 234, 248);
 }
+
+.worldmap-map {
+  height: 100%;
+}

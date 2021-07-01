@@ -1,3 +1,4 @@
+import "../css/HeaderPanel.css";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -9,7 +10,6 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import "../css/HeaderPanel.css";
 
 const propTypes = exact({});
 

@@ -1,0 +1,17 @@
+.legend-flex-column {
+    align-items: "stretch";
+    display: "flex";
+    flex-direction: "column";
+    height: "100%";
+    justify-content: "center";
+}
+
+.legend-entry {
+    align-items: "center";
+    display: "flex";
+    flex: 1;
+    font-size: "x-small";
+    font-weight: "bolder";
+    justify-content: "center";
+}
+

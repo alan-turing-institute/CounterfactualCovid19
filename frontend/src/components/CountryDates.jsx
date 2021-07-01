@@ -1,3 +1,4 @@
+import "../css/common.css";
 import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
@@ -15,13 +16,7 @@ const defaultProps = {};
 
 const CountryDates = (props) => {
   return (
-    <Card
-      style={{
-        marginTop: "1%",
-        marginBottom: "1%",
-      }}
-      bg={"light"}
-    >
+    <Card className="common-card" bg={"light"}>
       <Card.Body>
         <Card.Title>
           {`${props.countryName ? props.countryName : "Unknown"}`}
