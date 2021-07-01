@@ -55,7 +55,7 @@ class MainGrid extends React.PureComponent {
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
       isoCode = iso_code;
-      heightHistogram = 50;
+      heightHistogram = 40;
     }
     const heightMap =
       100 - heightHistogram - Number(this.state.heightHeader.replace("vh", ""));

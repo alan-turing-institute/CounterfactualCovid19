@@ -176,6 +176,8 @@ class InfoPanel extends React.PureComponent {
   }
 
   render() {
+    // Leave a 5vh buffer for the date chooser
+    const histogramHeight = `${Number(this.props.height.replace("vh", "")) - 5}vh`;
     return (
       <div>
         {!this.props.isoCode ? null : (
@@ -226,7 +228,7 @@ class InfoPanel extends React.PureComponent {
                 <Row xs={1} md={1} lg={1}>
                   <Histogram
                     isoCode={this.props.isoCode}
-                    height={this.props.height}
+                    height={histogramHeight}
                     dateInitial={this.state.dateFirstCase}
                     dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
