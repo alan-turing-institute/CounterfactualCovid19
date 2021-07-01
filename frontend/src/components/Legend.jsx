@@ -1,6 +1,6 @@
-import "../css/Legend.css";
 import exact from "prop-types-exact";
 import legendItems from "../entities/LegendItems";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({});
 
@@ -9,10 +9,10 @@ const defaultProps = {};
 const Legend = () => {
   const legendItemsReverse = [...legendItems].reverse();
   return (
-    <div className="legend-flex-column"
-    >
+    <div className={styles.stretch_column}>
       {legendItemsReverse.map((item) => (
-        <div className="legend-entry"
+        <div
+          className={styles.entry}
           key={item.title}
           style={{
             backgroundColor: item.color,

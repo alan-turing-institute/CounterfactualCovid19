@@ -1,4 +1,3 @@
-import "../css/common.css";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import exact from "prop-types-exact";
@@ -9,6 +8,7 @@ import Loading from "./Loading";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
 import React from "react";
 import Row from "react-bootstrap/Row";
+import styles from "../css/Common.module.css";
 import WorldMap from "./WorldMap";
 
 const propTypes = exact({});
@@ -24,9 +24,9 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
-      heightHeader: 13,
-      heightMap: 85,
-      heightHistogram: 0,
+      heightHeader: "13vh",
+      heightMap: "87vh",
+      heightHistogram: "0vh",
     };
 
     // Bind functions that need to use `this`
@@ -47,16 +47,18 @@ class MainGrid extends React.PureComponent {
 
   // Update the state for a new country
   handleCountryChange(iso_code, clickable) {
+    var isoCode, heightHistogram;
     if (iso_code === this.state.isoCode || !clickable) {
       console.log(`Setting currently selected country to none`);
-      const isoCode = null;
-      const heightHistogram = 0;
+      isoCode = null;
+      heightHistogram = 0;
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
-      const isoCode = iso_code;
-      const heightHistogram = 50;
+      isoCode = iso_code;
+      heightHistogram = 50;
     }
-    const heightMap = 100 - heightHistogram - Number(this.state.heightHeader.replace("vh", ""));
+    const heightMap =
+      100 - heightHistogram - Number(this.state.heightHeader.replace("vh", ""));
     this.setState({
       isoCode: isoCode,
       heightMap: `${heightMap}vh`,
@@ -75,13 +77,13 @@ class MainGrid extends React.PureComponent {
               <HeaderPanel />
             </Row>
             <Row style={{ height: this.state.heightMap }}>
-              <Col md={11} className="common-no-padding">
+              <Col md={11} className={styles.no_padding}>
                 <WorldMap
                   countries={this.state.countries}
                   onCountrySelect={this.handleCountryChange}
                 />
               </Col>
-              <Col xs={1} className="common-no-padding">
+              <Col xs={1} className={styles.no_padding}>
                 <Legend />
               </Col>
             </Row>
@@ -89,7 +91,7 @@ class MainGrid extends React.PureComponent {
               <Loading />
             ) : (
               <Row style={{ height: this.state.heightHistogram }}>
-                <Col xs={12} className="common-no-padding">
+                <Col xs={12} className={styles.no_padding}>
                   <InfoPanel
                     isoCode={this.state.isoCode}
                     height={this.state.heightHistogram}

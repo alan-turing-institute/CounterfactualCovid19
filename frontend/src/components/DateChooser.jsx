@@ -1,9 +1,10 @@
-import "../css/DateChooser.css";
+import "../css/overrides/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 import React from "react";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   allowedDates: PropTypes.array,
@@ -73,7 +74,7 @@ class DateChooser extends React.PureComponent {
     const extraProps = includeDates ? {} : { disabled: true };
 
     return (
-      <div className="date-chooser">
+      <div className={styles.flex_column}>
         <DatePicker
           dateFormat="yyyy-MM-dd"
           highlightDates={highlightDates}
@@ -83,7 +84,7 @@ class DateChooser extends React.PureComponent {
           isClearable
           {...extraProps}
         />
-        <p>
+        <p className={styles.centered_text}>
           <em>{this.props.caption}</em>
         </p>
       </div>

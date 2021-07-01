@@ -1,9 +1,10 @@
-import "../css/WorldMap.css";
+import "../css/overrides/leaflet.css";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, GeoJSON } from "react-leaflet";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 import React from "react";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   onCountrySelect: PropTypes.func.isRequired,
@@ -22,7 +23,7 @@ class WorldMap extends React.PureComponent {
     };
 
     // Component-level constants
-    this.styles = {
+    this.layerStyles = {
       default: {
         weight: 0.5,
         color: "black",
@@ -40,7 +41,7 @@ class WorldMap extends React.PureComponent {
     // If any layer is currently selected then unselect it
     if (this.state.currentLayer) {
       console.log(`Resetting borders of ${this.state.currentLayer.feature.id}`);
-      this.state.currentLayer.setStyle(this.styles.default);
+      this.state.currentLayer.setStyle(this.layerStyles.default);
     }
     if (layer === this.state.currentLayer) {
       // If we're clicking on the previously-selected layer then set current layer to none
@@ -48,7 +49,7 @@ class WorldMap extends React.PureComponent {
     } else {
       // Otherwise highlight the selected layer and set the current layer to point at it
       console.log(`Highlighting borders of ${layer.feature.id}`);
-      layer.setStyle(this.styles.highlight);
+      layer.setStyle(this.layerStyles.highlight);
       this.setState({ currentLayer: layer });
     }
   };
@@ -72,9 +73,9 @@ class WorldMap extends React.PureComponent {
   // This is evaluated whenever the component is rendered
   render() {
     return (
-      <MapContainer className="worldmap-map" zoom={5.0} center={[50, 0]}>
+      <MapContainer className={styles.full_height} zoom={5.0} center={[50, 0]}>
         <GeoJSON
-          style={this.styles.default}
+          style={this.layerStyles.default}
           data={this.props.countries}
           onEachFeature={this.onEachCountry}
         />

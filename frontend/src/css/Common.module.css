@@ -1,0 +1,30 @@
+.card {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.flex_column {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flex_row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.no_padding {
+  padding: 0px;
+}
+
+.centered_text {
+  text-align: center;
+}
+
+.full_height {
+  height: 100%;
+}

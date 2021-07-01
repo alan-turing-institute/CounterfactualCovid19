@@ -1,4 +1,3 @@
-import "../css/common.css";
 import {
   Bar,
   CartesianGrid,
@@ -17,6 +16,7 @@ import Loading from "./Loading";
 import pDebounce from "p-debounce";
 import PropTypes from "prop-types";
 import React from "react";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   dateFinal: PropTypes.string,
@@ -105,8 +105,7 @@ class Histogram extends React.PureComponent {
   render() {
     console.debug("Redrawing histogram...");
     return (
-      <div className="common-flex-row" style={{height: this.props.height}}
-      >
+      <div className={styles.flex_row} style={{ height: this.props.height }}>
         {this.state.casesData.length === 0 ? (
           <Loading />
         ) : (
