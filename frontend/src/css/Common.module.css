@@ -1,30 +1,36 @@
 .card {
-  margin-top: 1%;
-  margin-bottom: 1%;
+  margin: 1vh;
 }
 
-.flex_column {
+.contents_centered {
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.flex_row {
+.contents_spaced {
   align-items: center;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
-.top_margin {
-  margin-top: 10px;
+.full_available_width {
+  width: 100%;
 }
 
-.centered_text {
-  text-align: center;
-}
-
-.full_height {
+.full_available_height {
   height: 100%;
+}
+
+.full_screen {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.spacing_vertical {
+  margin-bottom: 1vh;
+  margin-top: 1vh;
 }

@@ -1,4 +1,4 @@
-.stretch_column {
+.contents_stretched {
   align-items: stretch;
   display: flex;
   flex-direction: column;

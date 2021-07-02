@@ -14,10 +14,7 @@ import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import commonStyles from "../css/Common.module.css";
-import localStyles from "../css/InfoPanel.module.css";
-
-const styles = { ...commonStyles, ...localStyles };
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   isoCode: PropTypes.string.isRequired,
@@ -180,17 +177,17 @@ class InfoPanel extends React.PureComponent {
   }
 
   render() {
-    // Leave a 5vh buffer for the date chooser
-    const histogramHeight = `${
-      Number(this.props.height.replace("vh", "")) - 7
-    }vh`;
+    // Set explicit heights taking the 2vh margin into account
+    const availableHeight = Number(this.props.height.replace("vh", ""));
+    const dateChooserHeight = `${0.2 * availableHeight - 2}vh`;
+    const histogramHeight = `${0.8 * availableHeight - 2}vh`;
     return (
       <div>
         {!this.props.isoCode ? null : (
           <Container fluid>
             <Row>
-              <Col xs={3} md={3} lg={3} className={styles.flex_fill_column}>
-                <Row xs={1} md={1} lg={1}>
+              <Col xs={3} className={styles.contents_spaced}>
+                <Row xs={1} className={styles.full_available_width}>
                   <CountryDates
                     countryName={this.state.countryName}
                     dateFirstWaveEnd={this.state.dateFirstCase}
@@ -199,7 +196,7 @@ class InfoPanel extends React.PureComponent {
                     dateLockdown={this.state.dateLockdownReal}
                   />
                 </Row>
-                <Row xs={1} md={1} lg={1}>
+                <Row xs={1} className={styles.full_available_width}>
                   <CountryStatistics
                     totalCases={this.state.totalCasesReal}
                     totalDeaths={this.state.totalDeathsReal}
@@ -207,22 +204,21 @@ class InfoPanel extends React.PureComponent {
                   />
                 </Row>
               </Col>
-              <Col xs={6} md={6} lg={6} className={styles.flex_fill_column}>
+              <Col xs={6}>
                 <Row
-                  xs={1}
-                  md={1}
-                  lg={1}
                   key={this.props.isoCode} /* Recreate whenever key changes */
+                  style={{ height: dateChooserHeight }}
+                  className={`${styles.full_available_width} ${styles.contents_spaced} ${styles.spacing_vertical}`}
                 >
-                  <Col xs={6} md={6} lg={6}>
+                  <Col xs={6}>
                     <DateChooser
                       allowedDates={this.state.allowedDatesFirstRestrictions}
-                      caption="First social distance restrictions"
+                      caption="Social distancing"
                       nominalDate={this.state.dateFirstRestrictionsReal}
                       onDateChange={this.onFirstRestrictionsChange}
                     />
                   </Col>
-                  <Col xs={6} md={6} lg={6}>
+                  <Col xs={6}>
                     <DateChooser
                       allowedDates={this.state.allowedDatesLockdown}
                       caption="National lockdown"
@@ -231,10 +227,12 @@ class InfoPanel extends React.PureComponent {
                     />
                   </Col>
                 </Row>
-                <Row xs={1} md={1} lg={1}>
+                <Row
+                  className={`${styles.full_available_width} ${styles.spacing_vertical}`}
+                  style={{ height: histogramHeight }}
+                >
                   <Histogram
                     isoCode={this.props.isoCode}
-                    height={histogramHeight}
                     dateInitial={this.state.dateFirstCase}
                     dateFinal={this.state.dateModelEnd}
                     dateFirstRestrictionsReal={
@@ -250,14 +248,14 @@ class InfoPanel extends React.PureComponent {
                   />
                 </Row>
               </Col>
-              <Col xs={3} md={3} lg={3} className={styles.flex_fill_column}>
-                <Row xs={1} md={1} lg={1}>
+              <Col xs={3} className={styles.contents_spaced}>
+                <Row xs={1} className={styles.full_available_width}>
                   <CounterfactualStory
                     dateStart={this.state.dateModelStart}
                     dateEnd={this.state.dateModelEnd}
                   />
                 </Row>
-                <Row xs={1} md={1} lg={1}>
+                <Row xs={1} className={styles.full_available_width}>
                   <CounterfactualStatistics
                     totalCasesCounterfactual={
                       this.state.totalCasesCounterfactual

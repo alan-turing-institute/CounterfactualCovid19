@@ -73,7 +73,11 @@ class WorldMap extends React.PureComponent {
   // This is evaluated whenever the component is rendered
   render() {
     return (
-      <MapContainer className={styles.full_height} zoom={5.0} center={[50, 0]}>
+      <MapContainer
+        className={styles.full_available_height}
+        zoom={5.0}
+        center={[50, 0]}
+      >
         <GeoJSON
           style={this.layerStyles.default}
           data={this.props.countries}

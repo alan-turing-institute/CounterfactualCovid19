@@ -16,7 +16,6 @@ import Loading from "./Loading";
 import pDebounce from "p-debounce";
 import PropTypes from "prop-types";
 import React from "react";
-import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   dateFinal: PropTypes.string,
@@ -25,7 +24,6 @@ const propTypes = exact({
   dateInitial: PropTypes.string,
   dateLockdownCounterfactual: PropTypes.string,
   dateLockdownReal: PropTypes.string,
-  height: PropTypes.string.isRequired,
   isoCode: PropTypes.string.isRequired,
 });
 
@@ -104,46 +102,43 @@ class Histogram extends React.PureComponent {
 
   render() {
     console.debug("Redrawing histogram...");
+    if (this.state.casesData.length === 0) {
+      return <Loading />;
+    }
     return (
-      <div className={styles.flex_row} style={{ height: this.props.height }}>
-        {this.state.casesData.length === 0 ? (
-          <Loading />
-        ) : (
-          <ResponsiveContainer height="90%">
-            <ComposedChart data={this.state.casesData}>
-              <CartesianGrid stroke="#f5f5f5" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="Real cases" fill="#413ea0" />
-              <Line
-                type="monotone"
-                dataKey="Counterfactual cases"
-                stroke="#ff7300"
-              />
-              {this.props.dateFirstRestrictionsReal != null && (
-                <ReferenceLine
-                  x={this.props.dateFirstRestrictionsReal}
-                  label={{
-                    position: "left",
-                    value: "First Restrictions",
-                    fontSize: 12,
-                  }}
-                  strokeDasharray="5 5"
-                />
-              )}
-              {this.props.dateLockdownReal != null && (
-                <ReferenceLine
-                  x={this.props.dateLockdownReal}
-                  label={{ position: "right", value: "Lockdown", fontSize: 12 }}
-                  strokeDasharray="5 5"
-                />
-              )}
-            </ComposedChart>
-          </ResponsiveContainer>
-        )}
-      </div>
+      <ResponsiveContainer height="100%">
+        <ComposedChart data={this.state.casesData}>
+          <CartesianGrid stroke="#f5f5f5" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="Real cases" fill="#413ea0" />
+          <Line
+            type="monotone"
+            dataKey="Counterfactual cases"
+            stroke="#ff7300"
+          />
+          {this.props.dateFirstRestrictionsReal != null && (
+            <ReferenceLine
+              x={this.props.dateFirstRestrictionsReal}
+              label={{
+                position: "left",
+                value: "First Restrictions",
+                fontSize: 12,
+              }}
+              strokeDasharray="5 5"
+            />
+          )}
+          {this.props.dateLockdownReal != null && (
+            <ReferenceLine
+              x={this.props.dateLockdownReal}
+              label={{ position: "right", value: "Lockdown", fontSize: 12 }}
+              strokeDasharray="5 5"
+            />
+          )}
+        </ComposedChart>
+      </ResponsiveContainer>
     );
   }
 }

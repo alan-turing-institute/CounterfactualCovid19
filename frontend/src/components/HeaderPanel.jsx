@@ -17,6 +17,7 @@ const propTypes = exact({});
 const defaultProps = {};
 
 const styles = { ...commonStyles, ...localStyles };
+
 class HeaderPanel extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -69,15 +70,15 @@ class HeaderPanel extends React.PureComponent {
 
     return (
       <Row>
-        <Col xs={1} md={1} lg={1} className={styles.flex_column}>
-          <Row className={styles.row_logo}>
+        <Col xs={1} md={1} lg={1} className={styles.contents_centered}>
+          <Row className={styles.logo}>
             <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
-          <Row className={styles.row_logo}>
+          <Row className={styles.logo}>
             <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
-        <Col xs={10} md={10} lg={10} className={styles.flex_column}>
+        <Col xs={10} md={10} lg={10} className={styles.contents_centered}>
           <Card bg={"light"} text={"dark"}>
             <Card.Body>
               <Card.Title>
@@ -92,7 +93,7 @@ class HeaderPanel extends React.PureComponent {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={1} md={1} lg={1} className={styles.flex_column}>
+        <Col xs={1} md={1} lg={1} className={styles.contents_centered}>
           <OverlayTrigger
             trigger="click"
             placement="bottom"

@@ -21,7 +21,7 @@ const CountryStatistics = (props) => {
           <Card.Text>
             {`Total COVID-19 Cases per Million: ${props.totalCases
               .toFixed(0)
-              .toString()} \n `}
+              .toString()}`}
           </Card.Text>
         )}
         {!props.totalDeaths ? null : (

@@ -1,4 +1,5 @@
 import exact from "prop-types-exact";
+import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import styles from "../css/Loading.module.css";
 
@@ -8,17 +9,11 @@ const defaultProps = {};
 
 const Loading = () => {
   return (
-    <div className={styles.spinners}>
-      <Spinner animation="grow" variant="success" role="status">
-        <span className="sr-only"></span>
-      </Spinner>
-      <Spinner animation="grow" variant="danger" role="status">
-        <span className="sr-only"></span>
-      </Spinner>
-      <Spinner animation="grow" variant="info" role="status">
-        <span className="sr-only"></span>
-      </Spinner>
-    </div>
+    <Row className={`${styles.spinners} flex-grow-1`}>
+      <Spinner animation="grow" variant="success" role="status" />
+      <Spinner animation="grow" variant="danger" role="status" />
+      <Spinner animation="grow" variant="info" role="status" />
+    </Row>
   );
 };
 

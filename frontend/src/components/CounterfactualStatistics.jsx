@@ -27,7 +27,7 @@ const CounterfactualStatistics = (props) => {
           <Card.Text>
             {`Total COVID-19 Cases per Million: ${props.totalCasesCounterfactual
               .toFixed(0)
-              .toString()} \n `}
+              .toString()}`}
           </Card.Text>
         )}
         {!(props.shiftFirstRestrictions !== 0 || props.shiftLockdown !== 0) ||

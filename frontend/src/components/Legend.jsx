@@ -9,7 +9,7 @@ const defaultProps = {};
 const Legend = () => {
   const legendItemsReverse = [...legendItems].reverse();
   return (
-    <div className={styles.stretch_column}>
+    <div className={styles.contents_stretched}>
       {legendItemsReverse.map((item) => (
         <div
           className={styles.entry}
