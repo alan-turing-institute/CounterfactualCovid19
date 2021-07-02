@@ -4,7 +4,7 @@ import axiosRetry from "axios-retry";
 // Asynchronously load country demographic data from Django backend
 const loadGeometriesTask = async () => {
   try {
-    const baseUrl = "http://localhost:8000";
+    const baseUrl = "http://localhost:3000";
     const endpoint = "/api/country/geometry/";
     console.debug(`Backend ${baseUrl}${endpoint}`);
     const request = axios.create({ baseURL: baseUrl });
