@@ -24,7 +24,7 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
-      heightHeader: "13vh",
+      heightHeader: "12vh",
       heightMap: "87vh",
       heightHistogram: "0vh",
     };
