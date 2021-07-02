@@ -14,6 +14,10 @@ import loadRealDatesTask from "../tasks/LoadRealDatesTask.js";
 import PropTypes from "prop-types";
 import React from "react";
 import Row from "react-bootstrap/Row";
+import commonStyles from "../css/Common.module.css";
+import localStyles from "../css/InfoPanel.module.css";
+
+const styles = { ...commonStyles, ...localStyles };
 
 const propTypes = exact({
   isoCode: PropTypes.string.isRequired,
@@ -177,13 +181,15 @@ class InfoPanel extends React.PureComponent {
 
   render() {
     // Leave a 5vh buffer for the date chooser
-    const histogramHeight = `${Number(this.props.height.replace("vh", "")) - 5}vh`;
+    const histogramHeight = `${
+      Number(this.props.height.replace("vh", "")) - 7
+    }vh`;
     return (
       <div>
         {!this.props.isoCode ? null : (
           <Container fluid>
             <Row>
-              <Col xs={3} md={3} lg={3}>
+              <Col xs={3} md={3} lg={3} className={styles.flex_fill_column}>
                 <Row xs={1} md={1} lg={1}>
                   <CountryDates
                     countryName={this.state.countryName}
@@ -201,7 +207,7 @@ class InfoPanel extends React.PureComponent {
                   />
                 </Row>
               </Col>
-              <Col xs={6} md={6} lg={6}>
+              <Col xs={6} md={6} lg={6} className={styles.flex_fill_column}>
                 <Row
                   xs={1}
                   md={1}
@@ -244,7 +250,7 @@ class InfoPanel extends React.PureComponent {
                   />
                 </Row>
               </Col>
-              <Col xs={3} md={3} lg={3}>
+              <Col xs={3} md={3} lg={3} className={styles.flex_fill_column}>
                 <Row xs={1} md={1} lg={1}>
                   <CounterfactualStory
                     dateStart={this.state.dateModelStart}

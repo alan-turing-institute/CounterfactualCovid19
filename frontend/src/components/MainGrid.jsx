@@ -8,7 +8,6 @@ import Loading from "./Loading";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import styles from "../css/Common.module.css";
 import WorldMap from "./WorldMap";
 
 const propTypes = exact({});
@@ -76,29 +75,27 @@ class MainGrid extends React.PureComponent {
             <Row style={{ height: this.state.heightHeader }}>
               <HeaderPanel />
             </Row>
-            <Row style={{ height: this.state.heightMap }}>
-              <Col md={11} className={styles.no_padding}>
+            <Row style={{ height: this.state.heightMap }} className="g-0">
+              <Col xs={11}>
                 <WorldMap
                   countries={this.state.countries}
                   onCountrySelect={this.handleCountryChange}
                 />
               </Col>
-              <Col xs={1} className={styles.no_padding}>
+              <Col xs={1}>
                 <Legend />
               </Col>
             </Row>
-            {!this.state.isoCode ? (
-              <Loading />
-            ) : (
-              <Row style={{ height: this.state.heightHistogram }}>
-                <Col xs={12} className={styles.no_padding}>
-                  <InfoPanel
-                    isoCode={this.state.isoCode}
-                    height={this.state.heightHistogram}
-                  />
-                </Col>
-              </Row>
-            )}
+            <Row style={{ height: this.state.heightHistogram }}>
+              {!this.state.isoCode ? (
+                <Loading />
+              ) : (
+                <InfoPanel
+                  isoCode={this.state.isoCode}
+                  height={this.state.heightHistogram}
+                />
+              )}
+            </Row>
           </Container>
         )}
       </div>

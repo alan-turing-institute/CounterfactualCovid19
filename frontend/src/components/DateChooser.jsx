@@ -76,6 +76,7 @@ class DateChooser extends React.PureComponent {
     return (
       <div className={styles.flex_column}>
         <DatePicker
+          className={styles.top_margin}
           dateFormat="yyyy-MM-dd"
           highlightDates={highlightDates}
           includeDates={includeDates}

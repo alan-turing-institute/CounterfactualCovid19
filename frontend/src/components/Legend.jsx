@@ -1,6 +1,6 @@
 import exact from "prop-types-exact";
 import legendItems from "../entities/LegendItems";
-import styles from "../css/Common.module.css";
+import styles from "../css/Legend.module.css";
 
 const propTypes = exact({});
 

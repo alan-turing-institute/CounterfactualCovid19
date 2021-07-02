@@ -17,8 +17,8 @@
   justify-content: center;
 }
 
-.no_padding {
-  padding: 0px;
+.top_margin {
+  margin-top: 10px;
 }
 
 .centered_text {

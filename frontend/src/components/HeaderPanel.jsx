@@ -9,12 +9,14 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import styles from "../css/Common.module.css";
+import commonStyles from "../css/Common.module.css";
+import localStyles from "../css/HeaderPanel.module.css";
 
 const propTypes = exact({});
 
 const defaultProps = {};
 
+const styles = { ...commonStyles, ...localStyles };
 class HeaderPanel extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -47,14 +49,13 @@ class HeaderPanel extends React.PureComponent {
             growth of COVID-19 cases across Europe during the first wave.
           </p>
           <p>
-            Analytical code and documentation relating to this project can be
-            found in{" "}
+            Analytical code and documentation relating to{" "}
             <a href="https://github.com/KFArnold/covid-lockdown/">
-              https://github.com/KFArnold/covid-lockdown/
+              the counterfactual simulation
             </a>
-            . Source code and documentation for this dashboard can be found at{" "}
+            . Source code and documentation for{" "}
             <a href="https://github.com/alan-turing-institute/CounterfactualCovid19">
-              https://github.com/alan-turing-institute/CounterfactualCovid19
+              this dashboard
             </a>
             .
           </p>
@@ -69,10 +70,10 @@ class HeaderPanel extends React.PureComponent {
     return (
       <Row>
         <Col xs={1} md={1} lg={1} className={styles.flex_column}>
-          <Row className="hp-row-logo">
+          <Row className={styles.row_logo}>
             <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
-          <Row className="hp-row-logo">
+          <Row className={styles.row_logo}>
             <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
