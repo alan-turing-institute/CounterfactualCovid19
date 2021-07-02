@@ -7,10 +7,8 @@ services:
       - POSTGRES_DB=counterfactualcovid
       - POSTGRES_USER=django
       - POSTGRES_PASSWORD=django
-    networks:
-      - backend
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     restart: always
   backend:
     build: ./backend
@@ -21,23 +19,14 @@ services:
       - DJANGO_SETTINGS_MODULE=backend.settings.docker
     links:
       - db:db
-    networks:
-      - app
-      - backend
-    ports:
-      - "127.0.0.1:8000:8000"
+    expose:
+      - "8000"
     restart: always
   frontend:
     build: ./frontend
     image: cfvoc.azurecr.io/cfcov-frontend:v1
     depends_on:
       - backend
-    networks:
-      - app
     ports:
       - "127.0.0.1:3000:3000"
     restart: always
-
-networks:
-  app:
-  backend:
