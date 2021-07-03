@@ -1,5 +1,5 @@
 .card {
-  margin: 1vh;
+  margin: 1%;
 }
 
 .contents_centered {
@@ -11,6 +11,10 @@
 
 .full_available_width {
   width: 100%;
+}
+
+.fixed_width_large {
+  width: 90%;
 }
 
 .full_available_height {

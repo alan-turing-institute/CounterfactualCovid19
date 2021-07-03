@@ -76,21 +76,21 @@ class MainGrid extends React.PureComponent {
     }
     return (
       <Container fluid className={styles.full_screen} id="bootstrap-overrides">
-        <Row style={{ height: this.state.heightHeader }}>
+        <Row style={{ height: this.state.heightHeader }} className="g-0">
           <HeaderPanel />
         </Row>
         <Row style={{ height: this.state.heightMap }} className="g-0">
-          <Col xs={11}>
+          <Col xs={9} md={11}>
             <WorldMap
               countries={this.state.countries}
               onCountrySelect={this.handleCountryChange}
             />
           </Col>
-          <Col xs={1}>
+          <Col xs={3} md={1}>
             <Legend />
           </Col>
         </Row>
-        <Row style={{ height: this.state.heightHistogram }}>
+        <Row style={{ height: this.state.heightHistogram }} className="g-0">
           {!this.state.isoCode ? (
             <Loading />
           ) : (

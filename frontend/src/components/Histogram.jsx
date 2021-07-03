@@ -106,7 +106,7 @@ class Histogram extends React.PureComponent {
       return <Loading />;
     }
     return (
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%">
         <ComposedChart data={this.state.casesData}>
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="date" />
