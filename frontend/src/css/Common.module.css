@@ -1,12 +1,21 @@
-.card {
-  margin: 1%;
-}
-
 .contents_centered {
   align-items: center;
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: center;
+}
+
+.contents_padded_lg {
+  padding: 5%;
+}
+
+.contents_padded_md {
+  padding: 2%;
+}
+
+.contents_padded_sm {
+  padding: 1%;
 }
 
 .full_available_width {
@@ -25,7 +34,7 @@
   height: 100vh;
   margin: 0;
   padding: 0;
-  width: 100vw;
+  width: 100%;
 }
 
 .space_child_columns {

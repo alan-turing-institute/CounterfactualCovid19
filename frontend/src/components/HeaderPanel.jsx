@@ -9,14 +9,11 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import commonStyles from "../css/Common.module.css";
-import localStyles from "../css/HeaderPanel.module.css";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({});
 
 const defaultProps = {};
-
-const styles = { ...commonStyles, ...localStyles };
 
 class HeaderPanel extends React.PureComponent {
   constructor(props) {
@@ -69,16 +66,16 @@ class HeaderPanel extends React.PureComponent {
     );
 
     return (
-      <Row>
-        <Col xs={3} md={2} xl={1} className={styles.contents_centered}>
-          <Row className={styles.logo}>
+      <Row className={`${styles.full_available_height} g-0`}>
+        <Col xs={3} md={2} xl={1} className={`${styles.contents_centered} row-height`}>
+          <Row className={styles.contents_padded_sm}>
             <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
-          <Row className={styles.logo}>
+          <Row className={styles.contents_padded_sm}>
             <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
-        <Col xs={7} md={9} xl={10} className={styles.contents_centered}>
+        <Col xs={7} md={9} xl={10} className={`${styles.contents_centered} ${styles.contents_padded_sm} row-height`}>
           <Card bg={"light"} text={"dark"}>
             <Card.Body>
               <Card.Title className={styles.responsive_card_title}>
@@ -93,7 +90,7 @@ class HeaderPanel extends React.PureComponent {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={2} md={1} xl={1} className={styles.contents_centered}>
+        <Col xs={2} md={1} xl={1} className={`${styles.contents_centered} ${styles.contents_padded_sm} row-height`}>
           <OverlayTrigger
             trigger="click"
             placement="bottom"
