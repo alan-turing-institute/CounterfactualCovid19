@@ -70,7 +70,7 @@ class HeaderPanel extends React.PureComponent {
 
     return (
       <Row>
-        <Col xs={1} md={1} lg={1} className={styles.contents_centered}>
+        <Col xs={3} md={2} xl={1} className={styles.contents_centered}>
           <Row className={styles.logo}>
             <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
@@ -78,14 +78,14 @@ class HeaderPanel extends React.PureComponent {
             <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
-        <Col xs={10} md={10} lg={10} className={styles.contents_centered}>
+        <Col xs={7} md={9} xl={10} className={styles.contents_centered}>
           <Card bg={"light"} text={"dark"}>
             <Card.Body>
-              <Card.Title>
+              <Card.Title className={styles.responsive_card_title}>
                 What if?: The counterfactual story of the first wave of COVID-19
                 in Europe.
               </Card.Title>
-              <Card.Text>
+              <Card.Text className={styles.responsive_card_text}>
                 This dashboard contains data and counterfactual simulations of
                 the growth of COVID-19 cases during Europe's first wave. Click
                 on a country to start.
@@ -93,7 +93,7 @@ class HeaderPanel extends React.PureComponent {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={1} md={1} lg={1} className={styles.contents_centered}>
+        <Col xs={2} md={1} xl={1} className={styles.contents_centered}>
           <OverlayTrigger
             trigger="click"
             placement="bottom"

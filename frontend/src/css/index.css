@@ -3,3 +3,10 @@ html {
   margin: 0;
   padding: 0;
 }
+
+/* Add responsive text sizes */
+@media (max-width: 576px) {
+  #bootstrap-overrides { font-size: calc(0.25 * (100% + 1vw + 1vh)); }
+  #bootstrap-overrides .btn { font-size: calc(0.25 * (100% + 1vw + 1vh)); }
+  #bootstrap-overrides .h5 { font-size: calc(1.25 * 0.25 * (100% + 1vw + 1vh)); }
+}

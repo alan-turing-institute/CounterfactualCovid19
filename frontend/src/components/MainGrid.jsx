@@ -75,7 +75,7 @@ class MainGrid extends React.PureComponent {
       );
     }
     return (
-      <Container fluid className={styles.full_screen}>
+      <Container fluid className={styles.full_screen} id="bootstrap-overrides">
         <Row style={{ height: this.state.heightHeader }}>
           <HeaderPanel />
         </Row>
