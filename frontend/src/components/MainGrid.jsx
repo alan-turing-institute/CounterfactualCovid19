@@ -95,14 +95,7 @@ class MainGrid extends React.PureComponent {
           </Col>
         </Row>
         <Row style={{ height: this.state.heightInfoPanel }} className="g-0">
-          {!this.state.isoCode ? (
-            <div></div>
-          ) : (
-            <InfoPanel
-              isoCode={this.state.isoCode}
-              height={this.state.heightInfoPanel}
-            />
-          )}
+          <InfoPanel isoCode={this.state.isoCode}/>
         </Row>
       </Container>
     );

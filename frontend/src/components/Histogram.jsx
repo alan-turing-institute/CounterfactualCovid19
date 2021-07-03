@@ -10,12 +10,15 @@ import {
   YAxis,
   ReferenceLine,
 } from "recharts";
+import Col from "react-bootstrap/Col";
 import exact from "prop-types-exact";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 import Loading from "./Loading";
 import pDebounce from "p-debounce";
 import PropTypes from "prop-types";
 import React from "react";
+import commonStyles from "../css/Common.module.css";
+import localStyles from "../css/Histogram.module.css";
 
 const propTypes = exact({
   dateFinal: PropTypes.string,
@@ -28,6 +31,8 @@ const propTypes = exact({
 });
 
 const defaultProps = {};
+
+const styles = { ...commonStyles, ...localStyles };
 
 class Histogram extends React.PureComponent {
   constructor(props) {
@@ -71,8 +76,7 @@ class Histogram extends React.PureComponent {
         const record = {
           date: casesReal[i].date,
           "Real cases": casesReal[i].summed_avg_cases_per_million,
-          "Counterfactual cases":
-            counterfactual.summed_avg_cases_per_million || 0,
+          "Counterfactual cases": counterfactual.summed_avg_cases_per_million || 0,
         };
         casesData.push(record);
       }
@@ -101,11 +105,15 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
-    console.debug("Redrawing histogram...");
     if (this.state.casesData.length === 0) {
-      return <Loading />;
+      return (
+        <Col xs={12} className={styles.loading}>
+          <Loading />
+        </Col>
+      );
     }
     // Set the x-axis and y-axis offsets based on the current window size
+    console.debug("Redrawing histogram...");
     const axisOffsetHorizontal = 0.03 * window.innerWidth;
     const axisOffsetVertical = 0.03 * window.innerHeight;
     return (

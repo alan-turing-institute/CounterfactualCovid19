@@ -9,7 +9,7 @@ const defaultProps = {};
 
 const Loading = () => {
   return (
-    <Row className={`${styles.spinners} flex-grow-1`}>
+    <Row className={`${styles.spinners} flex-grow-1 g-0`}>
       <Spinner animation="grow" variant="success" role="status" />
       <Spinner animation="grow" variant="danger" role="status" />
       <Spinner animation="grow" variant="info" role="status" />

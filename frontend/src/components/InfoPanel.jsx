@@ -18,7 +18,6 @@ import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   isoCode: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
 });
 
 const defaultProps = {};
@@ -185,7 +184,7 @@ class InfoPanel extends React.PureComponent {
     return (
       <Container fluid>
         <Row className={`${styles.full_available_height} g-0`}>
-          <Col xs={3} md={2} lg={3} className={"row-height"}>
+          <Col xs={3} md={2} lg={3} className="row-height">
             <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
               <CountryDates
                 countryName={this.state.countryName}
@@ -203,7 +202,7 @@ class InfoPanel extends React.PureComponent {
               />
             </Row>
           </Col>
-          <Col xs={6} md={8} lg={6} className={"row-height"}>
+          <Col xs={6} md={8} lg={6} className="row-height">
             <Row xs={1} className="g-0"
              key={this.props.isoCode} /* Recreate whenever key changes */
             >
