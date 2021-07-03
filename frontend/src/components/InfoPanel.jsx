@@ -184,7 +184,7 @@ class InfoPanel extends React.PureComponent {
     return (
       <Container fluid>
         <Row className={`${styles.full_available_height} g-0`}>
-          <Col xs={3} md={2} lg={3} className="row-height">
+          <Col xs={{span: 6, order: 2}} md={{span: 2, order: 1}} lg={{span: 3, order: 1}} className="row-height">
             <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
               <CountryDates
                 countryName={this.state.countryName}
@@ -202,9 +202,9 @@ class InfoPanel extends React.PureComponent {
               />
             </Row>
           </Col>
-          <Col xs={6} md={8} lg={6} className="row-height">
+          <Col xs={{span: 12, order: 1}} md={{span: 8, order: 2}} lg={{span: 6, order: 2}} className="row-height">
             <Row xs={1} className="g-0"
-             key={this.props.isoCode} /* Recreate whenever key changes */
+            key={this.props.isoCode} /* Recreate whenever key changes */
             >
               <Col xs={6}>
                 <DateChooser
@@ -235,7 +235,7 @@ class InfoPanel extends React.PureComponent {
               />
             </Row>
           </Col>
-          <Col xs={3} md={2} lg={3} className="row-height">
+          <Col xs={{span: 6, order: 3}} md={{span: 2, order: 3}} lg={{span: 3, order: 3}} className="row-height">
             <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
               <CounterfactualStory
                 dateStart={this.state.dateModelStart}

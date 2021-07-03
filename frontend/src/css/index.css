@@ -13,8 +13,3 @@ html {
   #bootstrap-overrides .recharts-text { font-size: calc(0.75 * 0.22 * (100% + 1vw + 1vh)); }
   #bootstrap-overrides .recharts-label { font-size: calc(0.75 * 0.22 * (100% + 1vw + 1vh)); }
 }
-
-#bootstrap-overrides .col-3 .col-6 {
-  background-color: lightcyan;
-  outline: 1px solid gray;
-}
