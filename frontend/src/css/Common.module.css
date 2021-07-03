@@ -9,13 +9,6 @@
   justify-content: center;
 }
 
-.contents_spaced {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-
 .full_available_width {
   width: 100%;
 }
@@ -28,6 +21,21 @@
   height: 100vh;
   margin: 0;
   padding: 0;
+  width: 100vw;
+}
+
+.space_child_columns {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.space_child_rows {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .spacing_vertical {

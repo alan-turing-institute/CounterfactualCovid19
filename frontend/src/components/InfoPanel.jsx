@@ -186,7 +186,7 @@ class InfoPanel extends React.PureComponent {
         {!this.props.isoCode ? null : (
           <Container fluid>
             <Row>
-              <Col xs={3} className={styles.contents_spaced}>
+              <Col xs={3} className={styles.space_child_rows}>
                 <Row xs={1} className={styles.full_available_width}>
                   <CountryDates
                     countryName={this.state.countryName}
@@ -208,7 +208,7 @@ class InfoPanel extends React.PureComponent {
                 <Row
                   key={this.props.isoCode} /* Recreate whenever key changes */
                   style={{ height: dateChooserHeight }}
-                  className={`${styles.full_available_width} ${styles.contents_spaced} ${styles.spacing_vertical}`}
+                  className={`${styles.full_available_width} ${styles.space_child_columns} ${styles.spacing_vertical}`}
                 >
                   <Col xs={6}>
                     <DateChooser
@@ -248,7 +248,7 @@ class InfoPanel extends React.PureComponent {
                   />
                 </Row>
               </Col>
-              <Col xs={3} className={styles.contents_spaced}>
+              <Col xs={3} className={styles.space_child_rows}>
                 <Row xs={1} className={styles.full_available_width}>
                   <CounterfactualStory
                     dateStart={this.state.dateModelStart}
