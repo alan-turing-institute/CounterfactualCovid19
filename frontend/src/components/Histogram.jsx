@@ -105,14 +105,17 @@ class Histogram extends React.PureComponent {
     if (this.state.casesData.length === 0) {
       return <Loading />;
     }
+    // Set the x-axis and y-axis offsets based on the current window size
+    const axisOffsetHorizontal = 0.03 * window.innerWidth;
+    const axisOffsetVertical = 0.03 * window.innerHeight;
     return (
-      <ResponsiveContainer width="100%">
+      <ResponsiveContainer width="100%" aspect={2}>
         <ComposedChart data={this.state.casesData}>
           <CartesianGrid stroke="#f5f5f5" />
-          <XAxis dataKey="date" />
-          <YAxis />
+          <XAxis dataKey="date" height={axisOffsetVertical} />
+          <YAxis width={axisOffsetHorizontal}/>
           <Tooltip />
-          <Legend />
+          <Legend align="center"/>
           <Bar dataKey="Real cases" fill="#413ea0" />
           <Line
             type="monotone"
