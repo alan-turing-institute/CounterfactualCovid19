@@ -2,6 +2,7 @@ import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
 import React from "react";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   totalCases: PropTypes.number,
@@ -13,20 +14,14 @@ const defaultProps = {};
 
 const CountryStatistics = (props) => {
   return (
-    <Card
-      style={{
-        marginTop: "1%",
-        marginBottom: "1%",
-      }}
-      bg={"light"}
-    >
+    <Card className={styles.card} bg={"light"}>
       <Card.Body>
         <Card.Title>Statistics</Card.Title>
         {!props.totalCases ? null : (
           <Card.Text>
             {`Total COVID-19 Cases per Million: ${props.totalCases
               .toFixed(0)
-              .toString()} \n `}
+              .toString()}`}
           </Card.Text>
         )}
         {!props.totalDeaths ? null : (
@@ -47,6 +42,7 @@ const CountryStatistics = (props) => {
     </Card>
   );
 };
+
 CountryStatistics.propTypes = propTypes;
 CountryStatistics.defaultProps = defaultProps;
 

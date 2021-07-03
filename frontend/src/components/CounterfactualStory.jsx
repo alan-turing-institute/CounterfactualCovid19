@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   dateEnd: PropTypes.string,
@@ -11,13 +12,7 @@ const defaultProps = {};
 
 const CounterfactualStory = (props) => {
   return (
-    <Card
-      style={{
-        marginTop: "1%",
-        marginBottom: "1%",
-      }}
-      bg={"light"}
-    >
+    <Card className={styles.card} bg={"light"}>
       <Card.Body>
         <Card.Title>Counterfactual story</Card.Title>
         <Card.Text>

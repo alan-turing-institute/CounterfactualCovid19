@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import loadInitialMapItems from "../tasks/LoadInitialMapItemsTask";
 import React from "react";
 import Row from "react-bootstrap/Row";
+import styles from "../css/Common.module.css";
 import WorldMap from "./WorldMap";
 
 const propTypes = exact({});
@@ -23,8 +24,9 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
-      sizeMapComponent: "85vh",
-      sizeHistogramComponent: "0vh",
+      heightHeader: "12vh",
+      heightMap: "87vh",
+      heightHistogram: "0vh",
     };
 
     // Bind functions that need to use `this`
@@ -45,60 +47,60 @@ class MainGrid extends React.PureComponent {
 
   // Update the state for a new country
   handleCountryChange(iso_code, clickable) {
+    var isoCode, heightHistogram;
     if (iso_code === this.state.isoCode || !clickable) {
       console.log(`Setting currently selected country to none`);
-      this.setState({
-        isoCode: null,
-        sizeMapComponent: "85vh",
-        sizeHistogramComponent: "0vh",
-      });
+      isoCode = null;
+      heightHistogram = 0;
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
-      this.setState({
-        isoCode: iso_code,
-        sizeMapComponent: "40vh",
-        sizeHistogramComponent: "45vh",
-      });
+      isoCode = iso_code;
+      heightHistogram = 35;
     }
+    const heightMap =
+      100 - heightHistogram - Number(this.state.heightHeader.replace("vh", ""));
+    this.setState({
+      isoCode: isoCode,
+      heightMap: `${heightMap}vh`,
+      heightHistogram: `${heightHistogram}vh`,
+    });
   }
 
-  // This is evaluated whenever the component is rendered
   render() {
-    return (
-      <div>
-        {this.state.countries.length === 0 ? (
+    if (this.state.countries.length === 0) {
+      return (
+        <Container fluid className={styles.full_screen}>
           <Loading />
-        ) : (
-          <Container fluid>
-            <Row style={{ height: "15vh" }}>
-              <HeaderPanel />
-            </Row>
-            <Row style={{ height: this.state.sizeMapComponent }}>
-              <Col md={11} style={{ padding: "0px" }}>
-                <WorldMap
-                  countries={this.state.countries}
-                  onCountrySelect={this.handleCountryChange}
-                />
-              </Col>
-              <Col xs={1} style={{ padding: "0px" }}>
-                <Legend />
-              </Col>
-            </Row>
-            {!this.state.isoCode ? (
-              <Loading />
-            ) : (
-              <Row style={{ height: this.state.sizeHistogramComponent }}>
-                <Col xs={12} style={{ padding: "0px" }}>
-                  <InfoPanel
-                    isoCode={this.state.isoCode}
-                    height={this.state.sizeHistogramComponent}
-                  />
-                </Col>
-              </Row>
-            )}
-          </Container>
-        )}
-      </div>
+        </Container>
+      );
+    }
+    return (
+      <Container fluid className={styles.full_screen}>
+        <Row style={{ height: this.state.heightHeader }}>
+          <HeaderPanel />
+        </Row>
+        <Row style={{ height: this.state.heightMap }} className="g-0">
+          <Col xs={11}>
+            <WorldMap
+              countries={this.state.countries}
+              onCountrySelect={this.handleCountryChange}
+            />
+          </Col>
+          <Col xs={1}>
+            <Legend />
+          </Col>
+        </Row>
+        <Row style={{ height: this.state.heightHistogram }}>
+          {!this.state.isoCode ? (
+            <Loading />
+          ) : (
+            <InfoPanel
+              isoCode={this.state.isoCode}
+              height={this.state.heightHistogram}
+            />
+          )}
+        </Row>
+      </Container>
     );
   }
 }

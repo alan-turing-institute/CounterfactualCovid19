@@ -14,7 +14,7 @@ def run():
     url_dates = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Output/summary_eur.csv"
 
     # Load important dates dataframe and parse them allowing for NAT
-    df_dates = pd.dataframe(
+    df_dates = pd.DataFrame(
         pd.read_csv(
             url_dates,
             parse_dates=[

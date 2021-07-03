@@ -9,11 +9,14 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import "../css/HeaderPanel.css";
+import commonStyles from "../css/Common.module.css";
+import localStyles from "../css/HeaderPanel.module.css";
 
 const propTypes = exact({});
 
 const defaultProps = {};
+
+const styles = { ...commonStyles, ...localStyles };
 
 class HeaderPanel extends React.PureComponent {
   constructor(props) {
@@ -47,14 +50,13 @@ class HeaderPanel extends React.PureComponent {
             growth of COVID-19 cases across Europe during the first wave.
           </p>
           <p>
-            Analytical code and documentation relating to this project can be
-            found in{" "}
+            Analytical code and documentation relating to{" "}
             <a href="https://github.com/KFArnold/covid-lockdown/">
-              https://github.com/KFArnold/covid-lockdown/
+              the counterfactual simulation
             </a>
-            . Source code and documentation for this dashboard can be found at{" "}
+            . Source code and documentation for{" "}
             <a href="https://github.com/alan-turing-institute/CounterfactualCovid19">
-              https://github.com/alan-turing-institute/CounterfactualCovid19
+              this dashboard
             </a>
             .
           </p>
@@ -68,15 +70,15 @@ class HeaderPanel extends React.PureComponent {
 
     return (
       <Row>
-        <Col xs={1} md={1} lg={1} className="hp-contents-centered-vertical">
-          <Row className="hp-row-logo">
+        <Col xs={1} md={1} lg={1} className={styles.contents_centered}>
+          <Row className={styles.logo}>
             <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
-          <Row className="hp-row-logo">
+          <Row className={styles.logo}>
             <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
-        <Col xs={10} md={10} lg={10} className="hp-contents-centered-vertical">
+        <Col xs={10} md={10} lg={10} className={styles.contents_centered}>
           <Card bg={"light"} text={"dark"}>
             <Card.Body>
               <Card.Title>
@@ -91,7 +93,7 @@ class HeaderPanel extends React.PureComponent {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={1} md={1} lg={1} className="hp-contents-centered-vertical">
+        <Col xs={1} md={1} lg={1} className={styles.contents_centered}>
           <OverlayTrigger
             trigger="click"
             placement="bottom"

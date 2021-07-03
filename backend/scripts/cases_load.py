@@ -14,7 +14,7 @@ def run():
     url_cases = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Data/Formatted/Cases_deaths_data_europe.csv"
 
     # Load all cases then filter by date
-    df_cases = pd.dataframe(pd.read_csv(url_cases, parse_dates=["Date"]))
+    df_cases = pd.DataFrame(pd.read_csv(url_cases, parse_dates=["Date"]))
 
     # Delete all existing CasesRecord data and regenerate the table
     CasesRecord.objects.all().delete()  # pylint: disable=no-member

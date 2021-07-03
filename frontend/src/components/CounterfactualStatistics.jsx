@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
 import exact from "prop-types-exact";
 import PropTypes from "prop-types";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   totalCasesCounterfactual: PropTypes.number,
@@ -12,15 +13,8 @@ const propTypes = exact({
 const defaultProps = {};
 
 const CounterfactualStatistics = (props) => {
-  // divide to turn shift from date difference to days
   return (
-    <Card
-      style={{
-        marginTop: "1%",
-        marginBottom: "1%",
-      }}
-      bg={"light"}
-    >
+    <Card className={styles.card} bg={"light"}>
       <Card.Body>
         <Card.Title>Counterfactual Statistics</Card.Title>
         {!props.shiftFirstRestrictions ? null : (
@@ -33,7 +27,7 @@ const CounterfactualStatistics = (props) => {
           <Card.Text>
             {`Total COVID-19 Cases per Million: ${props.totalCasesCounterfactual
               .toFixed(0)
-              .toString()} \n `}
+              .toString()}`}
           </Card.Text>
         )}
         {!(props.shiftFirstRestrictions !== 0 || props.shiftLockdown !== 0) ||

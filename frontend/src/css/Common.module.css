@@ -1,0 +1,36 @@
+.card {
+  margin: 1vh;
+}
+
+.contents_centered {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contents_spaced {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.full_available_width {
+  width: 100%;
+}
+
+.full_available_height {
+  height: 100%;
+}
+
+.full_screen {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.spacing_vertical {
+  margin-bottom: 1vh;
+  margin-top: 1vh;
+}
