@@ -77,7 +77,11 @@ class MainGrid extends React.PureComponent {
         </Container>
       );
     }
-    const heightWorldMap = this.toStr(100 - this.toNum(this.state.heightHeader) - this.toNum(this.state.heightInfoPanel));
+    const heightWorldMap = this.toStr(
+      100 -
+        this.toNum(this.state.heightHeader) -
+        this.toNum(this.state.heightInfoPanel)
+    );
     return (
       <Container fluid className={styles.full_screen} id="bootstrap-overrides">
         <Row style={{ height: this.state.heightHeader }} className="g-0">
@@ -95,7 +99,7 @@ class MainGrid extends React.PureComponent {
           </Col>
         </Row>
         <Row style={{ height: this.state.heightInfoPanel }} className="g-0">
-          <InfoPanel isoCode={this.state.isoCode}/>
+          <InfoPanel isoCode={this.state.isoCode} />
         </Row>
       </Container>
     );

@@ -76,7 +76,8 @@ class Histogram extends React.PureComponent {
         const record = {
           date: casesReal[i].date,
           "Real cases": casesReal[i].summed_avg_cases_per_million,
-          "Counterfactual cases": counterfactual.summed_avg_cases_per_million || 0,
+          "Counterfactual cases":
+            counterfactual.summed_avg_cases_per_million || 0,
         };
         casesData.push(record);
       }
@@ -121,9 +122,9 @@ class Histogram extends React.PureComponent {
         <ComposedChart data={this.state.casesData}>
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="date" height={axisOffsetVertical} />
-          <YAxis width={axisOffsetHorizontal}/>
+          <YAxis width={axisOffsetHorizontal} />
           <Tooltip />
-          <Legend align="center"/>
+          <Legend align="center" />
           <Bar dataKey="Real cases" fill="#413ea0" />
           <Line
             type="monotone"
