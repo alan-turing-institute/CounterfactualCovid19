@@ -1,13 +1,3 @@
-.date-chooser {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.date-chooser > p {
-  text-align: center;
-}
-
 /* Avoid Popper CSS issue: https://github.com/Hacker0x01/react-datepicker/issues/3009 */
 .react-datepicker-popper[data-placement^="bottom"] {
   margin-top: 0 !important;

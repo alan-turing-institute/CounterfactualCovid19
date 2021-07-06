@@ -18,9 +18,9 @@ class CounterfactualCasesRecord:
     @staticmethod
     def to_date(input_string):
         """Convert a string to a datetime date"""
-        if input_string:
-            return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
-        return None
+        if not input_string or input_string == "null":
+            return None
+        return datetime.datetime.strptime(input_string, r"%Y-%m-%d").date()
 
     @staticmethod
     def simulate(iso_codes, boundary_dates, knot_dates, summary):

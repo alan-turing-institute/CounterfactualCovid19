@@ -14,8 +14,8 @@ def run():
     url_best_knot = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Output/knots_best.csv"
 
     # Load Dates dataframe and parse them allowing for NAT
-    df_best_knot = pd.read_csv(
-        url_best_knot, parse_dates=["Knot_date_1", "Knot_date_2"]
+    df_best_knot = pd.DataFrame(
+        pd.read_csv(url_best_knot, parse_dates=["Knot_date_1", "Knot_date_2"])
     )
 
     # replace all NaT with None needed for django

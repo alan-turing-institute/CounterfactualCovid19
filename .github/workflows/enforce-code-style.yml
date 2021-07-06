@@ -11,11 +11,15 @@ jobs:
         with:
           python-version: 3.9
       - name: Install poetry
-        run: pip install poetry
+        run: pip install --upgrade pip poetry setuptools
       - name: Install dependencies
-        run: cd backend && poetry config virtualenvs.create false && poetry install
+        run: |
+          cd backend
+          poetry config virtualenvs.create false
+          poetry config experimental.new-installer false
+          poetry install
       - name: Check style with pylint
-        run: pylint backend/*/ --disable=duplicate-code,invalid-name,line-too-long,too-few-public-methods,too-many-ancestors
+        run: pylint backend/*/ --rcfile=.pylintrc
       - name: Run black --check
         run: black --check .
       - name: If needed, commit black changes to the pull request

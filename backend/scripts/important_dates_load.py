@@ -14,9 +14,16 @@ def run():
     url_dates = "https://raw.githubusercontent.com/KFArnold/covid-lockdown/dashboard/Output/summary_eur.csv"
 
     # Load important dates dataframe and parse them allowing for NAT
-    df_dates = pd.read_csv(
-        url_dates,
-        parse_dates=["Date_start", "Date_T", "Date_first_restriction", "Date_lockdown"],
+    df_dates = pd.DataFrame(
+        pd.read_csv(
+            url_dates,
+            parse_dates=[
+                "Date_start",
+                "Date_T",
+                "Date_first_restriction",
+                "Date_lockdown",
+            ],
+        )
     )
 
     # replace all NaT with None needed for django

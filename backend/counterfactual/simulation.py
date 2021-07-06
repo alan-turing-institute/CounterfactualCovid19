@@ -336,14 +336,24 @@ def simulate_single_country(
         ]
         n_cases_series_tminus1 = simulated_daily_cases[-1][simulation_dates[0]]
 
+        # if counterfactual_knot_date_1 happens after counterfactual_knot_date_2
+        # make a flag for skipping knot date 1 from the simulation
+        skip_knot_date_1 = False
+        if not pd.isnull(knots.counterfactual_knot_date_1) and not pd.isnull(
+            knots.counterfactual_knot_date_2
+        ):
+            if knots.counterfactual_knot_date_1 > knots.counterfactual_knot_date_2:
+                skip_knot_date_1 = True
+
         # Construct a list of time-period boundaries and associated growth factors
         # There is always one more time period to simulate than the number of knot points
         # As the growth factors correspond to the time in between the time-period boundaries
         time_period_boundaries = [pd.Timestamp.min, pd.Timestamp.max]
         growth_factors = [knots.growth_factor_0_1]
         with suppress(AttributeError):
-            # Check counterfactual_knot_date_1 for NaT before adding it
-            if not pd.isnull(knots.counterfactual_knot_date_1):
+            # Check counterfactual_knot_date_1 for NaT before adding it and
+            # only use this growth factor if counterfactual_knot_date_1 is before counterfactual_knot_date_2
+            if not pd.isnull(knots.counterfactual_knot_date_1) and not skip_knot_date_1:
                 # If knot_date_1 exists then we know that growth_factor_1_2 exists
                 time_period_boundaries.append(knots.counterfactual_knot_date_1)
                 growth_factors.append(knots.growth_factor_1_2)

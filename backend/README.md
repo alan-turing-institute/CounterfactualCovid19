@@ -1,7 +1,9 @@
 # CounterfactualCovid19 backend
+
 This project was bootstrapped with [Django start project](https://docs.djangoproject.com/en/3.1/ref/django-admin/#startproject).
 
 ## Prerequisites
+
 You will need to install the following dependencies in order to run this app:
 
 - [PostgreSQL](#postgresql)
@@ -25,7 +27,7 @@ createdb counterfactualcovid
 createuser django -P
 ```
 
-and type the password that is being used for this project (you can find it in line 90 of [this file](/backend/settings/common.py)). 
+and type the password that is being used for this project (you can find it in line 90 of [this file](/backend/settings/common.py)).
 
 You can test that `PostgreSQL` is correctly configured by running
 

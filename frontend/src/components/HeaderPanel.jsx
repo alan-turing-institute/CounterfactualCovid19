@@ -9,7 +9,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import React from "react";
 import Row from "react-bootstrap/Row";
-import "../css/HeaderPanel.css";
+import styles from "../css/Common.module.css";
 
 const propTypes = exact({});
 
@@ -47,14 +47,13 @@ class HeaderPanel extends React.PureComponent {
             growth of COVID-19 cases across Europe during the first wave.
           </p>
           <p>
-            Analytical code and documentation relating to this project can be
-            found in{" "}
+            Analytical code and documentation relating to{" "}
             <a href="https://github.com/KFArnold/covid-lockdown/">
-              https://github.com/KFArnold/covid-lockdown/
+              the counterfactual simulation
             </a>
-            . Source code and documentation for this dashboard can be found at{" "}
+            . Source code and documentation for{" "}
             <a href="https://github.com/alan-turing-institute/CounterfactualCovid19">
-              https://github.com/alan-turing-institute/CounterfactualCovid19
+              this dashboard
             </a>
             .
           </p>
@@ -67,23 +66,33 @@ class HeaderPanel extends React.PureComponent {
     );
 
     return (
-      <Row fluid>
-        <Col xs={1} md={1} lg={1} className="hp-contents-centered-vertical">
-          <Row className="hp-row-logo">
-            <Image src={logoLeeds} alt="Lida Logo" fluid />
+      <Row className={`${styles.full_available_height} g-0`}>
+        <Col
+          xs={3}
+          md={2}
+          xl={1}
+          className={`${styles.contents_centered} row-height`}
+        >
+          <Row className={styles.contents_padded_sm}>
+            <Image src={logoLeeds} alt="Lida Logo" />
           </Row>
-          <Row className="hp-row-logo">
-            <Image src={logoTuring} alt="Turing Logo" fluid />
+          <Row className={styles.contents_padded_sm}>
+            <Image src={logoTuring} alt="Turing Logo" />
           </Row>
         </Col>
-        <Col xs={10} md={10} lg={10} className="hp-contents-centered-vertical">
+        <Col
+          xs={7}
+          md={9}
+          xl={10}
+          className={`${styles.contents_centered} ${styles.contents_padded_sm} row-height`}
+        >
           <Card bg={"light"} text={"dark"}>
             <Card.Body>
-              <Card.Title>
+              <Card.Title className={styles.responsive_card_title}>
                 What if?: The counterfactual story of the first wave of COVID-19
                 in Europe.
               </Card.Title>
-              <Card.Text>
+              <Card.Text className={styles.responsive_card_text}>
                 This dashboard contains data and counterfactual simulations of
                 the growth of COVID-19 cases during Europe's first wave. Click
                 on a country to start.
@@ -91,7 +100,12 @@ class HeaderPanel extends React.PureComponent {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={1} md={1} lg={1} className="hp-contents-centered-vertical">
+        <Col
+          xs={2}
+          md={1}
+          xl={1}
+          className={`${styles.contents_centered} ${styles.contents_padded_sm} row-height`}
+        >
           <OverlayTrigger
             trigger="click"
             placement="bottom"
