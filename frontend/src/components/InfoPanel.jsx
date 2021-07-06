@@ -18,7 +18,6 @@ import styles from "../css/Common.module.css";
 
 const propTypes = exact({
   isoCode: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
 });
 
 const defaultProps = {};
@@ -177,105 +176,110 @@ class InfoPanel extends React.PureComponent {
   }
 
   render() {
-    // Set explicit heights taking the 2vh margin into account
-    const availableHeight = Number(this.props.height.replace("vh", ""));
-    const dateChooserHeight = `${0.2 * availableHeight - 2}vh`;
-    const histogramHeight = `${0.8 * availableHeight - 2}vh`;
+    // If there is country selected then return an empty <div>
+    if (this.props.isoCode == null) {
+      return <div></div>;
+    }
+    // Otherwise return the InfoPanel container
     return (
-      <div>
-        {!this.props.isoCode ? null : (
-          <Container fluid>
-            <Row>
-              <Col xs={3} className={styles.contents_spaced}>
-                <Row xs={1} className={styles.full_available_width}>
-                  <CountryDates
-                    countryName={this.state.countryName}
-                    dateFirstWaveEnd={this.state.dateFirstCase}
-                    dateFirstWaveStart={this.state.dateModelEnd}
-                    dateFirstRestrictions={this.state.dateFirstRestrictionsReal}
-                    dateLockdown={this.state.dateLockdownReal}
-                  />
-                </Row>
-                <Row xs={1} className={styles.full_available_width}>
-                  <CountryStatistics
-                    totalCases={this.state.totalCasesReal}
-                    totalDeaths={this.state.totalDeathsReal}
-                    populationDensity={this.state.populationDensity}
-                  />
-                </Row>
+      <Container fluid>
+        <Row className={`${styles.full_available_height} g-0`}>
+          <Col
+            xs={{ span: 6, order: 2 }}
+            md={{ span: 2, order: 1 }}
+            lg={{ span: 3, order: 1 }}
+            className="row-height"
+          >
+            <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
+              <CountryDates
+                countryName={this.state.countryName}
+                dateFirstWaveEnd={this.state.dateFirstCase}
+                dateFirstWaveStart={this.state.dateModelEnd}
+                dateFirstRestrictions={this.state.dateFirstRestrictionsReal}
+                dateLockdown={this.state.dateLockdownReal}
+              />
+            </Row>
+            <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
+              <CountryStatistics
+                totalCases={this.state.totalCasesReal}
+                totalDeaths={this.state.totalDeathsReal}
+                populationDensity={this.state.populationDensity}
+              />
+            </Row>
+          </Col>
+          <Col
+            xs={{ span: 12, order: 1 }}
+            md={{ span: 8, order: 2 }}
+            lg={{ span: 6, order: 2 }}
+            className="row-height"
+          >
+            <Row
+              xs={1}
+              className="g-0"
+              key={this.props.isoCode} /* Recreate whenever key changes */
+            >
+              <Col xs={6}>
+                <DateChooser
+                  allowedDates={this.state.allowedDatesFirstRestrictions}
+                  caption="Social distancing"
+                  nominalDate={this.state.dateFirstRestrictionsReal}
+                  onDateChange={this.onFirstRestrictionsChange}
+                />
               </Col>
               <Col xs={6}>
-                <Row
-                  key={this.props.isoCode} /* Recreate whenever key changes */
-                  style={{ height: dateChooserHeight }}
-                  className={`${styles.full_available_width} ${styles.contents_spaced} ${styles.spacing_vertical}`}
-                >
-                  <Col xs={6}>
-                    <DateChooser
-                      allowedDates={this.state.allowedDatesFirstRestrictions}
-                      caption="Social distancing"
-                      nominalDate={this.state.dateFirstRestrictionsReal}
-                      onDateChange={this.onFirstRestrictionsChange}
-                    />
-                  </Col>
-                  <Col xs={6}>
-                    <DateChooser
-                      allowedDates={this.state.allowedDatesLockdown}
-                      caption="National lockdown"
-                      nominalDate={this.state.dateLockdownReal}
-                      onDateChange={this.onLockdownChange}
-                    />
-                  </Col>
-                </Row>
-                <Row
-                  className={`${styles.full_available_width} ${styles.spacing_vertical}`}
-                  style={{ height: histogramHeight }}
-                >
-                  <Histogram
-                    isoCode={this.props.isoCode}
-                    dateInitial={this.state.dateFirstCase}
-                    dateFinal={this.state.dateModelEnd}
-                    dateFirstRestrictionsReal={
-                      this.state.dateFirstRestrictionsReal
-                    }
-                    dateLockdownReal={this.state.dateLockdownReal}
-                    dateFirstRestrictionsCounterfactual={
-                      this.state.dateFirstRestrictionsCounterfactual
-                    }
-                    dateLockdownCounterfactual={
-                      this.state.dateLockdownCounterfactual
-                    }
-                  />
-                </Row>
-              </Col>
-              <Col xs={3} className={styles.contents_spaced}>
-                <Row xs={1} className={styles.full_available_width}>
-                  <CounterfactualStory
-                    dateStart={this.state.dateModelStart}
-                    dateEnd={this.state.dateModelEnd}
-                  />
-                </Row>
-                <Row xs={1} className={styles.full_available_width}>
-                  <CounterfactualStatistics
-                    totalCasesCounterfactual={
-                      this.state.totalCasesCounterfactual
-                    }
-                    totalCasesReal={this.state.totalCasesReal}
-                    shiftFirstRestrictions={this.daysDelta(
-                      this.state.dateFirstRestrictionsReal,
-                      this.state.dateFirstRestrictionsCounterfactual
-                    )}
-                    shiftLockdown={this.daysDelta(
-                      this.state.dateLockdownReal,
-                      this.state.dateLockdownCounterfactual
-                    )}
-                  />
-                </Row>
+                <DateChooser
+                  allowedDates={this.state.allowedDatesLockdown}
+                  caption="National lockdown"
+                  nominalDate={this.state.dateLockdownReal}
+                  onDateChange={this.onLockdownChange}
+                />
               </Col>
             </Row>
-          </Container>
-        )}
-      </div>
+            <Row xs={1} className="g-0">
+              <Histogram
+                isoCode={this.props.isoCode}
+                dateInitial={this.state.dateFirstCase}
+                dateFinal={this.state.dateModelEnd}
+                dateFirstRestrictionsReal={this.state.dateFirstRestrictionsReal}
+                dateLockdownReal={this.state.dateLockdownReal}
+                dateFirstRestrictionsCounterfactual={
+                  this.state.dateFirstRestrictionsCounterfactual
+                }
+                dateLockdownCounterfactual={
+                  this.state.dateLockdownCounterfactual
+                }
+              />
+            </Row>
+          </Col>
+          <Col
+            xs={{ span: 6, order: 3 }}
+            md={{ span: 2, order: 3 }}
+            lg={{ span: 3, order: 3 }}
+            className="row-height"
+          >
+            <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
+              <CounterfactualStory
+                dateStart={this.state.dateModelStart}
+                dateEnd={this.state.dateModelEnd}
+              />
+            </Row>
+            <Row xs={1} className={`${styles.contents_padded_lg} g-0`}>
+              <CounterfactualStatistics
+                totalCasesCounterfactual={this.state.totalCasesCounterfactual}
+                totalCasesReal={this.state.totalCasesReal}
+                shiftFirstRestrictions={this.daysDelta(
+                  this.state.dateFirstRestrictionsReal,
+                  this.state.dateFirstRestrictionsCounterfactual
+                )}
+                shiftLockdown={this.daysDelta(
+                  this.state.dateLockdownReal,
+                  this.state.dateLockdownCounterfactual
+                )}
+              />
+            </Row>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

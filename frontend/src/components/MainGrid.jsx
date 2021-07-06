@@ -24,9 +24,8 @@ class MainGrid extends React.PureComponent {
       countries: [],
       defaultEndDate: "2020-07-06",
       isoCode: null,
-      heightHeader: "12vh",
-      heightMap: "87vh",
-      heightHistogram: "0vh",
+      heightHeader: "10vh",
+      heightInfoPanel: "0vh",
     };
 
     // Bind functions that need to use `this`
@@ -45,25 +44,29 @@ class MainGrid extends React.PureComponent {
     }
   }
 
+  // Convert between height in 'vh' units and the numerical value
+  toNum(value) {
+    return Number(value.replace("vh", ""));
+  }
+  toStr(value) {
+    return `${value}vh`;
+  }
+
   // Update the state for a new country
   handleCountryChange(iso_code, clickable) {
-    var isoCode, heightHistogram;
     if (iso_code === this.state.isoCode || !clickable) {
       console.log(`Setting currently selected country to none`);
-      isoCode = null;
-      heightHistogram = 0;
+      this.setState({
+        isoCode: null,
+        heightInfoPanel: `0vh`,
+      });
     } else {
       console.log(`Setting currently selected country to ${iso_code}`);
-      isoCode = iso_code;
-      heightHistogram = 35;
+      this.setState({
+        isoCode: iso_code,
+        heightInfoPanel: `35vh`,
+      });
     }
-    const heightMap =
-      100 - heightHistogram - Number(this.state.heightHeader.replace("vh", ""));
-    this.setState({
-      isoCode: isoCode,
-      heightMap: `${heightMap}vh`,
-      heightHistogram: `${heightHistogram}vh`,
-    });
   }
 
   render() {
@@ -74,31 +77,29 @@ class MainGrid extends React.PureComponent {
         </Container>
       );
     }
+    const heightWorldMap = this.toStr(
+      100 -
+        this.toNum(this.state.heightHeader) -
+        this.toNum(this.state.heightInfoPanel)
+    );
     return (
-      <Container fluid className={styles.full_screen}>
-        <Row style={{ height: this.state.heightHeader }}>
+      <Container fluid className={styles.full_screen} id="bootstrap-overrides">
+        <Row style={{ height: this.state.heightHeader }} className="g-0">
           <HeaderPanel />
         </Row>
-        <Row style={{ height: this.state.heightMap }} className="g-0">
-          <Col xs={11}>
+        <Row style={{ height: heightWorldMap }} className="g-0">
+          <Col xs={9} md={11}>
             <WorldMap
               countries={this.state.countries}
               onCountrySelect={this.handleCountryChange}
             />
           </Col>
-          <Col xs={1}>
+          <Col xs={3} md={1}>
             <Legend />
           </Col>
         </Row>
-        <Row style={{ height: this.state.heightHistogram }}>
-          {!this.state.isoCode ? (
-            <Loading />
-          ) : (
-            <InfoPanel
-              isoCode={this.state.isoCode}
-              height={this.state.heightHistogram}
-            />
-          )}
+        <Row style={{ height: this.state.heightInfoPanel }} className="g-0">
+          <InfoPanel isoCode={this.state.isoCode} />
         </Row>
       </Container>
     );

@@ -1,3 +1,4 @@
-.centered_text {
+.caption {
+  margin: 0;
   text-align: center;
 }

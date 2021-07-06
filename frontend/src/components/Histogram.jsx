@@ -10,12 +10,15 @@ import {
   YAxis,
   ReferenceLine,
 } from "recharts";
+import Col from "react-bootstrap/Col";
 import exact from "prop-types-exact";
 import LoadDailyCasesTask from "../tasks/LoadDailyCasesTask";
 import Loading from "./Loading";
 import pDebounce from "p-debounce";
 import PropTypes from "prop-types";
 import React from "react";
+import commonStyles from "../css/Common.module.css";
+import localStyles from "../css/Histogram.module.css";
 
 const propTypes = exact({
   dateFinal: PropTypes.string,
@@ -28,6 +31,8 @@ const propTypes = exact({
 });
 
 const defaultProps = {};
+
+const styles = { ...commonStyles, ...localStyles };
 
 class Histogram extends React.PureComponent {
   constructor(props) {
@@ -101,18 +106,25 @@ class Histogram extends React.PureComponent {
   }
 
   render() {
-    console.debug("Redrawing histogram...");
     if (this.state.casesData.length === 0) {
-      return <Loading />;
+      return (
+        <Col xs={12} className={styles.loading}>
+          <Loading />
+        </Col>
+      );
     }
+    // Set the x-axis and y-axis offsets based on the current window size
+    console.debug("Redrawing histogram...");
+    const axisOffsetHorizontal = 0.03 * window.innerWidth;
+    const axisOffsetVertical = 0.03 * window.innerHeight;
     return (
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" aspect={2}>
         <ComposedChart data={this.state.casesData}>
           <CartesianGrid stroke="#f5f5f5" />
-          <XAxis dataKey="date" />
-          <YAxis />
+          <XAxis dataKey="date" height={axisOffsetVertical} />
+          <YAxis width={axisOffsetHorizontal} />
           <Tooltip />
-          <Legend />
+          <Legend align="center" />
           <Bar dataKey="Real cases" fill="#413ea0" />
           <Line
             type="monotone"
